@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/vinyldns/go-vinyldns.svg?branch=master)](https://travis-ci.org/vinyldns/go-vinyldns)
+
 # vinyldns
 
 A Golang client for the [vinyldns](https://github.com/vinyldns) DNS as a service API.
