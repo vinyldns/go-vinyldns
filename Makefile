@@ -7,7 +7,7 @@ deps:
 		go get -u golang.org/x/tools/cmd/cover; \
 	fi
 	go get -u github.com/golang/dep/cmd/dep
-	dep ensure $(SOURCE)
+	dep ensure
 
 test:
 	go vet $(SOURCE)
