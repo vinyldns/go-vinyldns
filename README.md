@@ -2,7 +2,7 @@
 
 # vinyldns
 
-A Golang client for the [vinyldns](https://github.com/vinyldns) DNS as a service API.
+A Golang client for the [vinyldns](https://github.com/vinyldns/vinyldns) DNS as a service API.
 
 ## Usage
 
