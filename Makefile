@@ -1,3 +1,4 @@
+VERSION=0.8.0
 SOURCE?=./...
 
 all: deps test install
@@ -20,3 +21,12 @@ cover:
 
 install:
 	go install $(SOURCE)
+
+release: deps test
+	go get github.com/aktau/github-release
+	github-release release \
+		--user vinyldns \
+		--repo go-vinyldns \
+		--tag $(VERSION) \
+		--name "$(VERSION)" \
+		--description "go-vinyldns version $(VERSION)"
