@@ -53,10 +53,19 @@ func TestZoneIntegration(t *testing.T) {
 		t.Error(err)
 	}
 
+	connection := &ZoneConnection{
+		Name:          "ok.",
+		KeyName:       "vinyldns.",
+		Key:           "nzisn+4G2ldMn0q1CV3vsg==",
+		PrimaryServer: "localhost",
+	}
+
 	zone := &Zone{
-		Name:         "test.",
-		Email:        "email@email.com",
-		AdminGroupID: group.ID,
+		Name:               "ok.",
+		Email:              "email@email.com",
+		AdminGroupID:       group.ID,
+		Connection:         connection,
+		TransferConnection: connection,
 	}
 
 	_, err = c.ZoneCreate(zone)
