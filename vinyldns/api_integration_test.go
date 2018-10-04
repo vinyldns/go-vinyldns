@@ -34,11 +34,11 @@ func TestZoneIntegration(t *testing.T) {
 	c := client()
 	users := []User{
 		User{
-			UserName:  "test-user",
-			FirstName: "test",
-			LastName:  "user",
-			Email:     "test@vinyldns.com",
-			ID:        "123",
+			UserName:  "ok",
+			FirstName: "ok",
+			LastName:  "ok",
+			Email:     "test@test.com",
+			ID:        "ok",
 		},
 	}
 	group, err := c.GroupCreate(&Group{
