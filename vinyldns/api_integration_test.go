@@ -75,19 +75,25 @@ func TestIntegration(t *testing.T) {
 		t.Error(err)
 	}
 
+	createdZoneID := zc.Zone.ID
 	limit := 10
 	for i := 0; i < limit; time.Sleep(10 * time.Second) {
 		i++
 
-		zg, err := c.Zone(zc.ID)
-		if err == nil && zg.ID != zc.ID {
-			t.Error(fmt.Sprintf("unable to get zone %s", zc.ID))
+		zg, err := c.Zone(createdZoneID)
+		if err == nil && zg.ID != createdZoneID {
+			t.Error(fmt.Sprintf("unable to get zone %s", createdZoneID))
 		}
 
 		if i == (limit - 1) {
-			fmt.Printf("%d retries reached in polling for zone %s", limit, zc.ID)
+			fmt.Printf("%d retries reached in polling for zone %s", limit, createdZoneID)
 			t.Error(err)
 		}
+	}
+
+	_, err = c.ZoneDelete(createdZoneID)
+	if err != nil {
+		t.Error(err)
 	}
 
 	_, err = c.GroupDelete(group.ID)
