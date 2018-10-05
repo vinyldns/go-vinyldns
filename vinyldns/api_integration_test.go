@@ -15,7 +15,9 @@ limitations under the License.
 package vinyldns
 
 import (
+	"fmt"
 	"testing"
+	"time"
 )
 
 // client() assumes a VinylDNS is running on localhost:9000 witht he default access and secret keys
@@ -68,9 +70,24 @@ func TestIntegration(t *testing.T) {
 		TransferConnection: connection,
 	}
 
-	_, err = c.ZoneCreate(zone)
+	zc, err := c.ZoneCreate(zone)
 	if err != nil {
 		t.Error(err)
+	}
+
+	limit := 10
+	for i := 0; i < limit; time.Sleep(10 * time.Second) {
+		i++
+
+		zg, err := c.Zone(zc.ID)
+		if err == nil && zg.ID != zc.ID {
+			t.Error(fmt.Sprintf("unable to get zone %s", zc.ID))
+		}
+
+		if i == (limit - 1) {
+			fmt.Printf("%d retries reached in polling for zone %s", limit, zc.ID)
+			t.Error(err)
+		}
 	}
 
 	_, err = c.GroupDelete(group.ID)
