@@ -30,7 +30,7 @@ func client() *Client {
 	return client
 }
 
-func TestZoneIntegration(t *testing.T) {
+func TestIntegration(t *testing.T) {
 	c := client()
 	users := []User{
 		User{
@@ -57,7 +57,7 @@ func TestZoneIntegration(t *testing.T) {
 		Name:          "ok.",
 		KeyName:       "vinyldns.",
 		Key:           "nzisn+4G2ldMn0q1CV3vsg==",
-		PrimaryServer: "localhost",
+		PrimaryServer: "vinyldns-bind9",
 	}
 
 	zone := &Zone{
@@ -69,6 +69,11 @@ func TestZoneIntegration(t *testing.T) {
 	}
 
 	_, err = c.ZoneCreate(zone)
+	if err != nil {
+		t.Error(err)
+	}
+
+	_, err = c.GroupDelete(group.ID)
 	if err != nil {
 		t.Error(err)
 	}

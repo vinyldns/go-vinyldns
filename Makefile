@@ -2,7 +2,7 @@ VERSION=0.8.0
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
 
-all: deps test integration stop-api install
+all: deps test start-api integration stop-api install
 
 deps:
 	@go tool cover 2>/dev/null; if [ $$? -eq 3 ]; then \
