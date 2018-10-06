@@ -23,16 +23,14 @@ import (
 // client() assumes a VinylDNS is running on localhost:9000 witht he default access and secret keys
 // see `make start-api` for a Make task in starting VinylDNS
 func client() *Client {
-	client := NewClient(ClientConfiguration{
+	return NewClient(ClientConfiguration{
 		"okAccessKey",
 		"okSecretKey",
 		"http://localhost:9000",
 	})
-
-	return client
 }
 
-func TestIntegration(t *testing.T) {
+func TestGroupCreateIntegration(t *testing.T) {
 	c := client()
 	users := []User{
 		User{
@@ -43,18 +41,31 @@ func TestIntegration(t *testing.T) {
 			ID:        "ok",
 		},
 	}
-	group, err := c.GroupCreate(&Group{
+	gc, err := c.GroupCreate(&Group{
 		Name:        "test-group",
 		Description: "a test group",
 		Email:       "test@vinyldns.com",
 		Admins:      users,
 		Members:     users,
 	})
-
 	if err != nil {
 		t.Error(err)
 	}
+	gg, err := c.Group(gc.ID)
+	if err != nil {
+		t.Error(err)
+	}
+	if gg.ID != gc.ID {
+		t.Error(err)
+	}
+}
 
+func TestZoneCreateIntegration(t *testing.T) {
+	c := client()
+	groups, err := c.Groups()
+	if err != nil {
+		t.Error(err)
+	}
 	connection := &ZoneConnection{
 		Name:          "ok.",
 		KeyName:       "vinyldns.",
@@ -65,7 +76,7 @@ func TestIntegration(t *testing.T) {
 	zone := &Zone{
 		Name:               "ok.",
 		Email:              "email@email.com",
-		AdminGroupID:       group.ID,
+		AdminGroupID:       groups[0].ID,
 		Connection:         connection,
 		TransferConnection: connection,
 	}
@@ -93,15 +104,26 @@ func TestIntegration(t *testing.T) {
 			t.Error(err)
 		}
 	}
+}
 
-	_, err = c.ZoneDelete(createdZoneID)
+func TestZoneDeleteIntegration(t *testing.T) {
+	c := client()
+	zs, err := c.Zones()
 	if err != nil {
 		t.Error(err)
 	}
+	z := zs[0].ID
+
+	_, err = c.ZoneDelete(z)
+	if err != nil {
+		t.Error(err)
+	}
+
+	limit := 10
 	for i := 0; i < limit; time.Sleep(10 * time.Second) {
 		i++
 
-		exists, err := c.ZoneExists(createdZoneID)
+		exists, err := c.ZoneExists(z)
 		if err != nil {
 			t.Error(err)
 			break
@@ -112,12 +134,20 @@ func TestIntegration(t *testing.T) {
 		}
 
 		if i == (limit - 1) {
-			fmt.Printf("%d retries reached in waiting for zone deletion of %s", limit, createdZoneID)
+			fmt.Printf("%d retries reached in waiting for zone deletion of %s", limit, z)
 			t.Error(err)
 		}
 	}
+}
 
-	_, err = c.GroupDelete(group.ID)
+func TestGroupDeleteIntegration(t *testing.T) {
+	c := client()
+	gs, err := c.Groups()
+	if err != nil {
+		t.Error(err)
+	}
+	g := gs[0].ID
+	_, err = c.GroupDelete(g)
 	if err != nil {
 		t.Error(err)
 	}
