@@ -51,12 +51,32 @@ func TestGroupCreateIntegration(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+
 	gg, err := c.Group(gc.ID)
 	if err != nil {
 		t.Error(err)
 	}
+
 	if gg.ID != gc.ID {
 		t.Error(err)
+	}
+}
+
+func TestGroupAdminsIntegration(t *testing.T) {
+	c := client()
+	groups, err := c.Groups()
+	if err != nil {
+		t.Error(err)
+	}
+
+	gID := groups[0].ID
+	admins, err := c.GroupAdmins(gID)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if admins[0].UserName != "ok" {
+		t.Error(fmt.Sprintf("unable to get group admins for group %s", gID))
 	}
 }
 
@@ -158,7 +178,14 @@ func TestRecordSetDeleteIntegration(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	r := rs[0].ID
+
+	var r string
+	for _, rec := range rs {
+		if rec.Name == "integration-test" {
+			r = rec.ID
+			break
+		}
+	}
 
 	_, err = c.RecordSetDelete(z, r)
 	if err != nil {
