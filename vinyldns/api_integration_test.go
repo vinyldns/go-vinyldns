@@ -106,6 +106,66 @@ func TestZoneCreateIntegration(t *testing.T) {
 	}
 }
 
+func TestRecordSetCreateIntegration(t *testing.T) {
+	c := client()
+	zs, err := c.Zones()
+	if err != nil {
+		t.Error(err)
+	}
+	rc, err := c.RecordSetCreate(zs[0].ID, &RecordSet{
+		Name:   "integration-test",
+		ZoneID: zs[0].ID,
+		Type:   "A",
+		TTL:    60,
+		Records: []Record{
+			Record{
+				Address: "127.0.0.1",
+			},
+		},
+	})
+	if err != nil {
+		t.Error(err)
+	}
+	createdID := rc.RecordSet.ID
+	limit := 10
+	for i := 0; i < limit; time.Sleep(10 * time.Second) {
+		i++
+
+		rg, err := c.RecordSet(zs[0].ID, createdID)
+		if err == nil && rg.ID != createdID {
+			t.Error(fmt.Sprintf("unable to get record set %s", createdID))
+		}
+		if err == nil && rg.ID == createdID {
+			break
+		}
+
+		if i == (limit - 1) {
+			fmt.Printf("%d retries reached in polling for record set %s", limit, createdID)
+			t.Error(err)
+		}
+	}
+}
+
+func TestRecordSetDeleteIntegration(t *testing.T) {
+	c := client()
+	zs, err := c.Zones()
+	if err != nil {
+		t.Error(err)
+	}
+	z := zs[0].ID
+
+	rs, err := c.RecordSets(z)
+	if err != nil {
+		t.Error(err)
+	}
+	r := rs[0].ID
+
+	_, err = c.RecordSetDelete(z, r)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func TestZoneDeleteIntegration(t *testing.T) {
 	c := client()
 	zs, err := c.Zones()
