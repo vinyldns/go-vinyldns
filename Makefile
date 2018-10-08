@@ -1,7 +1,8 @@
 VERSION=0.8.0
 SOURCE?=./...
+VINYLDNS_REPO=github.com/vinyldns/vinyldns
 
-all: deps test install
+all: deps test start-api integration stop-api install
 
 deps:
 	@go tool cover 2>/dev/null; if [ $$? -eq 3 ]; then \
@@ -13,6 +14,19 @@ deps:
 test:
 	go vet $(SOURCE)
 	go test $(SOURCE) -cover
+
+integration:
+	go test $(SOURCE) -tags=integration
+
+start-api:
+	if [ ! -d "$(GOPATH)/src/$(VINYLDNS_REPO)" ]; then \
+		echo "$(VINYLDNS_REPO) not found in your GOPATH (necessary for acceptance tests), getting..."; \
+		git clone https://$(VINYLDNS_REPO) $(GOPATH)/src/$(VINYLDNS_REPO); \
+	fi
+	$(GOPATH)/src/$(VINYLDNS_REPO)/bin/docker-up-vinyldns.sh
+
+stop-api:
+	./../vinyldns/bin/remove-vinyl-containers.sh
 
 cover:
 	go test $(SOURCE) -coverprofile=coverage.out
