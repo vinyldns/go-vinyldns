@@ -23,7 +23,7 @@ start-api:
 		echo "$(VINYLDNS_REPO) not found in your GOPATH (necessary for acceptance tests), getting..."; \
 		git clone https://$(VINYLDNS_REPO) $(GOPATH)/src/$(VINYLDNS_REPO); \
 	fi
-	$(GOPATH)/src/$(VINYLDNS_REPO)/bin/docker-up-api-server.sh
+	$(GOPATH)/src/$(VINYLDNS_REPO)/bin/docker-up-vinyldns.sh
 
 stop-api:
 	./../vinyldns/bin/remove-vinyl-containers.sh
