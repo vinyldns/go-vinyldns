@@ -132,7 +132,7 @@ func TestRecordSetCreateIntegration(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	rc, err := c.RecordSetCreate(zs[0].ID, &RecordSet{
+	rc, err := c.RecordSetCreate(&RecordSet{
 		Name:   "integration-test",
 		ZoneID: zs[0].ID,
 		Type:   "A",

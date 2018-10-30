@@ -207,7 +207,8 @@ func (c *Client) RecordSet(zoneID, recordSetID string) (RecordSet, error) {
 }
 
 // RecordSetCreate creates the RecordSet it's passed in the Zone whose ID it's passed.
-func (c *Client) RecordSetCreate(zoneID string, rs *RecordSet) (*RecordSetUpdateResponse, error) {
+func (c *Client) RecordSetCreate(rs *RecordSet) (*RecordSetUpdateResponse, error) {
+	zoneID := rs.ZoneID
 	rsJSON, err := json.Marshal(rs)
 	if err != nil {
 		return nil, err
