@@ -11,6 +11,9 @@ deps:
 	go get -u github.com/golang/dep/cmd/dep
 	dep ensure
 
+fmt:
+	gofmt -s -w vinyldns
+
 test:
 	go vet $(SOURCE)
 	go test $(SOURCE) -cover

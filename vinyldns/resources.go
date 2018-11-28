@@ -158,7 +158,7 @@ type RecordSetUpdateResponse struct {
 type Record struct {
 	Address     string `json:"address,omitempty"`
 	CName       string `json:"cname,omitempty"`
-	Preference  int `json:"preference,omitempty"`
+	Preference  int    `json:"preference,omitempty"`
 	Exchange    string `json:"exchange,omitempty"`
 	NSDName     string `json:"nsdname,omitempty"`
 	PTRDName    string `json:"ptrdname,omitempty"`

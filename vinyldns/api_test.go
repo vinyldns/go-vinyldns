@@ -439,7 +439,7 @@ func TestRecordSetCreate(t *testing.T) {
 		Name:   "name",
 		Type:   "CNAME",
 		TTL:    200,
-		Records: []Record{Record{
+		Records: []Record{{
 			CName: "cname",
 		}},
 	}
@@ -472,7 +472,7 @@ func TestRecordSetUpdate(t *testing.T) {
 		Name:   "name",
 		Type:   "CNAME",
 		TTL:    200,
-		Records: []Record{Record{
+		Records: []Record{{
 			CName: "cname",
 		}},
 	}

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/vinyldns/go-vinyldns.svg?branch=master)](https://travis-ci.org/vinyldns/go-vinyldns)
+[![Build Status](https://travis-ci.org/vinyldns/go-vinyldns.svg?branch=master)](https://travis-ci.org/vinyldns/go-vinyldns) [![Go Report Card](https://goreportcard.com/badge/github.com/vinyldns/go-vinyldns)](https://goreportcard.com/report/github.com/vinyldns/go-vinyldns)
 
 # vinyldns
 
