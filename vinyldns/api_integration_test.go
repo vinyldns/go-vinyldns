@@ -33,7 +33,7 @@ func client() *Client {
 func TestGroupCreateIntegration(t *testing.T) {
 	c := client()
 	users := []User{
-		User{
+		{
 			UserName:  "ok",
 			FirstName: "ok",
 			LastName:  "ok",
@@ -138,7 +138,7 @@ func TestRecordSetCreateIntegration(t *testing.T) {
 		Type:   "A",
 		TTL:    60,
 		Records: []Record{
-			Record{
+			{
 				Address: "127.0.0.1",
 			},
 		},
