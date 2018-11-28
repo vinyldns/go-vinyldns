@@ -20,7 +20,7 @@ import (
 	"time"
 )
 
-// client() assumes a VinylDNS is running on localhost:9000 witht he default access and secret keys
+// client() assumes a VinylDNS is running on localhost:9000 with the default access and secret keys
 // see `make start-api` for a Make task in starting VinylDNS
 func client() *Client {
 	return NewClient(ClientConfiguration{
