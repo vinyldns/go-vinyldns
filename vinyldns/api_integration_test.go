@@ -179,7 +179,7 @@ func TestRecordSetCreateIntegrationNSRecord(t *testing.T) {
 		TTL:    60,
 		Records: []Record{
 			{
-				NSDName: "foo",
+				NSDName: "ns1.parent.com.",
 			},
 		},
 	})
