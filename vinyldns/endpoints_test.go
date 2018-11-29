@@ -65,11 +65,17 @@ func TestRecordSetsEp(t *testing.T) {
 	if rs != expected {
 		fmt.Printf("Expected: %s", expected)
 		fmt.Printf("Actual: %s", rs)
-		t.Error("zoneHistoryEP should return the right endpoint")
+		t.Error("recordSetsEp should return the right endpoint")
 	}
 
 	rs = recordSetsEp(c, "543", "nextplease", 0)
 	expected = "http://host.com/zones/543/recordsets?startFrom=nextplease"
+
+	if rs != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", rs)
+		t.Error("recordSetsEp should return the right endpoint")
+	}
 
 	rs = recordSetsEp(c, "7", "nextplease", 99)
 	expected = "http://host.com/zones/7/recordsets?startFrom=nextplease?limit=99"
@@ -77,7 +83,7 @@ func TestRecordSetsEp(t *testing.T) {
 	if rs != expected {
 		fmt.Printf("Expected: %s", expected)
 		fmt.Printf("Actual: %s", rs)
-		t.Error("zoneHistoryEP should return the right endpoint")
+		t.Error("recordSetsEp should return the right endpoint")
 	}
 }
 
