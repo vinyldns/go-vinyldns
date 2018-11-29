@@ -365,7 +365,7 @@ func TestRecordSetCollector(t *testing.T) {
 		t.Error(err)
 	}
 
-	rs, err := collector()
+	rs, _ := collector()
 	if len(rs) != 2 {
 		t.Log(pretty.PrettyFormat(rs))
 		t.Error("Expected 2 Record Sets, got ", len(rs))
@@ -382,7 +382,7 @@ func TestRecordSetCollector(t *testing.T) {
 		t.Error(err)
 	}
 
-	rs, err = collector()
+	rs, _ = collector()
 	if len(rs) != 1 {
 		t.Log(pretty.PrettyFormat(rs))
 		t.Error("Expected 1 Record Sets, got ", len(rs))
