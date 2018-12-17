@@ -239,14 +239,10 @@ func TestZoneHistoryIntegration(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	z := zs[0].ID
+	z := zs[1].ID
 
-	zh, err := c.ZoneHistory(z)
+	_, err = c.ZoneHistory(z)
 	if err != nil {
-		t.Error(err)
-	}
-
-	if zh.ZoneID != z {
 		t.Error(err)
 	}
 }
