@@ -267,6 +267,24 @@ func TestZoneDeleteIntegration(t *testing.T) {
 	}
 }
 
+func TestZoneHistoryIntegration(t *testing.T) {
+	c := client()
+	zs, err := c.Zones()
+	if err != nil {
+		t.Error(err)
+	}
+	z := zs[0].ID
+
+	zh, err = c.ZoneHistory(z)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if zh.ZoneID != z {
+		t.Error(err)
+	}
+}
+
 func TestGroupDeleteIntegration(t *testing.T) {
 	c := client()
 	gs, err := c.Groups()
