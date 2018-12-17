@@ -233,6 +233,24 @@ func TestRecordSetDeleteIntegration(t *testing.T) {
 	}
 }
 
+func TestZoneHistoryIntegration(t *testing.T) {
+	c := client()
+	zs, err := c.Zones()
+	if err != nil {
+		t.Error(err)
+	}
+	z := zs[0].ID
+
+	zh, err := c.ZoneHistory(z)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if zh.ZoneID != z {
+		t.Error(err)
+	}
+}
+
 func TestZoneDeleteIntegration(t *testing.T) {
 	c := client()
 	zs, err := c.Zones()
@@ -264,24 +282,6 @@ func TestZoneDeleteIntegration(t *testing.T) {
 			fmt.Printf("%d retries reached in waiting for zone deletion of %s", limit, z)
 			t.Error(err)
 		}
-	}
-}
-
-func TestZoneHistoryIntegration(t *testing.T) {
-	c := client()
-	zs, err := c.Zones()
-	if err != nil {
-		t.Error(err)
-	}
-	z := zs[0].ID
-
-	zh, err := c.ZoneHistory(z)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if zh.ZoneID != z {
-		t.Error(err)
 	}
 }
 
