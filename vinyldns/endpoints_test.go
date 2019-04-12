@@ -36,6 +36,21 @@ func TestZonesEP(t *testing.T) {
 	}
 }
 
+func TestZonesSearchEP(t *testing.T) {
+	zones := zonesSearchEP(c, ListFilter{
+		NameFilter: "foo",
+		MaxItems:   2,
+		StartFrom:  "123",
+	})
+	expected := "http://host.com/zones?nameFilter=foo&maxItems=2&startFrom=123"
+
+	if zones != expected {
+		fmt.Printf("\nExpected: %s", expected)
+		fmt.Printf("\nActual: %s", zones)
+		t.Error("zonesSearchEP should return the right endpoint")
+	}
+}
+
 func TestZoneEP(t *testing.T) {
 	zone := zoneEP(c, "123")
 	expected := "http://host.com/zones/123"
