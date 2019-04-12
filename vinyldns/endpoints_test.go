@@ -42,7 +42,31 @@ func TestZonesListEP(t *testing.T) {
 		MaxItems:   2,
 		StartFrom:  "123",
 	})
-	expected := "http://host.com/zones?nameFilter=foo&maxItems=2&startFrom=123"
+	expected := "http://host.com/zones?nameFilter=foo&startFrom=123&maxItems=2"
+
+	if zones != expected {
+		fmt.Printf("\nExpected: %s", expected)
+		fmt.Printf("\nActual: %s", zones)
+		t.Error("zonesListEP should return the right endpoint")
+	}
+}
+
+func TestZonesListEPWithoutAllFilterParams(t *testing.T) {
+	zones := zonesListEP(c, ListFilter{
+		NameFilter: "foo",
+	})
+	expected := "http://host.com/zones?nameFilter=foo"
+
+	if zones != expected {
+		fmt.Printf("\nExpected: %s", expected)
+		fmt.Printf("\nActual: %s", zones)
+		t.Error("zonesListEP should return the right endpoint")
+	}
+}
+
+func TestZonesListEPWithoutAnyFilterParams(t *testing.T) {
+	zones := zonesListEP(c, ListFilter{})
+	expected := "http://host.com/zones"
 
 	if zones != expected {
 		fmt.Printf("\nExpected: %s", expected)
