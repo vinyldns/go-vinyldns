@@ -107,7 +107,10 @@ type ZoneUpdateResponse struct {
 
 // Zones is a slice of zones
 type Zones struct {
-	Zones []Zone `json:"zones"`
+	Zones     []Zone `json:"zones"`
+	StartFrom string `json:"startFrom"`
+	MaxItems  int    `json:"maxItems"`
+	NextID    string `json:"nexItems"`
 }
 
 // ZoneHistory represents the zone history
