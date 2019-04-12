@@ -29,6 +29,17 @@ func (c *Client) Zones() ([]Zone, error) {
 	return zones.Zones, nil
 }
 
+// ZonesList retrieves the list of zones with the List criteria passed.
+func (c *Client) ZonesList(filter ListFilter) (*Zones, error) {
+	zones := &Zones{}
+	err := resourceRequest(c, zonesListEP(c, filter), "GET", nil, zones)
+	if err != nil {
+		return zones, err
+	}
+
+	return zones, nil
+}
+
 // Zone retrieves the Zone whose ID it's passed.
 func (c *Client) Zone(id string) (Zone, error) {
 	zone := &ZoneResponse{}
