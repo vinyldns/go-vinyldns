@@ -22,7 +22,7 @@ func zonesEP(c *Client) string {
 	return concatStrs("", c.Host, "/zones")
 }
 
-func zonesSearchEP(c *Client, f ListFilter) string {
+func zonesListEP(c *Client, f ListFilter) string {
 	nameFilter := ""
 	maxItems := "maxItems=100"
 	startFrom := ""

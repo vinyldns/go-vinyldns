@@ -36,8 +36,8 @@ func TestZonesEP(t *testing.T) {
 	}
 }
 
-func TestZonesSearchEP(t *testing.T) {
-	zones := zonesSearchEP(c, ListFilter{
+func TestZonesListEP(t *testing.T) {
+	zones := zonesListEP(c, ListFilter{
 		NameFilter: "foo",
 		MaxItems:   2,
 		StartFrom:  "123",
@@ -47,7 +47,7 @@ func TestZonesSearchEP(t *testing.T) {
 	if zones != expected {
 		fmt.Printf("\nExpected: %s", expected)
 		fmt.Printf("\nActual: %s", zones)
-		t.Error("zonesSearchEP should return the right endpoint")
+		t.Error("zonesListEP should return the right endpoint")
 	}
 }
 
