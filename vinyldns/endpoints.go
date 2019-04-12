@@ -23,29 +23,26 @@ func zonesEP(c *Client) string {
 }
 
 func zonesListEP(c *Client, f ListFilter) string {
-	nameFilter := ""
-	maxItems := "maxItems=100"
-	startFrom := ""
+	params := []string{}
+	query := "?"
 
 	if f.NameFilter != "" {
-		nameFilter = fmt.Sprintf("nameFilter=%s", f.NameFilter)
-	}
-
-	if f.MaxItems != 0 {
-		maxItems = fmt.Sprintf("maxItems=%d", f.MaxItems)
+		params = append(params, fmt.Sprintf("nameFilter=%s", f.NameFilter))
 	}
 
 	if f.StartFrom != "" {
-		startFrom = fmt.Sprintf("startFrom=%s", f.StartFrom)
+		params = append(params, fmt.Sprintf("startFrom=%s", f.StartFrom))
 	}
 
-	params := concatStrs("", strings.Join([]string{
-		nameFilter,
-		maxItems,
-		startFrom,
-	}, "&"))
+	if f.MaxItems != 0 {
+		params = append(params, fmt.Sprintf("maxItems=%d", f.MaxItems))
+	}
 
-	return concatStrs("", zonesEP(c), "?", params)
+	if len(params) == 0 {
+		query = ""
+	}
+
+	return concatStrs("", zonesEP(c), query, strings.Join(params, "&"))
 }
 
 func zoneEP(c *Client, id string) string {
