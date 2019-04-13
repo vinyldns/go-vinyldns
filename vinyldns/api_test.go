@@ -89,6 +89,36 @@ func TestZones(t *testing.T) {
 	}
 }
 
+func TestZonesCollector(t *testing.T) {
+	server, client := testTools(200, zonesJSON)
+	defer server.Close()
+
+	if _, err := client.ZonesCollector(ListFilter{
+		MaxItems: 200,
+	}); err == nil {
+		t.Error("Expected error -- MaxItems must be between 1 and 100")
+	}
+
+	collector, err := client.ZonesCollector(ListFilter{
+		MaxItems: 2,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	zs, _ := collector()
+	if len(zs) != 2 {
+		t.Log(pretty.PrettyFormat(zs))
+		t.Error("Expected 2 Zones; got ", len(zs))
+	}
+
+	for _, z := range zs {
+		if z.ID == "" {
+			t.Error("Expected Zone.ID to have a value")
+		}
+	}
+}
+
 func TestZone(t *testing.T) {
 	server, client := testTools("/zones/123", 200, zoneJSON)
 	defer server.Close()

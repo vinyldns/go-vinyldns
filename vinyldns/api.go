@@ -40,6 +40,40 @@ func (c *Client) ZonesList(filter ListFilter) (*Zones, error) {
 	return zones, nil
 }
 
+// ZonesCollector creates a function to retrieve the next set of zones from the zones list endpoint.
+// To retrieve *all* zones, call the returned function repeatedly until err == // io.EOF
+func (c *Client) ZonesCollector(filter ListFilter) (func() ([]Zone, error), error) {
+	if filter.MaxItems > 100 {
+		return nil, fmt.Errorf("MaxItems must be between 1 and 100")
+	}
+
+	var zones []Zone
+	var err error
+
+	return func() ([]Zone, error) {
+		if err != nil {
+			return nil, err
+		}
+
+		for {
+			resp, err := c.ZonesList(filter)
+			if err != nil {
+				return nil, err
+			}
+			zones = append(zones, resp.Zones...)
+
+			filter.StartFrom = resp.NextID
+			if len(filter.StartFrom) == 0 {
+				// keep from trying to get more records
+				err = io.EOF
+				break
+			}
+		}
+
+		return zones, err
+	}, nil
+}
+
 // Zone retrieves the Zone whose ID it's passed.
 func (c *Client) Zone(id string) (Zone, error) {
 	zone := &ZoneResponse{}
@@ -157,6 +191,7 @@ func (c *Client) RecordSetCollector(zoneID string, limit int) (func() ([]RecordS
 		if err != nil {
 			return nil, err
 		}
+
 		for {
 			rss := &RecordSetsResponse{}
 			err = resourceRequest(c, recordSetsEP(c, zoneID, nextID, limit), "GET", nil, rss)
@@ -169,6 +204,7 @@ func (c *Client) RecordSetCollector(zoneID string, limit int) (func() ([]RecordS
 			if len(nextID) == 0 {
 				// keep from trying to get more records
 				err = io.EOF
+
 				break
 			}
 		}
