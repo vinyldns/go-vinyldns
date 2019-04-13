@@ -26,7 +26,7 @@ func zoneHistoryEP(c *Client, id string) string {
 	return concatStrs("", zoneEP(c, id), "/history")
 }
 
-func recordSetsEp(c *Client, id string, startFrom string, limit int) string {
+func recordSetsEP(c *Client, id string, startFrom string, limit int) string {
 	ep := concatStrs("", zoneEP(c, id), "/recordsets")
 	if len(startFrom) != 0 {
 		ep += "?startFrom=" + startFrom
@@ -38,7 +38,7 @@ func recordSetsEp(c *Client, id string, startFrom string, limit int) string {
 }
 
 func recordSetEP(c *Client, zoneID, recordSetID string) string {
-	return concatStrs("", recordSetsEp(c, zoneID, "", 0), "/", recordSetID)
+	return concatStrs("", recordSetsEP(c, zoneID, "", 0), "/", recordSetID)
 }
 
 func recordSetChangeEP(c *Client, zoneID, recordSetID, changeID string) string {

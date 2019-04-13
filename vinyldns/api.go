@@ -148,7 +148,7 @@ func (c *Client) RecordSetCollector(zoneID string, limit int) (func() ([]RecordS
 		}
 		for {
 			rss := &RecordSetsResponse{}
-			err = resourceRequest(c, recordSetsEp(c, zoneID, nextID, limit), "GET", nil, rss)
+			err = resourceRequest(c, recordSetsEP(c, zoneID, nextID, limit), "GET", nil, rss)
 			if err != nil {
 				return nil, err
 			}
@@ -213,7 +213,7 @@ func (c *Client) RecordSetCreate(zoneID string, rs *RecordSet) (*RecordSetUpdate
 		return nil, err
 	}
 	var resource = &RecordSetUpdateResponse{}
-	err = resourceRequest(c, recordSetsEp(c, zoneID, "", 0), "POST", rsJSON, resource)
+	err = resourceRequest(c, recordSetsEP(c, zoneID, "", 0), "POST", rsJSON, resource)
 	if err != nil {
 		return &RecordSetUpdateResponse{}, err
 	}
