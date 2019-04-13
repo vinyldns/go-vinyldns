@@ -112,7 +112,7 @@ const (
 		}
 	}`
 
-	zoneUpdateResponseJson = `{
+	zoneUpdateResponseJSON = `{
 		"zone": {
 			"name": "test.",
 			"email": "paul_cleary@foo.com",
@@ -128,7 +128,7 @@ const (
 		"id": "ccf116b8-f72b-4507-b042-3c6cc64c58fd"
 	}`
 
-	zoneHistoryJson = `{
+	zoneHistoryJSON = `{
 		"zoneId": "123",
 		"zoneChanges": [
 			{
@@ -212,7 +212,7 @@ const (
 		]
 	}`
 
-	recordSetsJson = `{
+	recordSetsJSON = `{
 		"recordSets": [{
       "id": "6eb42765-818b-4966-89e8-1a34720c82a2",
       "zoneId": "2d9f4ec0-0596-4040-a953-d14e2cca8982",
@@ -247,7 +247,7 @@ const (
     }
   ]}`
 
-	recordSetUpdateResponseJson = `{
+	recordSetUpdateResponseJSON = `{
 		"zone": {
 			"name": "vinyldnstest.sys.vinyldns.net.",
 			"email": "paul_cleary@foo.com",
@@ -293,7 +293,7 @@ const (
 		"id": "b3d4e0a9-a081-4adc-9a95-3ec2e7d26635"
 	}`
 
-	recordSetJson = `{
+	recordSetJSON = `{
 		"recordSet":{
 			"id":"123",
 			"zoneId":"456",
@@ -309,7 +309,7 @@ const (
 			"account":"vinyldns"
 	}}`
 
-	recordSetChangeJson = `{
+	recordSetChangeJSON = `{
 		"zone": {
 			"name": "vinyldnstest.sys.vinyldns.net.",
 			"email": "paul_cleary@foo.com",
@@ -355,7 +355,7 @@ const (
 		"id": "b3d4e0a9-a081-4adc-9a95-3ec2e7d26635"
 	}`
 
-	groupsJson = `{
+	groupsJSON = `{
 		"maxItems": 100,
 		"groups": [
 			{
@@ -395,7 +395,7 @@ const (
 		]
 	}`
 
-	groupJson = `{
+	groupJSON = `{
 		"id":"3094e07b-3b82-4fff-ac9d-f60dff223c2c",
 		"name":"test-group",
 		"email":"test@test.com",

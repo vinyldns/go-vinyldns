@@ -161,7 +161,7 @@ func TestZone(t *testing.T) {
 }
 
 func TestZoneCreate(t *testing.T) {
-	server, client := testTools(200, zoneUpdateResponseJson)
+	server, client := testTools(200, zoneUpdateResponseJSON)
 	defer server.Close()
 
 	zone := &Zone{
@@ -190,7 +190,7 @@ func TestZoneCreate(t *testing.T) {
 }
 
 func TestZoneUpdate(t *testing.T) {
-	server, client := testTools(200, zoneUpdateResponseJson)
+	server, client := testTools(200, zoneUpdateResponseJSON)
 	defer server.Close()
 
 	zone := &Zone{
@@ -219,7 +219,7 @@ func TestZoneUpdate(t *testing.T) {
 }
 
 func TestZoneDelete(t *testing.T) {
-	server, client := testTools(200, zoneUpdateResponseJson)
+	server, client := testTools(200, zoneUpdateResponseJSON)
 	defer server.Close()
 
 	z, err := client.ZoneDelete("123")
@@ -236,7 +236,7 @@ func TestZoneDelete(t *testing.T) {
 }
 
 func TestZoneExists_yes(t *testing.T) {
-	yes, client := testTools(200, zoneUpdateResponseJson)
+	yes, client := testTools(200, zoneUpdateResponseJSON)
 	defer yes.Close()
 
 	z, err := client.ZoneExists("123")
@@ -250,7 +250,7 @@ func TestZoneExists_yes(t *testing.T) {
 }
 
 func TestZoneExists_no(t *testing.T) {
-	no, client := testTools(404, zoneUpdateResponseJson)
+	no, client := testTools(404, zoneUpdateResponseJSON)
 	defer no.Close()
 
 	z, err := client.ZoneExists("123")
@@ -264,7 +264,7 @@ func TestZoneExists_no(t *testing.T) {
 }
 
 func TestZoneHistory(t *testing.T) {
-	server, client := testTools(200, zoneHistoryJson)
+	server, client := testTools(200, zoneHistoryJSON)
 	defer server.Close()
 
 	z, err := client.ZoneHistory("123")
@@ -319,7 +319,7 @@ func TestZoneHistory(t *testing.T) {
 }
 
 func TestZoneChange(t *testing.T) {
-	server, client := testTools(200, zoneHistoryJson)
+	server, client := testTools(200, zoneHistoryJSON)
 	defer server.Close()
 
 	z, err := client.ZoneChange("123", "change123")
@@ -333,7 +333,7 @@ func TestZoneChange(t *testing.T) {
 }
 
 func TestRecordSets(t *testing.T) {
-	server, client := testTools(200, recordSetsJson)
+	server, client := testTools(200, recordSetsJSON)
 	defer server.Close()
 
 	rs, err := client.RecordSets("123")
@@ -352,7 +352,7 @@ func TestRecordSets(t *testing.T) {
 }
 
 func TestRecordSetCollector(t *testing.T) {
-	server, client := testTools(200, recordSetsJson)
+	server, client := testTools(200, recordSetsJSON)
 	defer server.Close()
 
 	if _, err := client.RecordSetCollector("123", 999); err == nil {
@@ -390,7 +390,7 @@ func TestRecordSetCollector(t *testing.T) {
 }
 
 func TestRecordSet(t *testing.T) {
-	server, client := testTools(200, recordSetJson)
+	server, client := testTools(200, recordSetJSON)
 	defer server.Close()
 
 	rs, err := client.RecordSet("123", "456")
@@ -431,7 +431,7 @@ func TestRecordSet(t *testing.T) {
 }
 
 func TestRecordSetCreate(t *testing.T) {
-	server, client := testTools(202, recordSetUpdateResponseJson)
+	server, client := testTools(202, recordSetUpdateResponseJSON)
 	defer server.Close()
 
 	rs := &RecordSet{
@@ -464,7 +464,7 @@ func TestRecordSetCreate(t *testing.T) {
 }
 
 func TestRecordSetUpdate(t *testing.T) {
-	server, client := testTools(202, recordSetUpdateResponseJson)
+	server, client := testTools(202, recordSetUpdateResponseJSON)
 	defer server.Close()
 
 	rs := &RecordSet{
@@ -497,7 +497,7 @@ func TestRecordSetUpdate(t *testing.T) {
 }
 
 func TestRecordSetDelete(t *testing.T) {
-	server, client := testTools(202, recordSetUpdateResponseJson)
+	server, client := testTools(202, recordSetUpdateResponseJSON)
 	defer server.Close()
 
 	r, err := client.RecordSetDelete("123", "456")
@@ -520,7 +520,7 @@ func TestRecordSetDelete(t *testing.T) {
 }
 
 func TestRecordSetChange(t *testing.T) {
-	server, client := testTools(200, recordSetChangeJson)
+	server, client := testTools(200, recordSetChangeJSON)
 	defer server.Close()
 
 	rsc, err := client.RecordSetChange("123", "456", "789")
@@ -534,7 +534,7 @@ func TestRecordSetChange(t *testing.T) {
 }
 
 func TestGroupCreate(t *testing.T) {
-	server, client := testTools(200, groupJson)
+	server, client := testTools(200, groupJSON)
 	defer server.Close()
 
 	group := &Group{
@@ -560,7 +560,7 @@ func TestGroupCreate(t *testing.T) {
 }
 
 func TestGroupUpdate(t *testing.T) {
-	server, client := testTools(200, groupJson)
+	server, client := testTools(200, groupJSON)
 	defer server.Close()
 
 	group := &Group{
@@ -587,7 +587,7 @@ func TestGroupUpdate(t *testing.T) {
 }
 
 func TestGroupDelete(t *testing.T) {
-	server, client := testTools(200, groupJson)
+	server, client := testTools(200, groupJSON)
 	defer server.Close()
 
 	g, err := client.GroupDelete("123")
@@ -607,7 +607,7 @@ func TestGroupDelete(t *testing.T) {
 }
 
 func TestGroups(t *testing.T) {
-	server, client := testTools(200, groupsJson)
+	server, client := testTools(200, groupsJSON)
 	defer server.Close()
 
 	groups, err := client.Groups()
@@ -638,7 +638,7 @@ func TestGroups(t *testing.T) {
 }
 
 func TestGroup(t *testing.T) {
-	server, client := testTools(200, groupJson)
+	server, client := testTools(200, groupJSON)
 	defer server.Close()
 
 	g, err := client.Group("123")
