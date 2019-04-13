@@ -3,19 +3,26 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:766bf25377bc2a5bd7b7b2bbe3a490200be68cc325c63db9f338316357086f2f"
   name = "github.com/gobs/pretty"
   packages = ["."]
+  pruneopts = "UT"
   revision = "09732c25a95b8e10e85177a3201cf4c7fe35a377"
 
 [[projects]]
+  digest = "1:05ad719dddba9f454a7e1426a03eec6d35a483b3a4d3c2626bf153ba20301610"
   name = "github.com/smartystreets/go-aws-auth"
   packages = ["."]
+  pruneopts = "UT"
   revision = "8ef1316913ee4f44bc48c2456e44a5c1c68ea53b"
   version = "1.0.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "05cbcb3b39ff02dd8031d164883679b15b435463c1ce5ac203a0a415bb429883"
+  input-imports = [
+    "github.com/gobs/pretty",
+    "github.com/smartystreets/go-aws-auth",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
