@@ -24,15 +24,18 @@ import (
 )
 
 func testTools(endpoint string, code int, body string) (*httptest.Server, *Client) {
+	host := "http://host.com"
+
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch r.URL.Path {
-		case endpoint:
+		uriStr := host + endpoint
+		switch r.RequestURI {
+		case uriStr:
 			w.WriteHeader(code)
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprintf(w, body)
 		default:
-			fmt.Println(r.URL.Path)
-			fmt.Println(endpoint)
+			fmt.Printf("Requested: %s\n", r.RequestURI)
+			fmt.Printf("Expected: %s\n", uriStr)
 			http.Error(w, "not found", http.StatusNotFound)
 			return
 		}
@@ -48,7 +51,7 @@ func testTools(endpoint string, code int, body string) (*httptest.Server, *Clien
 	client := &Client{
 		"accessToken",
 		"secretToken",
-		"http://host.com",
+		host,
 		&http.Client{Transport: tr},
 	}
 
@@ -90,7 +93,7 @@ func TestZones(t *testing.T) {
 }
 
 func TestZonesCollector(t *testing.T) {
-	server, client := testTools("/zones", 200, zonesJSON)
+	server, client := testTools("/zones?maxItems=2", 200, zonesJSON)
 	defer server.Close()
 
 	if _, err := client.ZonesCollector(ListFilter{
@@ -390,7 +393,7 @@ func TestRecordSets(t *testing.T) {
 }
 
 func TestRecordSetCollector(t *testing.T) {
-	server, client := testTools("/zones/123/recordsets", 200, recordSetsJSON)
+	server, client := testTools("/zones/123/recordsets?limit=3", 200, recordSetsJSON)
 	defer server.Close()
 
 	if _, err := client.RecordSetCollector("123", 999); err == nil {
