@@ -23,11 +23,19 @@ import (
 	"github.com/gobs/pretty"
 )
 
-func testTools(code int, body string) (*httptest.Server, *Client) {
+func testTools(endpoint string, code int, body string) (*httptest.Server, *Client) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(code)
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, body)
+		switch r.URL.Path {
+		case endpoint:
+			w.WriteHeader(code)
+			w.Header().Set("Content-Type", "application/json")
+			fmt.Fprintf(w, body)
+		default:
+			fmt.Println(r.URL.Path)
+			fmt.Println(endpoint)
+			http.Error(w, "not found", http.StatusNotFound)
+			return
+		}
 	}))
 
 	tr := &http.Transport{
@@ -48,7 +56,7 @@ func testTools(code int, body string) (*httptest.Server, *Client) {
 }
 
 func TestZones(t *testing.T) {
-	server, client := testTools(202, zonesJSON)
+	server, client := testTools("/zones", 202, zonesJSON)
 	defer server.Close()
 
 	zones, err := client.Zones()
@@ -82,7 +90,7 @@ func TestZones(t *testing.T) {
 }
 
 func TestZone(t *testing.T) {
-	server, client := testTools(200, zoneJSON)
+	server, client := testTools("/zones/123", 200, zoneJSON)
 	defer server.Close()
 
 	z, err := client.Zone("123")
@@ -161,7 +169,7 @@ func TestZone(t *testing.T) {
 }
 
 func TestZoneCreate(t *testing.T) {
-	server, client := testTools(200, zoneUpdateResponseJSON)
+	server, client := testTools("/zones", 200, zoneUpdateResponseJSON)
 	defer server.Close()
 
 	zone := &Zone{
@@ -190,7 +198,7 @@ func TestZoneCreate(t *testing.T) {
 }
 
 func TestZoneUpdate(t *testing.T) {
-	server, client := testTools(200, zoneUpdateResponseJSON)
+	server, client := testTools("/zones/123", 200, zoneUpdateResponseJSON)
 	defer server.Close()
 
 	zone := &Zone{
@@ -219,7 +227,7 @@ func TestZoneUpdate(t *testing.T) {
 }
 
 func TestZoneDelete(t *testing.T) {
-	server, client := testTools(200, zoneUpdateResponseJSON)
+	server, client := testTools("/zones/123", 200, zoneUpdateResponseJSON)
 	defer server.Close()
 
 	z, err := client.ZoneDelete("123")
@@ -236,7 +244,7 @@ func TestZoneDelete(t *testing.T) {
 }
 
 func TestZoneExists_yes(t *testing.T) {
-	yes, client := testTools(200, zoneUpdateResponseJSON)
+	yes, client := testTools("/zones/123", 200, zoneUpdateResponseJSON)
 	defer yes.Close()
 
 	z, err := client.ZoneExists("123")
@@ -250,7 +258,7 @@ func TestZoneExists_yes(t *testing.T) {
 }
 
 func TestZoneExists_no(t *testing.T) {
-	no, client := testTools(404, zoneUpdateResponseJSON)
+	no, client := testTools("/zones/123", 404, zoneUpdateResponseJSON)
 	defer no.Close()
 
 	z, err := client.ZoneExists("123")
@@ -264,7 +272,7 @@ func TestZoneExists_no(t *testing.T) {
 }
 
 func TestZoneHistory(t *testing.T) {
-	server, client := testTools(200, zoneHistoryJSON)
+	server, client := testTools("/zones/123/history", 200, zoneHistoryJSON)
 	defer server.Close()
 
 	z, err := client.ZoneHistory("123")
@@ -319,7 +327,7 @@ func TestZoneHistory(t *testing.T) {
 }
 
 func TestZoneChange(t *testing.T) {
-	server, client := testTools(200, zoneHistoryJSON)
+	server, client := testTools("/zones/123/history", 200, zoneHistoryJSON)
 	defer server.Close()
 
 	z, err := client.ZoneChange("123", "change123")
@@ -333,7 +341,7 @@ func TestZoneChange(t *testing.T) {
 }
 
 func TestRecordSets(t *testing.T) {
-	server, client := testTools(200, recordSetsJSON)
+	server, client := testTools("/zones/123/recordsets", 200, recordSetsJSON)
 	defer server.Close()
 
 	rs, err := client.RecordSets("123")
@@ -352,7 +360,7 @@ func TestRecordSets(t *testing.T) {
 }
 
 func TestRecordSetCollector(t *testing.T) {
-	server, client := testTools(200, recordSetsJSON)
+	server, client := testTools("/zones/123/recordsets", 200, recordSetsJSON)
 	defer server.Close()
 
 	if _, err := client.RecordSetCollector("123", 999); err == nil {
@@ -390,7 +398,7 @@ func TestRecordSetCollector(t *testing.T) {
 }
 
 func TestRecordSet(t *testing.T) {
-	server, client := testTools(200, recordSetJSON)
+	server, client := testTools("/zones/123/recordsets/456", 200, recordSetJSON)
 	defer server.Close()
 
 	rs, err := client.RecordSet("123", "456")
@@ -431,7 +439,7 @@ func TestRecordSet(t *testing.T) {
 }
 
 func TestRecordSetCreate(t *testing.T) {
-	server, client := testTools(202, recordSetUpdateResponseJSON)
+	server, client := testTools("/zones/123/recordsets", 202, recordSetUpdateResponseJSON)
 	defer server.Close()
 
 	rs := &RecordSet{
@@ -464,7 +472,7 @@ func TestRecordSetCreate(t *testing.T) {
 }
 
 func TestRecordSetUpdate(t *testing.T) {
-	server, client := testTools(202, recordSetUpdateResponseJSON)
+	server, client := testTools("/zones/123/recordsets/456", 202, recordSetUpdateResponseJSON)
 	defer server.Close()
 
 	rs := &RecordSet{
@@ -497,7 +505,7 @@ func TestRecordSetUpdate(t *testing.T) {
 }
 
 func TestRecordSetDelete(t *testing.T) {
-	server, client := testTools(202, recordSetUpdateResponseJSON)
+	server, client := testTools("/zones/123/recordsets/456", 202, recordSetUpdateResponseJSON)
 	defer server.Close()
 
 	r, err := client.RecordSetDelete("123", "456")
@@ -520,7 +528,7 @@ func TestRecordSetDelete(t *testing.T) {
 }
 
 func TestRecordSetChange(t *testing.T) {
-	server, client := testTools(200, recordSetChangeJSON)
+	server, client := testTools("/zones/123/recordsets/456/changes/789", 200, recordSetChangeJSON)
 	defer server.Close()
 
 	rsc, err := client.RecordSetChange("123", "456", "789")
@@ -534,7 +542,7 @@ func TestRecordSetChange(t *testing.T) {
 }
 
 func TestGroupCreate(t *testing.T) {
-	server, client := testTools(200, groupJSON)
+	server, client := testTools("/groups", 200, groupJSON)
 	defer server.Close()
 
 	group := &Group{
@@ -560,7 +568,7 @@ func TestGroupCreate(t *testing.T) {
 }
 
 func TestGroupUpdate(t *testing.T) {
-	server, client := testTools(200, groupJSON)
+	server, client := testTools("/groups/123", 200, groupJSON)
 	defer server.Close()
 
 	group := &Group{
@@ -587,7 +595,7 @@ func TestGroupUpdate(t *testing.T) {
 }
 
 func TestGroupDelete(t *testing.T) {
-	server, client := testTools(200, groupJSON)
+	server, client := testTools("/groups/123", 200, groupJSON)
 	defer server.Close()
 
 	g, err := client.GroupDelete("123")
@@ -607,7 +615,7 @@ func TestGroupDelete(t *testing.T) {
 }
 
 func TestGroups(t *testing.T) {
-	server, client := testTools(200, groupsJSON)
+	server, client := testTools("/groups", 200, groupsJSON)
 	defer server.Close()
 
 	groups, err := client.Groups()
@@ -638,7 +646,7 @@ func TestGroups(t *testing.T) {
 }
 
 func TestGroup(t *testing.T) {
-	server, client := testTools(200, groupJSON)
+	server, client := testTools("/groups/123", 200, groupJSON)
 	defer server.Close()
 
 	g, err := client.Group("123")
@@ -658,7 +666,7 @@ func TestGroup(t *testing.T) {
 }
 
 func TestGroupAdmins(t *testing.T) {
-	server, client := testTools(200, groupAdminsJSON)
+	server, client := testTools("/groups/123/admins", 200, groupAdminsJSON)
 	defer server.Close()
 
 	admins, err := client.GroupAdmins("123")
@@ -674,7 +682,7 @@ func TestGroupAdmins(t *testing.T) {
 }
 
 func TestGroupMembers(t *testing.T) {
-	server, client := testTools(200, groupMembersJSON)
+	server, client := testTools("/groups/123/members", 200, groupMembersJSON)
 	defer server.Close()
 
 	members, err := client.GroupMembers("123")
@@ -690,7 +698,7 @@ func TestGroupMembers(t *testing.T) {
 }
 
 func TestGroupActivity(t *testing.T) {
-	server, client := testTools(200, groupActivityJSON)
+	server, client := testTools("/groups/123/activity", 200, groupActivityJSON)
 	defer server.Close()
 
 	activity, err := client.GroupActivity("123")
@@ -715,7 +723,7 @@ func TestGroupActivity(t *testing.T) {
 }
 
 func TestBatchRecordChanges(t *testing.T) {
-	server, client := testTools(200, batchRecordChangesJSON)
+	server, client := testTools("/zones/batchrecordchanges", 200, batchRecordChangesJSON)
 	defer server.Close()
 
 	changes, err := client.BatchRecordChanges()
@@ -734,7 +742,7 @@ func TestBatchRecordChanges(t *testing.T) {
 }
 
 func TestBatchRecordChange(t *testing.T) {
-	server, client := testTools(200, batchRecordChangeJSON)
+	server, client := testTools("/zones/batchrecordchanges/123", 200, batchRecordChangeJSON)
 	defer server.Close()
 
 	change, err := client.BatchRecordChange("123")
@@ -753,7 +761,7 @@ func TestBatchRecordChange(t *testing.T) {
 }
 
 func TestBatchRecordChangeCreate(t *testing.T) {
-	server, client := testTools(200, batchRecordChangeCreateJSON)
+	server, client := testTools("/zones/batchrecordchanges", 200, batchRecordChangeCreateJSON)
 	defer server.Close()
 
 	change := &BatchRecordChange{}
