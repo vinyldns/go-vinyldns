@@ -90,7 +90,7 @@ func TestZones(t *testing.T) {
 }
 
 func TestZonesCollector(t *testing.T) {
-	server, client := testTools(200, zonesJSON)
+	server, client := testTools("/zones", 200, zonesJSON)
 	defer server.Close()
 
 	if _, err := client.ZonesCollector(ListFilter{
