@@ -128,7 +128,7 @@ func TestZoneCreateIntegration(t *testing.T) {
 
 func TestZonesListAllIntegrationFilterForNonexistentName(t *testing.T) {
 	c := client()
-	zones, err := c.ListAll(ListFilter{
+	zones, err := c.ZonesListAll(ListFilter{
 		NameFilter: "foo",
 	})
 	if err != nil {
