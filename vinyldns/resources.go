@@ -110,7 +110,7 @@ type Zones struct {
 	Zones     []Zone `json:"zones"`
 	StartFrom string `json:"startFrom"`
 	MaxItems  int    `json:"maxItems"`
-	NextID    string `json:"nexItems"`
+	NextID    string `json:"nextId"`
 }
 
 // ZoneHistory represents the zone history
