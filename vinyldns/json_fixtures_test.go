@@ -76,6 +76,76 @@ const (
 			}
 		}]}`
 
+	zonesListJSON1 = `{
+		"nextId": "2",
+		"maxItems": 1,
+		"zones": [{
+			"name": "vinyldns-one.",
+			"email": "some_user@foo.com",
+			"status": "Active",
+			"created": "2015-10-30T01:25:46Z",
+			"id": "1",
+			"connection": {
+				"name": "vinyldns.",
+				"keyName": "vinyldns.",
+				"key": "OBF:1:ABC+5",
+				"primaryServer": "127.0.0.1"
+			},
+			"transferConnection": {
+				"name": "vinyldns.",
+				"keyName": "vinyldns.",
+				"key": "OBF:1:ABC+5",
+				"primaryServer": "127.0.0.1"
+			},
+			"adminGroupId": "c314836d-17db-4a57-b849-eb1feffe0ae7",
+			"acl": {
+				"rules": [
+					{
+						"accessLevel": "Read",
+						"description": "test-acl-group-id",
+						"groupId": "123",
+						"recordMask": "www-*",
+						"recordTypes": ["A", "AAAA", "CNAME"]
+					}
+				]
+			}
+		}]}`
+
+	zonesListJSON2 = `{
+		"startFrom": "2",
+		"maxItems": 1,
+		"zones": [{
+			"name": "vinyldns-two.",
+			"email": "some_user@foo.com",
+			"status": "Active",
+			"created": "2015-10-30T01:25:46Z",
+			"id": "2",
+			"connection": {
+				"name": "vinyldns.",
+				"keyName": "vinyldns.",
+				"key": "OBF:1:ABC+5",
+				"primaryServer": "127.0.0.1"
+			},
+			"transferConnection": {
+				"name": "vinyldns.",
+				"keyName": "vinyldns.",
+				"key": "OBF:1:ABC+5",
+				"primaryServer": "127.0.0.1"
+			},
+			"adminGroupId": "c314836d-17db-4a57-b849-eb1feffe0ae7",
+			"acl": {
+				"rules": [
+					{
+						"accessLevel": "Read",
+						"description": "test-acl-group-id",
+						"groupId": "123",
+						"recordMask": "www-*",
+						"recordTypes": ["A", "AAAA", "CNAME"]
+					}
+				]
+			}
+		}]}`
+
 	zoneJSON = `{
 		"zone":{
 			"name":"vinyldns.",

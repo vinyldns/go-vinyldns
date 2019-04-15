@@ -29,49 +29,28 @@ func (c *Client) Zones() ([]Zone, error) {
 	return zones.Zones, nil
 }
 
-// ZonesList retrieves the list of zones with the List criteria passed.
-func (c *Client) ZonesList(filter ListFilter) (*Zones, error) {
-	zones := &Zones{}
-	err := resourceRequest(c, zonesListEP(c, filter), "GET", nil, zones)
-	if err != nil {
-		return zones, err
-	}
-
-	return zones, nil
-}
-
-// ZonesCollector creates a function to retrieve the next set of zones from the zones list endpoint.
-// To retrieve *all* zones, call the returned function repeatedly until err == // io.EOF
-func (c *Client) ZonesCollector(filter ListFilter) (func() ([]Zone, error), error) {
+// ZonesListAll retrieves the complete list of zones with the ListFilter criteria passed.
+// Handles paging through results on the user's behalf.
+func (c *Client) ZonesListAll(filter ListFilter) ([]Zone, error) {
 	if filter.MaxItems > 100 {
 		return nil, fmt.Errorf("MaxItems must be between 1 and 100")
 	}
 
 	var zones []Zone
-	var err error
 
-	return func() ([]Zone, error) {
+	for {
+		resp, err := c.zonesList(filter)
 		if err != nil {
 			return nil, err
 		}
 
-		for {
-			resp, err := c.ZonesList(filter)
-			if err != nil {
-				return nil, err
-			}
-			zones = append(zones, resp.Zones...)
+		zones = append(zones, resp.Zones...)
+		filter.StartFrom = resp.NextID
 
-			filter.StartFrom = resp.NextID
-			if len(filter.StartFrom) == 0 {
-				// keep from trying to get more records
-				err = io.EOF
-				break
-			}
+		if len(filter.StartFrom) == 0 {
+			return zones, nil
 		}
-
-		return zones, err
-	}, nil
+	}
 }
 
 // Zone retrieves the Zone whose ID it's passed.
