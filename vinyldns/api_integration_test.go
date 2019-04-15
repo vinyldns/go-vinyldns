@@ -128,7 +128,7 @@ func TestZoneCreateIntegration(t *testing.T) {
 
 func TestRecordSetCreateIntegrationARecord(t *testing.T) {
 	c := client()
-	zs, err := c.Zones()
+	zs, err := c.ZonesListAll()
 	if err != nil {
 		t.Error(err)
 	}
@@ -168,7 +168,7 @@ func TestRecordSetCreateIntegrationARecord(t *testing.T) {
 
 func TestRecordSetCreateIntegrationNSRecord(t *testing.T) {
 	c := client()
-	zs, err := c.Zones()
+	zs, err := c.ZonesListAll()
 	if err != nil {
 		t.Error(err)
 	}
@@ -208,7 +208,7 @@ func TestRecordSetCreateIntegrationNSRecord(t *testing.T) {
 
 func TestRecordSetDeleteIntegration(t *testing.T) {
 	c := client()
-	zs, err := c.Zones()
+	zs, err := c.ZonesListAll()
 	if err != nil {
 		t.Error(err)
 	}
@@ -235,7 +235,7 @@ func TestRecordSetDeleteIntegration(t *testing.T) {
 
 func TestZoneDeleteIntegration(t *testing.T) {
 	c := client()
-	zs, err := c.Zones()
+	zs, err := c.ZonesListAll()
 	if err != nil {
 		t.Error(err)
 	}
