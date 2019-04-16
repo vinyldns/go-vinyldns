@@ -29,6 +29,30 @@ func (c *Client) Zones() ([]Zone, error) {
 	return zones.Zones, nil
 }
 
+// ZonesListAll retrieves the complete list of zones with the ListFilter criteria passed.
+// Handles paging through results on the user's behalf.
+func (c *Client) ZonesListAll(filter ListFilter) ([]Zone, error) {
+	if filter.MaxItems > 100 {
+		return nil, fmt.Errorf("MaxItems must be between 1 and 100")
+	}
+
+	var zones []Zone
+
+	for {
+		resp, err := c.zonesList(filter)
+		if err != nil {
+			return nil, err
+		}
+
+		zones = append(zones, resp.Zones...)
+		filter.StartFrom = resp.NextID
+
+		if len(filter.StartFrom) == 0 {
+			return zones, nil
+		}
+	}
+}
+
 // Zone retrieves the Zone whose ID it's passed.
 func (c *Client) Zone(id string) (Zone, error) {
 	zone := &ZoneResponse{}
@@ -146,6 +170,7 @@ func (c *Client) RecordSetCollector(zoneID string, limit int) (func() ([]RecordS
 		if err != nil {
 			return nil, err
 		}
+
 		for {
 			rss := &RecordSetsResponse{}
 			err = resourceRequest(c, recordSetsEP(c, zoneID, nextID, limit), "GET", nil, rss)
@@ -158,6 +183,7 @@ func (c *Client) RecordSetCollector(zoneID string, limit int) (func() ([]RecordS
 			if len(nextID) == 0 {
 				// keep from trying to get more records
 				err = io.EOF
+
 				break
 			}
 		}

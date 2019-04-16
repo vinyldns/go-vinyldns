@@ -12,10 +12,37 @@ limitations under the License.
 
 package vinyldns
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
 func zonesEP(c *Client) string {
 	return concatStrs("", c.Host, "/zones")
+}
+
+func zonesListEP(c *Client, f ListFilter) string {
+	params := []string{}
+	query := "?"
+
+	if f.NameFilter != "" {
+		params = append(params, fmt.Sprintf("nameFilter=%s", f.NameFilter))
+	}
+
+	if f.StartFrom != "" {
+		params = append(params, fmt.Sprintf("startFrom=%s", f.StartFrom))
+	}
+
+	if f.MaxItems != 0 {
+		params = append(params, fmt.Sprintf("maxItems=%d", f.MaxItems))
+	}
+
+	if len(params) == 0 {
+		query = ""
+	}
+
+	return concatStrs("", zonesEP(c), query, strings.Join(params, "&"))
 }
 
 func zoneEP(c *Client, id string) string {

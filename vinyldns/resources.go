@@ -42,6 +42,14 @@ func (d Error) Error() string {
 	return strings.Join(components, "\n")
 }
 
+// ListFilter represents the list query parameters that may be passed to
+// VinylDNS API endpoints such as /zones and /recordsets
+type ListFilter struct {
+	NameFilter string
+	StartFrom  string
+	MaxItems   int
+}
+
 // ZoneConnection represents a zone connection
 type ZoneConnection struct {
 	Name          string `json:"name,omitempty"`
@@ -99,7 +107,10 @@ type ZoneUpdateResponse struct {
 
 // Zones is a slice of zones
 type Zones struct {
-	Zones []Zone `json:"zones"`
+	Zones     []Zone `json:"zones"`
+	StartFrom string `json:"startFrom"`
+	MaxItems  int    `json:"maxItems"`
+	NextID    string `json:"nextId"`
 }
 
 // ZoneHistory represents the zone history
