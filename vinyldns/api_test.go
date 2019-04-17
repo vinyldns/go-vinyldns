@@ -479,6 +479,48 @@ func TestRecordSets(t *testing.T) {
 	}
 }
 
+func TestRecordSetsListAll(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets?maxItems=1",
+			code:     200,
+			body:     recordSetsListJSON1,
+		},
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets?startFrom=2&maxItems=1",
+			code:     200,
+			body:     recordSetsListJSON2,
+		},
+	})
+
+	defer server.Close()
+
+	if _, err := client.RecordSetsListAll("123", ListFilter{
+		MaxItems: 200,
+	}); err == nil {
+		t.Error("Expected error -- MaxItems must be between 1 and 100")
+	}
+
+	records, err := client.RecordSetsListAll("123", ListFilter{
+		MaxItems: 1,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) != 2 {
+		t.Error("Expected 2 records; got ", len(records))
+	}
+
+	if records[0].ID != "1" {
+		t.Error("Expected RecordSet.ID to be 1")
+	}
+
+	if records[1].ID != "2" {
+		t.Error("Expected RecordSet.ID to be 2")
+	}
+}
+
 func TestRecordSetCollector(t *testing.T) {
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{

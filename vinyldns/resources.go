@@ -200,7 +200,7 @@ type RecordSetResponse struct {
 // response from the record sets endpoint.
 type RecordSetsResponse struct {
 	NextID           string      `json:"nextId,omitempty"`
-	MaxItems         string      `json:"maxItems,omitempty"`
+	MaxItems         int         `json:"maxItems,omitempty"`
 	StartFrom        string      `json:"startFrom,omitempty"`
 	RecordNameFilter string      `json:"recordNameFilter,omitempty"`
 	RecordSets       []RecordSet `json:"recordSets"`
