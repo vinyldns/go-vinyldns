@@ -482,12 +482,12 @@ func TestRecordSets(t *testing.T) {
 func TestRecordSetCollector(t *testing.T) {
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
-			endpoint: "http://host.com/zones/123/recordsets?limit=3",
+			endpoint: "http://host.com/zones/123/recordsets?maxItems=3",
 			code:     200,
 			body:     recordSetsJSON,
 		},
 		testToolsConfig{
-			endpoint: "http://host.com/zones/123/recordsets?limit=1",
+			endpoint: "http://host.com/zones/123/recordsets?maxItems=1",
 			code:     200,
 			body:     recordSetsJSON,
 		},
