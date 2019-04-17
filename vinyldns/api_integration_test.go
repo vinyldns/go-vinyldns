@@ -18,8 +18,6 @@ import (
 	"fmt"
 	"testing"
 	"time"
-
-	"github.com/gobs/pretty"
 )
 
 // client() assumes a VinylDNS is running on localhost:9000 with the default access and secret keys
@@ -222,7 +220,7 @@ func TestRecordSetCreateIntegrationNSRecord(t *testing.T) {
 	}
 }
 
-func TestRecordSetsListAllIntegrationFilterForNonexistentName(t *testing.T) {
+func TestRecordSetsListAllIntegrationFilterForExistentName(t *testing.T) {
 	c := client()
 	zs, err := c.ZonesListAll(ListFilter{})
 	if err != nil {
@@ -236,9 +234,27 @@ func TestRecordSetsListAllIntegrationFilterForNonexistentName(t *testing.T) {
 		t.Error(err)
 	}
 
+	if len(records) < 1 {
+		t.Error("Expected RecordSetsListAll for records named 'foo' to yield results")
+	}
+}
+
+func TestRecordSetsListAllIntegrationFilterForNonexistentName(t *testing.T) {
+	c := client()
+	zs, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	records, err := c.RecordSetsListAll(zs[0].ID, ListFilter{
+		NameFilter: "thisdoesnotexist",
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
 	if len(records) > 0 {
-		t.Log(pretty.PrettyFormat(records))
-		t.Error("Expected RecordSetsListAll for records named 'foo' to yield no results")
+		t.Error("Expected RecordSetsListAll for records named 'thisdoesnotexist' to yield no results")
 	}
 }
 
