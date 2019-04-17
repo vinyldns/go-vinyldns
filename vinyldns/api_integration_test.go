@@ -18,6 +18,8 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/gobs/pretty"
 )
 
 // client() assumes a VinylDNS is running on localhost:9000 with the default access and secret keys
@@ -235,6 +237,7 @@ func TestRecordSetsListAllIntegrationFilterForNonexistentName(t *testing.T) {
 	}
 
 	if len(records) > 0 {
+		t.Log(pretty.PrettyFormat(records))
 		t.Error("Expected RecordSetsListAll for records named 'foo' to yield no results")
 	}
 }
