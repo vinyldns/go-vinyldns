@@ -321,42 +321,38 @@ const (
 		"nextId": "2",
 		"maxItems": 1,
 		"recordSets": [{
-      "id": "1",
-      "zoneId": "123",
-      "name": "bind9",
-      "type": "A",
-      "status": "Active",
-      "created": "2015-11-02T14:02:08Z",
-      "updated": "2015-11-02T14:02:09Z",
-      "ttl": 300,
-      "records": [
-        {
-          "address": "127.0.0.1"
-        }
-      ],
-      "account": "account-test-2"
-    }
-  ]}`
+			"id": "1",
+			"zoneId": "123",
+			"name": "bind9",
+			"type": "A",
+			"status": "Active",
+			"created": "2015-11-02T14:02:08Z",
+			"updated": "2015-11-02T14:02:09Z",
+			"ttl": 300,
+			"records": [{
+				"address": "127.0.0.1"
+			}],
+			"account": "account-test-2"
+		}]
+	}`
 
 	recordSetsListJSON2 = `{
 		"maxItems": 1,
 		"recordSets": [{
-      "id": "2",
-      "zoneId": "123",
-      "name": "bind9",
-      "type": "A",
-      "status": "Active",
-      "created": "2015-11-02T14:02:08Z",
-      "updated": "2015-11-02T14:02:09Z",
-      "ttl": 300,
-      "records": [
-        {
-          "address": "127.0.0.1"
-        }
-      ],
-      "account": "account-test-2"
-    }
-  ]}`
+			"id": "2",
+			"zoneId": "123",
+			"name": "bind9",
+			"type": "A",
+			"status": "Active",
+			"created": "2015-11-02T14:02:08Z",
+			"updated": "2015-11-02T14:02:09Z",
+			"ttl": 300,
+			"records": [{
+				"address": "127.0.0.1"
+			}],
+			"account": "account-test-2"
+		}]
+	}`
 
 	recordSetUpdateResponseJSON = `{
 		"zone": {
