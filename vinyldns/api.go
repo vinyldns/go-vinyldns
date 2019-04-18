@@ -173,7 +173,10 @@ func (c *Client) RecordSetCollector(zoneID string, limit int) (func() ([]RecordS
 
 		for {
 			rss := &RecordSetsResponse{}
-			err = resourceRequest(c, recordSetsEP(c, zoneID, nextID, limit), "GET", nil, rss)
+			err = resourceRequest(c, recordSetsListEP(c, zoneID, ListFilter{
+				StartFrom: nextID,
+				MaxItems:  limit,
+			}), "GET", nil, rss)
 			if err != nil {
 				return nil, err
 			}
@@ -221,6 +224,30 @@ func (c *Client) RecordSets(id string) ([]RecordSet, error) {
 	return recordSets, nil
 }
 
+// RecordSetsListAll retrieves the complete list of record sets with the ListFilter criteria passed.
+// Handles paging through results on the user's behalf.
+func (c *Client) RecordSetsListAll(zoneID string, filter ListFilter) ([]RecordSet, error) {
+	if filter.MaxItems > 100 {
+		return nil, fmt.Errorf("MaxItems must be between 1 and 100")
+	}
+
+	var rss []RecordSet
+
+	for {
+		resp, err := c.recordSetsList(zoneID, filter)
+		if err != nil {
+			return nil, err
+		}
+
+		rss = append(rss, resp.RecordSets...)
+		filter.StartFrom = resp.NextID
+
+		if len(filter.StartFrom) == 0 {
+			return rss, nil
+		}
+	}
+}
+
 // RecordSet retrieves the record matching the Zone ID and RecordSet ID it's passed.
 func (c *Client) RecordSet(zoneID, recordSetID string) (RecordSet, error) {
 	rs := &RecordSetResponse{}
@@ -239,7 +266,7 @@ func (c *Client) RecordSetCreate(zoneID string, rs *RecordSet) (*RecordSetUpdate
 		return nil, err
 	}
 	var resource = &RecordSetUpdateResponse{}
-	err = resourceRequest(c, recordSetsEP(c, zoneID, "", 0), "POST", rsJSON, resource)
+	err = resourceRequest(c, recordSetsEP(c, zoneID), "POST", rsJSON, resource)
 	if err != nil {
 		return &RecordSetUpdateResponse{}, err
 	}

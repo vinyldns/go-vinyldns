@@ -220,6 +220,44 @@ func TestRecordSetCreateIntegrationNSRecord(t *testing.T) {
 	}
 }
 
+func TestRecordSetsListAllIntegrationFilterForExistentName(t *testing.T) {
+	c := client()
+	zs, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	records, err := c.RecordSetsListAll(zs[0].ID, ListFilter{
+		NameFilter: "foo",
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) < 1 {
+		t.Error("Expected RecordSetsListAll for records named 'foo' to yield results")
+	}
+}
+
+func TestRecordSetsListAllIntegrationFilterForNonexistentName(t *testing.T) {
+	c := client()
+	zs, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	records, err := c.RecordSetsListAll(zs[0].ID, ListFilter{
+		NameFilter: "thisdoesnotexist",
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) > 0 {
+		t.Error("Expected RecordSetsListAll for records named 'thisdoesnotexist' to yield no results")
+	}
+}
+
 func TestRecordSetDeleteIntegration(t *testing.T) {
 	c := client()
 	zs, err := c.ZonesListAll(ListFilter{})
@@ -228,7 +266,7 @@ func TestRecordSetDeleteIntegration(t *testing.T) {
 	}
 	z := zs[0].ID
 
-	rs, err := c.RecordSets(z)
+	rs, err := c.RecordSetsListAll(z, ListFilter{})
 	if err != nil {
 		t.Error(err)
 	}

@@ -14,7 +14,6 @@ package vinyldns
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 )
 
@@ -53,19 +52,35 @@ func zoneHistoryEP(c *Client, id string) string {
 	return concatStrs("", zoneEP(c, id), "/history")
 }
 
-func recordSetsEP(c *Client, id string, startFrom string, limit int) string {
-	ep := concatStrs("", zoneEP(c, id), "/recordsets")
-	if len(startFrom) != 0 {
-		ep += "?startFrom=" + startFrom
+func recordSetsEP(c *Client, zoneID string) string {
+	return concatStrs("", zoneEP(c, zoneID), "/recordsets")
+}
+
+func recordSetsListEP(c *Client, zoneID string, f ListFilter) string {
+	params := []string{}
+	query := "?"
+
+	if f.NameFilter != "" {
+		params = append(params, fmt.Sprintf("recordNameFilter=%s", f.NameFilter))
 	}
-	if limit > 0 {
-		ep += "?limit=" + strconv.Itoa(limit)
+
+	if f.StartFrom != "" {
+		params = append(params, fmt.Sprintf("startFrom=%s", f.StartFrom))
 	}
-	return ep
+
+	if f.MaxItems != 0 {
+		params = append(params, fmt.Sprintf("maxItems=%d", f.MaxItems))
+	}
+
+	if len(params) == 0 {
+		query = ""
+	}
+
+	return concatStrs("", recordSetsEP(c, zoneID), query, strings.Join(params, "&"))
 }
 
 func recordSetEP(c *Client, zoneID, recordSetID string) string {
-	return concatStrs("", recordSetsEP(c, zoneID, "", 0), "/", recordSetID)
+	return concatStrs("", recordSetsEP(c, zoneID), "/", recordSetID)
 }
 
 func recordSetChangeEP(c *Client, zoneID, recordSetID, changeID string) string {

@@ -97,32 +97,50 @@ func TestZoneHistoryEP(t *testing.T) {
 	}
 }
 
-func TestRecordSetsEP(t *testing.T) {
-	rs := recordSetsEP(c, "123", "", 0)
+func TestRecordSetsListEP(t *testing.T) {
+	rs := recordSetsListEP(c, "123", ListFilter{})
 	expected := "http://host.com/zones/123/recordsets"
 
 	if rs != expected {
 		fmt.Printf("Expected: %s", expected)
 		fmt.Printf("Actual: %s", rs)
-		t.Error("recordSetsEP should return the right endpoint")
+		t.Error("recordSetsListEP should return the right endpoint")
 	}
 
-	rs = recordSetsEP(c, "543", "nextplease", 0)
+	rs = recordSetsListEP(c, "543", ListFilter{
+		StartFrom: "nextplease",
+	})
 	expected = "http://host.com/zones/543/recordsets?startFrom=nextplease"
 
 	if rs != expected {
 		fmt.Printf("Expected: %s", expected)
 		fmt.Printf("Actual: %s", rs)
-		t.Error("recordSetsEP should return the right endpoint")
+		t.Error("recordSetsListEP should return the right endpoint")
 	}
 
-	rs = recordSetsEP(c, "7", "nextplease", 99)
-	expected = "http://host.com/zones/7/recordsets?startFrom=nextplease?limit=99"
+	rs = recordSetsListEP(c, "7", ListFilter{
+		StartFrom: "nextplease",
+		MaxItems:  99,
+	})
+	expected = "http://host.com/zones/7/recordsets?startFrom=nextplease&maxItems=99"
 
 	if rs != expected {
 		fmt.Printf("Expected: %s", expected)
 		fmt.Printf("Actual: %s", rs)
-		t.Error("recordSetsEP should return the right endpoint")
+		t.Error("recordSetsListEP should return the right endpoint")
+	}
+
+	rs = recordSetsListEP(c, "7", ListFilter{
+		NameFilter: "foo",
+		StartFrom:  "nextplease",
+		MaxItems:   99,
+	})
+	expected = "http://host.com/zones/7/recordsets?recordNameFilter=foo&startFrom=nextplease&maxItems=99"
+
+	if rs != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", rs)
+		t.Error("recordSetsListEP should return the right endpoint")
 	}
 }
 

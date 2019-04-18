@@ -199,8 +199,11 @@ type RecordSetResponse struct {
 // RecordSetsResponse represents the JSON
 // response from the record sets endpoint.
 type RecordSetsResponse struct {
-	NextID     string      `json:"nextId,omitempty"`
-	RecordSets []RecordSet `json:"recordSets"`
+	NextID           string      `json:"nextId,omitempty"`
+	MaxItems         int         `json:"maxItems,omitempty"`
+	StartFrom        string      `json:"startFrom,omitempty"`
+	RecordNameFilter string      `json:"recordNameFilter,omitempty"`
+	RecordSets       []RecordSet `json:"recordSets"`
 }
 
 // User represents a vinyldns user.
