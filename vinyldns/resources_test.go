@@ -37,7 +37,7 @@ func TestZoneMarshaling(t *testing.T) {
 func TestRecordSetMarshaling(t *testing.T) {
 	rs := &RecordSet{
 		Records: []Record{
-			Record{
+			{
 				Type: "text",
 			},
 		},

@@ -20,7 +20,7 @@ import (
 	"time"
 )
 
-// client() assumes a VinylDNS is running on localhost:9000 witht he default access and secret keys
+// client() assumes a VinylDNS is running on localhost:9000 with the default access and secret keys
 // see `make start-api` for a Make task in starting VinylDNS
 func client() *Client {
 	return NewClient(ClientConfiguration{
@@ -33,7 +33,7 @@ func client() *Client {
 func TestGroupCreateIntegration(t *testing.T) {
 	c := client()
 	users := []User{
-		User{
+		{
 			UserName:  "ok",
 			FirstName: "ok",
 			LastName:  "ok",
@@ -126,9 +126,23 @@ func TestZoneCreateIntegration(t *testing.T) {
 	}
 }
 
-func TestRecordSetCreateIntegration(t *testing.T) {
+func TestZonesListAllIntegrationFilterForNonexistentName(t *testing.T) {
 	c := client()
-	zs, err := c.Zones()
+	zones, err := c.ZonesListAll(ListFilter{
+		NameFilter: "foo",
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) > 0 {
+		t.Error("Expected ZonesListAll for zones named 'foo' to yield no results")
+	}
+}
+
+func TestRecordSetCreateIntegrationARecord(t *testing.T) {
+	c := client()
+	zs, err := c.ZonesListAll(ListFilter{})
 	if err != nil {
 		t.Error(err)
 	}
@@ -138,7 +152,7 @@ func TestRecordSetCreateIntegration(t *testing.T) {
 		Type:   "A",
 		TTL:    60,
 		Records: []Record{
-			Record{
+			{
 				Address: "127.0.0.1",
 			},
 		},
@@ -166,15 +180,93 @@ func TestRecordSetCreateIntegration(t *testing.T) {
 	}
 }
 
+func TestRecordSetCreateIntegrationNSRecord(t *testing.T) {
+	c := client()
+	zs, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+	rc, err := c.RecordSetCreate(zs[0].ID, &RecordSet{
+		Name:   "integration-test",
+		ZoneID: zs[0].ID,
+		Type:   "NS",
+		TTL:    60,
+		Records: []Record{
+			{
+				NSDName: "ns1.parent.com.",
+			},
+		},
+	})
+	if err != nil {
+		t.Error(err)
+	}
+	createdID := rc.RecordSet.ID
+	limit := 10
+	for i := 0; i < limit; time.Sleep(10 * time.Second) {
+		i++
+
+		rg, err := c.RecordSet(zs[0].ID, createdID)
+		if err == nil && rg.ID != createdID {
+			t.Error(fmt.Sprintf("unable to get record set %s", createdID))
+		}
+		if err == nil && rg.ID == createdID {
+			break
+		}
+
+		if i == (limit - 1) {
+			fmt.Printf("%d retries reached in polling for record set %s", limit, createdID)
+			t.Error(err)
+		}
+	}
+}
+
+func TestRecordSetsListAllIntegrationFilterForExistentName(t *testing.T) {
+	c := client()
+	zs, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	records, err := c.RecordSetsListAll(zs[0].ID, ListFilter{
+		NameFilter: "foo",
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) < 1 {
+		t.Error("Expected RecordSetsListAll for records named 'foo' to yield results")
+	}
+}
+
+func TestRecordSetsListAllIntegrationFilterForNonexistentName(t *testing.T) {
+	c := client()
+	zs, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	records, err := c.RecordSetsListAll(zs[0].ID, ListFilter{
+		NameFilter: "thisdoesnotexist",
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) > 0 {
+		t.Error("Expected RecordSetsListAll for records named 'thisdoesnotexist' to yield no results")
+	}
+}
+
 func TestRecordSetDeleteIntegration(t *testing.T) {
 	c := client()
-	zs, err := c.Zones()
+	zs, err := c.ZonesListAll(ListFilter{})
 	if err != nil {
 		t.Error(err)
 	}
 	z := zs[0].ID
 
-	rs, err := c.RecordSets(z)
+	rs, err := c.RecordSetsListAll(z, ListFilter{})
 	if err != nil {
 		t.Error(err)
 	}
@@ -195,7 +287,7 @@ func TestRecordSetDeleteIntegration(t *testing.T) {
 
 func TestZoneDeleteIntegration(t *testing.T) {
 	c := client()
-	zs, err := c.Zones()
+	zs, err := c.ZonesListAll(ListFilter{})
 	if err != nil {
 		t.Error(err)
 	}

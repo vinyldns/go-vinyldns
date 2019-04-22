@@ -1,4 +1,4 @@
-VERSION=0.8.1
+VERSION=0.8.3
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
 
@@ -10,6 +10,9 @@ deps:
 	fi
 	go get -u github.com/golang/dep/cmd/dep
 	dep ensure
+
+fmt:
+	gofmt -s -w vinyldns
 
 test:
 	go vet $(SOURCE)
@@ -23,7 +26,9 @@ start-api:
 		echo "$(VINYLDNS_REPO) not found in your GOPATH (necessary for acceptance tests), getting..."; \
 		git clone https://$(VINYLDNS_REPO) $(GOPATH)/src/$(VINYLDNS_REPO); \
 	fi
-	$(GOPATH)/src/$(VINYLDNS_REPO)/bin/docker-up-vinyldns.sh --timeout 120
+	$(GOPATH)/src/$(VINYLDNS_REPO)/bin/docker-up-vinyldns.sh \
+		--api-only \
+		--version 0.8.0
 
 stop-api:
 	./../vinyldns/bin/remove-vinyl-containers.sh

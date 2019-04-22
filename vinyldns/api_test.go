@@ -23,11 +23,28 @@ import (
 	"github.com/gobs/pretty"
 )
 
-func testTools(code int, body string) (*httptest.Server, *Client) {
+type testToolsConfig struct {
+	endpoint string
+	code     int
+	body     string
+}
+
+func testTools(configs []testToolsConfig) (*httptest.Server, *Client) {
+	host := "http://host.com"
+
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(code)
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, body)
+		for _, c := range configs {
+			if c.endpoint == r.RequestURI {
+				w.WriteHeader(c.code)
+				w.Header().Set("Content-Type", "application/json")
+				fmt.Fprintf(w, c.body)
+				return
+			}
+		}
+
+		fmt.Printf("Requested: %s\n", r.RequestURI)
+		http.Error(w, "not found", http.StatusNotFound)
+		return
 	}))
 
 	tr := &http.Transport{
@@ -40,7 +57,7 @@ func testTools(code int, body string) (*httptest.Server, *Client) {
 	client := &Client{
 		"accessToken",
 		"secretToken",
-		"http://host.com",
+		host,
 		&http.Client{Transport: tr},
 	}
 
@@ -48,7 +65,13 @@ func testTools(code int, body string) (*httptest.Server, *Client) {
 }
 
 func TestZones(t *testing.T) {
-	server, client := testTools(202, zonesJSON)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones",
+			code:     202,
+			body:     zonesJSON,
+		},
+	})
 	defer server.Close()
 
 	zones, err := client.Zones()
@@ -81,8 +104,57 @@ func TestZones(t *testing.T) {
 	}
 }
 
+func TestZonesListAll(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones?maxItems=1",
+			code:     200,
+			body:     zonesListJSON1,
+		},
+		testToolsConfig{
+			endpoint: "http://host.com/zones?startFrom=2&maxItems=1",
+			code:     200,
+			body:     zonesListJSON2,
+		},
+	})
+
+	defer server.Close()
+
+	if _, err := client.ZonesListAll(ListFilter{
+		MaxItems: 200,
+	}); err == nil {
+		t.Error("Expected error -- MaxItems must be between 1 and 100")
+	}
+
+	zones, err := client.ZonesListAll(ListFilter{
+		MaxItems: 1,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) != 2 {
+		t.Error("Expected 2 Zones; got ", len(zones))
+	}
+
+	if zones[0].ID != "1" {
+		t.Error("Expected Zone.ID to be 1")
+	}
+
+	if zones[1].ID != "2" {
+		t.Error("Expected Zone.ID to be 2")
+	}
+}
+
 func TestZone(t *testing.T) {
-	server, client := testTools(200, zoneJSON)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123",
+			code:     200,
+			body:     zoneJSON,
+		},
+	})
+
 	defer server.Close()
 
 	z, err := client.Zone("123")
@@ -161,7 +233,14 @@ func TestZone(t *testing.T) {
 }
 
 func TestZoneCreate(t *testing.T) {
-	server, client := testTools(200, zoneUpdateResponseJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones",
+			code:     200,
+			body:     zoneUpdateResponseJSON,
+		},
+	})
+
 	defer server.Close()
 
 	zone := &Zone{
@@ -190,7 +269,14 @@ func TestZoneCreate(t *testing.T) {
 }
 
 func TestZoneUpdate(t *testing.T) {
-	server, client := testTools(200, zoneUpdateResponseJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123",
+			code:     200,
+			body:     zoneUpdateResponseJSON,
+		},
+	})
+
 	defer server.Close()
 
 	zone := &Zone{
@@ -219,7 +305,14 @@ func TestZoneUpdate(t *testing.T) {
 }
 
 func TestZoneDelete(t *testing.T) {
-	server, client := testTools(200, zoneUpdateResponseJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123",
+			code:     200,
+			body:     zoneUpdateResponseJSON,
+		},
+	})
+
 	defer server.Close()
 
 	z, err := client.ZoneDelete("123")
@@ -236,8 +329,15 @@ func TestZoneDelete(t *testing.T) {
 }
 
 func TestZoneExists_yes(t *testing.T) {
-	yes, client := testTools(200, zoneUpdateResponseJson)
-	defer yes.Close()
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123",
+			code:     200,
+			body:     zoneUpdateResponseJSON,
+		},
+	})
+
+	defer server.Close()
 
 	z, err := client.ZoneExists("123")
 	if err != nil {
@@ -250,8 +350,15 @@ func TestZoneExists_yes(t *testing.T) {
 }
 
 func TestZoneExists_no(t *testing.T) {
-	no, client := testTools(404, zoneUpdateResponseJson)
-	defer no.Close()
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123",
+			code:     404,
+			body:     zoneUpdateResponseJSON,
+		},
+	})
+
+	defer server.Close()
 
 	z, err := client.ZoneExists("123")
 	if err != nil {
@@ -264,7 +371,14 @@ func TestZoneExists_no(t *testing.T) {
 }
 
 func TestZoneHistory(t *testing.T) {
-	server, client := testTools(200, zoneHistoryJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/history",
+			code:     200,
+			body:     zoneHistoryJSON,
+		},
+	})
+
 	defer server.Close()
 
 	z, err := client.ZoneHistory("123")
@@ -319,7 +433,14 @@ func TestZoneHistory(t *testing.T) {
 }
 
 func TestZoneChange(t *testing.T) {
-	server, client := testTools(200, zoneHistoryJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/history",
+			code:     200,
+			body:     zoneHistoryJSON,
+		},
+	})
+
 	defer server.Close()
 
 	z, err := client.ZoneChange("123", "change123")
@@ -333,7 +454,14 @@ func TestZoneChange(t *testing.T) {
 }
 
 func TestRecordSets(t *testing.T) {
-	server, client := testTools(200, recordSetsJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets",
+			code:     200,
+			body:     recordSetsJSON,
+		},
+	})
+
 	defer server.Close()
 
 	rs, err := client.RecordSets("123")
@@ -351,8 +479,62 @@ func TestRecordSets(t *testing.T) {
 	}
 }
 
+func TestRecordSetsListAll(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets?maxItems=1",
+			code:     200,
+			body:     recordSetsListJSON1,
+		},
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets?startFrom=2&maxItems=1",
+			code:     200,
+			body:     recordSetsListJSON2,
+		},
+	})
+
+	defer server.Close()
+
+	if _, err := client.RecordSetsListAll("123", ListFilter{
+		MaxItems: 200,
+	}); err == nil {
+		t.Error("Expected error -- MaxItems must be between 1 and 100")
+	}
+
+	records, err := client.RecordSetsListAll("123", ListFilter{
+		MaxItems: 1,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) != 2 {
+		t.Error("Expected 2 records; got ", len(records))
+	}
+
+	if records[0].ID != "1" {
+		t.Error("Expected RecordSet.ID to be 1")
+	}
+
+	if records[1].ID != "2" {
+		t.Error("Expected RecordSet.ID to be 2")
+	}
+}
+
 func TestRecordSetCollector(t *testing.T) {
-	server, client := testTools(200, recordSetsJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets?maxItems=3",
+			code:     200,
+			body:     recordSetsJSON,
+		},
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets?maxItems=1",
+			code:     200,
+			body:     recordSetsJSON,
+		},
+	})
+
 	defer server.Close()
 
 	if _, err := client.RecordSetCollector("123", 999); err == nil {
@@ -365,7 +547,7 @@ func TestRecordSetCollector(t *testing.T) {
 		t.Error(err)
 	}
 
-	rs, err := collector()
+	rs, _ := collector()
 	if len(rs) != 2 {
 		t.Log(pretty.PrettyFormat(rs))
 		t.Error("Expected 2 Record Sets, got ", len(rs))
@@ -382,7 +564,7 @@ func TestRecordSetCollector(t *testing.T) {
 		t.Error(err)
 	}
 
-	rs, err = collector()
+	rs, _ = collector()
 	if len(rs) != 1 {
 		t.Log(pretty.PrettyFormat(rs))
 		t.Error("Expected 1 Record Sets, got ", len(rs))
@@ -390,7 +572,14 @@ func TestRecordSetCollector(t *testing.T) {
 }
 
 func TestRecordSet(t *testing.T) {
-	server, client := testTools(200, recordSetJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets/456",
+			code:     200,
+			body:     recordSetJSON,
+		},
+	})
+
 	defer server.Close()
 
 	rs, err := client.RecordSet("123", "456")
@@ -431,7 +620,14 @@ func TestRecordSet(t *testing.T) {
 }
 
 func TestRecordSetCreate(t *testing.T) {
-	server, client := testTools(202, recordSetUpdateResponseJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets",
+			code:     200,
+			body:     recordSetUpdateResponseJSON,
+		},
+	})
+
 	defer server.Close()
 
 	rs := &RecordSet{
@@ -439,7 +635,7 @@ func TestRecordSetCreate(t *testing.T) {
 		Name:   "name",
 		Type:   "CNAME",
 		TTL:    200,
-		Records: []Record{Record{
+		Records: []Record{{
 			CName: "cname",
 		}},
 	}
@@ -464,7 +660,14 @@ func TestRecordSetCreate(t *testing.T) {
 }
 
 func TestRecordSetUpdate(t *testing.T) {
-	server, client := testTools(202, recordSetUpdateResponseJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets/456",
+			code:     202,
+			body:     recordSetUpdateResponseJSON,
+		},
+	})
+
 	defer server.Close()
 
 	rs := &RecordSet{
@@ -472,7 +675,7 @@ func TestRecordSetUpdate(t *testing.T) {
 		Name:   "name",
 		Type:   "CNAME",
 		TTL:    200,
-		Records: []Record{Record{
+		Records: []Record{{
 			CName: "cname",
 		}},
 	}
@@ -497,7 +700,14 @@ func TestRecordSetUpdate(t *testing.T) {
 }
 
 func TestRecordSetDelete(t *testing.T) {
-	server, client := testTools(202, recordSetUpdateResponseJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets/456",
+			code:     202,
+			body:     recordSetUpdateResponseJSON,
+		},
+	})
+
 	defer server.Close()
 
 	r, err := client.RecordSetDelete("123", "456")
@@ -520,7 +730,14 @@ func TestRecordSetDelete(t *testing.T) {
 }
 
 func TestRecordSetChange(t *testing.T) {
-	server, client := testTools(200, recordSetChangeJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets/456/changes/789",
+			code:     200,
+			body:     recordSetChangeJSON,
+		},
+	})
+
 	defer server.Close()
 
 	rsc, err := client.RecordSetChange("123", "456", "789")
@@ -534,7 +751,14 @@ func TestRecordSetChange(t *testing.T) {
 }
 
 func TestGroupCreate(t *testing.T) {
-	server, client := testTools(200, groupJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/groups",
+			code:     200,
+			body:     groupJSON,
+		},
+	})
+
 	defer server.Close()
 
 	group := &Group{
@@ -560,7 +784,14 @@ func TestGroupCreate(t *testing.T) {
 }
 
 func TestGroupUpdate(t *testing.T) {
-	server, client := testTools(200, groupJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/groups/123",
+			code:     200,
+			body:     groupJSON,
+		},
+	})
+
 	defer server.Close()
 
 	group := &Group{
@@ -587,7 +818,14 @@ func TestGroupUpdate(t *testing.T) {
 }
 
 func TestGroupDelete(t *testing.T) {
-	server, client := testTools(200, groupJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/groups/123",
+			code:     200,
+			body:     groupJSON,
+		},
+	})
+
 	defer server.Close()
 
 	g, err := client.GroupDelete("123")
@@ -607,7 +845,14 @@ func TestGroupDelete(t *testing.T) {
 }
 
 func TestGroups(t *testing.T) {
-	server, client := testTools(200, groupsJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/groups",
+			code:     200,
+			body:     groupsJSON,
+		},
+	})
+
 	defer server.Close()
 
 	groups, err := client.Groups()
@@ -638,7 +883,14 @@ func TestGroups(t *testing.T) {
 }
 
 func TestGroup(t *testing.T) {
-	server, client := testTools(200, groupJson)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/groups/123",
+			code:     200,
+			body:     groupJSON,
+		},
+	})
+
 	defer server.Close()
 
 	g, err := client.Group("123")
@@ -658,7 +910,14 @@ func TestGroup(t *testing.T) {
 }
 
 func TestGroupAdmins(t *testing.T) {
-	server, client := testTools(200, groupAdminsJSON)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/groups/123/admins",
+			code:     200,
+			body:     groupAdminsJSON,
+		},
+	})
+
 	defer server.Close()
 
 	admins, err := client.GroupAdmins("123")
@@ -674,7 +933,14 @@ func TestGroupAdmins(t *testing.T) {
 }
 
 func TestGroupMembers(t *testing.T) {
-	server, client := testTools(200, groupMembersJSON)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/groups/123/members",
+			code:     200,
+			body:     groupMembersJSON,
+		},
+	})
+
 	defer server.Close()
 
 	members, err := client.GroupMembers("123")
@@ -690,7 +956,14 @@ func TestGroupMembers(t *testing.T) {
 }
 
 func TestGroupActivity(t *testing.T) {
-	server, client := testTools(200, groupActivityJSON)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/groups/123/activity",
+			code:     200,
+			body:     groupActivityJSON,
+		},
+	})
+
 	defer server.Close()
 
 	activity, err := client.GroupActivity("123")
@@ -715,7 +988,14 @@ func TestGroupActivity(t *testing.T) {
 }
 
 func TestBatchRecordChanges(t *testing.T) {
-	server, client := testTools(200, batchRecordChangesJSON)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/batchrecordchanges",
+			code:     200,
+			body:     batchRecordChangesJSON,
+		},
+	})
+
 	defer server.Close()
 
 	changes, err := client.BatchRecordChanges()
@@ -734,7 +1014,14 @@ func TestBatchRecordChanges(t *testing.T) {
 }
 
 func TestBatchRecordChange(t *testing.T) {
-	server, client := testTools(200, batchRecordChangeJSON)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/batchrecordchanges/123",
+			code:     200,
+			body:     batchRecordChangeJSON,
+		},
+	})
+
 	defer server.Close()
 
 	change, err := client.BatchRecordChange("123")
@@ -753,7 +1040,14 @@ func TestBatchRecordChange(t *testing.T) {
 }
 
 func TestBatchRecordChangeCreate(t *testing.T) {
-	server, client := testTools(200, batchRecordChangeCreateJSON)
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/batchrecordchanges",
+			code:     200,
+			body:     batchRecordChangeCreateJSON,
+		},
+	})
+
 	defer server.Close()
 
 	change := &BatchRecordChange{}

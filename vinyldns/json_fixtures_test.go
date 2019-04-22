@@ -76,6 +76,76 @@ const (
 			}
 		}]}`
 
+	zonesListJSON1 = `{
+		"nextId": "2",
+		"maxItems": 1,
+		"zones": [{
+			"name": "vinyldns-one.",
+			"email": "some_user@foo.com",
+			"status": "Active",
+			"created": "2015-10-30T01:25:46Z",
+			"id": "1",
+			"connection": {
+				"name": "vinyldns.",
+				"keyName": "vinyldns.",
+				"key": "OBF:1:ABC+5",
+				"primaryServer": "127.0.0.1"
+			},
+			"transferConnection": {
+				"name": "vinyldns.",
+				"keyName": "vinyldns.",
+				"key": "OBF:1:ABC+5",
+				"primaryServer": "127.0.0.1"
+			},
+			"adminGroupId": "c314836d-17db-4a57-b849-eb1feffe0ae7",
+			"acl": {
+				"rules": [
+					{
+						"accessLevel": "Read",
+						"description": "test-acl-group-id",
+						"groupId": "123",
+						"recordMask": "www-*",
+						"recordTypes": ["A", "AAAA", "CNAME"]
+					}
+				]
+			}
+		}]}`
+
+	zonesListJSON2 = `{
+		"startFrom": "2",
+		"maxItems": 1,
+		"zones": [{
+			"name": "vinyldns-two.",
+			"email": "some_user@foo.com",
+			"status": "Active",
+			"created": "2015-10-30T01:25:46Z",
+			"id": "2",
+			"connection": {
+				"name": "vinyldns.",
+				"keyName": "vinyldns.",
+				"key": "OBF:1:ABC+5",
+				"primaryServer": "127.0.0.1"
+			},
+			"transferConnection": {
+				"name": "vinyldns.",
+				"keyName": "vinyldns.",
+				"key": "OBF:1:ABC+5",
+				"primaryServer": "127.0.0.1"
+			},
+			"adminGroupId": "c314836d-17db-4a57-b849-eb1feffe0ae7",
+			"acl": {
+				"rules": [
+					{
+						"accessLevel": "Read",
+						"description": "test-acl-group-id",
+						"groupId": "123",
+						"recordMask": "www-*",
+						"recordTypes": ["A", "AAAA", "CNAME"]
+					}
+				]
+			}
+		}]}`
+
 	zoneJSON = `{
 		"zone":{
 			"name":"vinyldns.",
@@ -112,7 +182,7 @@ const (
 		}
 	}`
 
-	zoneUpdateResponseJson = `{
+	zoneUpdateResponseJSON = `{
 		"zone": {
 			"name": "test.",
 			"email": "paul_cleary@foo.com",
@@ -128,7 +198,7 @@ const (
 		"id": "ccf116b8-f72b-4507-b042-3c6cc64c58fd"
 	}`
 
-	zoneHistoryJson = `{
+	zoneHistoryJSON = `{
 		"zoneId": "123",
 		"zoneChanges": [
 			{
@@ -212,7 +282,7 @@ const (
 		]
 	}`
 
-	recordSetsJson = `{
+	recordSetsJSON = `{
 		"recordSets": [{
       "id": "6eb42765-818b-4966-89e8-1a34720c82a2",
       "zoneId": "2d9f4ec0-0596-4040-a953-d14e2cca8982",
@@ -247,7 +317,44 @@ const (
     }
   ]}`
 
-	recordSetUpdateResponseJson = `{
+	recordSetsListJSON1 = `{
+		"nextId": "2",
+		"maxItems": 1,
+		"recordSets": [{
+			"id": "1",
+			"zoneId": "123",
+			"name": "bind9",
+			"type": "A",
+			"status": "Active",
+			"created": "2015-11-02T14:02:08Z",
+			"updated": "2015-11-02T14:02:09Z",
+			"ttl": 300,
+			"records": [{
+				"address": "127.0.0.1"
+			}],
+			"account": "account-test-2"
+		}]
+	}`
+
+	recordSetsListJSON2 = `{
+		"maxItems": 1,
+		"recordSets": [{
+			"id": "2",
+			"zoneId": "123",
+			"name": "bind9",
+			"type": "A",
+			"status": "Active",
+			"created": "2015-11-02T14:02:08Z",
+			"updated": "2015-11-02T14:02:09Z",
+			"ttl": 300,
+			"records": [{
+				"address": "127.0.0.1"
+			}],
+			"account": "account-test-2"
+		}]
+	}`
+
+	recordSetUpdateResponseJSON = `{
 		"zone": {
 			"name": "vinyldnstest.sys.vinyldns.net.",
 			"email": "paul_cleary@foo.com",
@@ -293,7 +400,7 @@ const (
 		"id": "b3d4e0a9-a081-4adc-9a95-3ec2e7d26635"
 	}`
 
-	recordSetJson = `{
+	recordSetJSON = `{
 		"recordSet":{
 			"id":"123",
 			"zoneId":"456",
@@ -309,7 +416,7 @@ const (
 			"account":"vinyldns"
 	}}`
 
-	recordSetChangeJson = `{
+	recordSetChangeJSON = `{
 		"zone": {
 			"name": "vinyldnstest.sys.vinyldns.net.",
 			"email": "paul_cleary@foo.com",
@@ -355,7 +462,7 @@ const (
 		"id": "b3d4e0a9-a081-4adc-9a95-3ec2e7d26635"
 	}`
 
-	groupsJson = `{
+	groupsJSON = `{
 		"maxItems": 100,
 		"groups": [
 			{
@@ -395,7 +502,7 @@ const (
 		]
 	}`
 
-	groupJson = `{
+	groupJSON = `{
 		"id":"3094e07b-3b82-4fff-ac9d-f60dff223c2c",
 		"name":"test-group",
 		"email":"test@test.com",
