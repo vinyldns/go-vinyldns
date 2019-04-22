@@ -359,6 +359,11 @@ const (
 		}]
 	}`
 
+	recordSetsListNoneJSON = `{
+		"maxItems": 100,
+		"recordSets": []
+	}`
+
 	recordSetUpdateResponseJSON = `{
 		"zone": {
 			"name": "vinyldnstest.sys.vinyldns.net.",

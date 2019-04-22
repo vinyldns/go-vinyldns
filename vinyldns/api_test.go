@@ -173,7 +173,7 @@ func TestZonesListAllWhenNone(t *testing.T) {
 	}
 
 	if string(j) != "[]" {
-		t.Error("Expected marshaled JSON to be '[]'; got ", string(j))
+		t.Error("Expected string-converted marshaled JSON to be '[]'; got ", string(j))
 	}
 }
 
@@ -549,6 +549,36 @@ func TestRecordSetsListAll(t *testing.T) {
 
 	if records[1].ID != "2" {
 		t.Error("Expected RecordSet.ID to be 2")
+	}
+}
+
+func TestRecordSetsListAllWhenNoneExist(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets",
+			code:     200,
+			body:     recordSetsListNoneJSON,
+		},
+	})
+
+	defer server.Close()
+
+	records, err := client.RecordSetsListAll("123", ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) != 0 {
+		t.Error("Expected 0 records; got ", len(records))
+	}
+
+	j, err := json.Marshal(records)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if string(j) != "[]" {
+		t.Error("Expected string-converted marshaled JSON to be '[]'; got ", string(j))
 	}
 }
 

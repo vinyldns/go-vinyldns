@@ -231,7 +231,7 @@ func (c *Client) RecordSetsListAll(zoneID string, filter ListFilter) ([]RecordSe
 		return nil, fmt.Errorf("MaxItems must be between 1 and 100")
 	}
 
-	var rss []RecordSet
+	rss := []RecordSet{}
 
 	for {
 		resp, err := c.recordSetsList(zoneID, filter)
