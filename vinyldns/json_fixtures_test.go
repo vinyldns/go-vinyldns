@@ -146,6 +146,11 @@ const (
 			}
 		}]}`
 
+	zonesListNoneJSON = `{
+		"maxItems": 100,
+		"zones": []
+	}`
+
 	zoneJSON = `{
 		"zone":{
 			"name":"vinyldns.",

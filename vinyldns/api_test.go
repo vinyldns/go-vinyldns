@@ -14,6 +14,7 @@ package vinyldns
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -143,6 +144,36 @@ func TestZonesListAll(t *testing.T) {
 
 	if zones[1].ID != "2" {
 		t.Error("Expected Zone.ID to be 2")
+	}
+}
+
+func TestZonesListAllWhenNone(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones",
+			code:     200,
+			body:     zonesListNoneJSON,
+		},
+	})
+
+	defer server.Close()
+
+	zones, err := client.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) != 0 {
+		t.Error("Expected 0 Zones; got ", len(zones))
+	}
+
+	j, err := json.Marshal(zones)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if string(j) != "[]" {
+		t.Error("Expected marshaled JSON to be '[]'; got ", string(j))
 	}
 }
 

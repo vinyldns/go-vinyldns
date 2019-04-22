@@ -36,7 +36,7 @@ func (c *Client) ZonesListAll(filter ListFilter) ([]Zone, error) {
 		return nil, fmt.Errorf("MaxItems must be between 1 and 100")
 	}
 
-	var zones []Zone
+	zones := []Zone{}
 
 	for {
 		resp, err := c.zonesList(filter)
