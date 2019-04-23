@@ -14,6 +14,7 @@ package vinyldns
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -143,6 +144,36 @@ func TestZonesListAll(t *testing.T) {
 
 	if zones[1].ID != "2" {
 		t.Error("Expected Zone.ID to be 2")
+	}
+}
+
+func TestZonesListAllWhenNone(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones",
+			code:     200,
+			body:     zonesListNoneJSON,
+		},
+	})
+
+	defer server.Close()
+
+	zones, err := client.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) != 0 {
+		t.Error("Expected 0 Zones; got ", len(zones))
+	}
+
+	j, err := json.Marshal(zones)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if string(j) != "[]" {
+		t.Error("Expected string-converted marshaled JSON to be '[]'; got ", string(j))
 	}
 }
 
@@ -518,6 +549,36 @@ func TestRecordSetsListAll(t *testing.T) {
 
 	if records[1].ID != "2" {
 		t.Error("Expected RecordSet.ID to be 2")
+	}
+}
+
+func TestRecordSetsListAllWhenNoneExist(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets",
+			code:     200,
+			body:     recordSetsListNoneJSON,
+		},
+	})
+
+	defer server.Close()
+
+	records, err := client.RecordSetsListAll("123", ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) != 0 {
+		t.Error("Expected 0 records; got ", len(records))
+	}
+
+	j, err := json.Marshal(records)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if string(j) != "[]" {
+		t.Error("Expected string-converted marshaled JSON to be '[]'; got ", string(j))
 	}
 }
 

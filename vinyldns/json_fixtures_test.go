@@ -146,6 +146,11 @@ const (
 			}
 		}]}`
 
+	zonesListNoneJSON = `{
+		"maxItems": 100,
+		"zones": []
+	}`
+
 	zoneJSON = `{
 		"zone":{
 			"name":"vinyldns.",
@@ -352,6 +357,11 @@ const (
 			}],
 			"account": "account-test-2"
 		}]
+	}`
+
+	recordSetsListNoneJSON = `{
+		"maxItems": 100,
+		"recordSets": []
 	}`
 
 	recordSetUpdateResponseJSON = `{
