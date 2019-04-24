@@ -144,16 +144,17 @@ type RecordSetChange struct {
 
 // RecordSet represents a DNS record set.
 type RecordSet struct {
-	ID      string   `json:"id,omitempty"`
-	ZoneID  string   `json:"zoneId"`
-	Name    string   `json:"name,omitempty"`
-	Type    string   `json:"type"`
-	Status  string   `json:"status,omitempty"`
-	Created string   `json:"created,omitempty"`
-	Updated string   `json:"updated,omitempty"`
-	TTL     int      `json:"ttl"`
-	Account string   `json:"account"`
-	Records []Record `json:"records"`
+	ID           string   `json:"id,omitempty"`
+	ZoneID       string   `json:"zoneId"`
+	OwnerGroupID string   `json:"ownerGroupId,omitempty"`
+	Name         string   `json:"name,omitempty"`
+	Type         string   `json:"type"`
+	Status       string   `json:"status,omitempty"`
+	Created      string   `json:"created,omitempty"`
+	Updated      string   `json:"updated,omitempty"`
+	TTL          int      `json:"ttl"`
+	Account      string   `json:"account"`
+	Records      []Record `json:"records"`
 }
 
 // RecordSetUpdateResponse represents
