@@ -263,7 +263,7 @@ type BatchRecordChanges struct {
 	BatchChanges []RecordChange `json:"batchChanges,omitempty"`
 }
 
-// RecordChange is represents a batch record change.
+// RecordChange represents a batch record change.
 type RecordChange struct {
 	ID               string     `json:"id,omitempty"`
 	Status           string     `json:"status,omitempty"`
@@ -295,7 +295,7 @@ type RecordData struct {
 	PTRDName string `json:"ptrdname,omitempty"`
 }
 
-// BatchRecordChange is represents a batch record change API response.
+// BatchRecordChange represents a batch record change API response.
 type BatchRecordChange struct {
 	ID               string         `json:"id,omitempty"`
 	UserName         string         `json:"userName,omitempty"`
@@ -303,5 +303,6 @@ type BatchRecordChange struct {
 	Status           string         `json:"status,omitempty"`
 	Comments         string         `json:"comments,omitempty"`
 	CreatedTimestamp string         `json:"createdTimestamp,omitempty"`
+	OwnerGroupID     string         `json:"ownerGroupId,omitempty"`
 	Changes          []RecordChange `json:"changes,omitempty"`
 }
