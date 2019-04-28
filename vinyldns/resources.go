@@ -86,6 +86,7 @@ type Zone struct {
 	Connection         *ZoneConnection `json:"connection,omitempty"`
 	TransferConnection *ZoneConnection `json:"transferConnection,omitempty"`
 	ACL                *ZoneACL        `json:"acl,omitempty"`
+	Shared             bool            `json:"shared,omitempty"`
 }
 
 // ZoneResponse represents the JSON response
