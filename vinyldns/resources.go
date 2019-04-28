@@ -258,12 +258,13 @@ type GroupChanges struct {
 	Changes []GroupChange `json:"changes"`
 }
 
-// BatchRecordChanges represents a list of record changes.
+// BatchRecordChanges represents a list of record changes,
+// as returned by the list batch changes VinylDNS API endpoint.
 type BatchRecordChanges struct {
 	BatchChanges []RecordChange `json:"batchChanges,omitempty"`
 }
 
-// RecordChange represents a batch record change.
+// RecordChange represents an individual batch record change.
 type RecordChange struct {
 	ID               string     `json:"id,omitempty"`
 	Status           string     `json:"status,omitempty"`
@@ -280,6 +281,7 @@ type RecordChange struct {
 	UserID           string     `json:"userId,omitempty"`
 	CreatedTimestamp string     `json:"createdTimestamp,omitempty"`
 	Record           RecordData `json:"data,omitempty"`
+	OwnerGroupID     string     `json:"ownerGroupId,omitempty"`
 }
 
 // BatchRecordChangeUpdateResponse is represents a batch record change create or update response
