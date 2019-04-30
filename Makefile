@@ -28,7 +28,7 @@ start-api:
 	fi
 	$(GOPATH)/src/$(VINYLDNS_REPO)/bin/docker-up-vinyldns.sh \
 		--api-only \
-		--version 0.8.0
+		--version 0.9.0
 
 stop-api:
 	./../vinyldns/bin/remove-vinyl-containers.sh
