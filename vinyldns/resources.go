@@ -287,8 +287,9 @@ type RecordChange struct {
 
 // BatchRecordChangeUpdateResponse is represents a batch record change create or update response
 type BatchRecordChangeUpdateResponse struct {
-	Comments string         `json:"comments,omitempty"`
-	Changes  []RecordChange `json:"changes,omitempty"`
+	Comments     string         `json:"comments,omitempty"`
+	OwnerGroupID string         `json:"ownerGroupId,omitempty"`
+	Changes      []RecordChange `json:"changes,omitempty"`
 }
 
 // RecordData is represents a batch record change record data.
