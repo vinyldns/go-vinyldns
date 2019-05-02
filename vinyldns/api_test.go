@@ -651,6 +651,9 @@ func TestRecordSet(t *testing.T) {
 	if rs.ID != "123" {
 		t.Error("Expected RecordSet.Id to have a value")
 	}
+	if rs.OwnerGroupID != "456" {
+		t.Error("Expected RecordSet.OwnerGroupID to have a value")
+	}
 	if rs.ZoneID != "456" {
 		t.Error("Expected RecordSet.ZoneId to have a value")
 	}
