@@ -1,4 +1,4 @@
-VERSION=0.8.4
+VERSION=0.9.0
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
 
@@ -28,7 +28,7 @@ start-api:
 	fi
 	$(GOPATH)/src/$(VINYLDNS_REPO)/bin/docker-up-vinyldns.sh \
 		--api-only \
-		--version 0.8.0
+		--version 0.9.1
 
 stop-api:
 	./../vinyldns/bin/remove-vinyl-containers.sh

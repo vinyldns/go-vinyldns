@@ -413,6 +413,7 @@ const (
 	recordSetJSON = `{
 		"recordSet":{
 			"id":"123",
+			"ownerGroupId":"789",
 			"zoneId":"456",
 			"name":"test-01",
 			"type":"A",

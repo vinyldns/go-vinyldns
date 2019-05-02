@@ -86,6 +86,7 @@ type Zone struct {
 	Connection         *ZoneConnection `json:"connection,omitempty"`
 	TransferConnection *ZoneConnection `json:"transferConnection,omitempty"`
 	ACL                *ZoneACL        `json:"acl,omitempty"`
+	Shared             bool            `json:"shared,omitempty"`
 }
 
 // ZoneResponse represents the JSON response
@@ -144,16 +145,17 @@ type RecordSetChange struct {
 
 // RecordSet represents a DNS record set.
 type RecordSet struct {
-	ID      string   `json:"id,omitempty"`
-	ZoneID  string   `json:"zoneId"`
-	Name    string   `json:"name,omitempty"`
-	Type    string   `json:"type"`
-	Status  string   `json:"status,omitempty"`
-	Created string   `json:"created,omitempty"`
-	Updated string   `json:"updated,omitempty"`
-	TTL     int      `json:"ttl"`
-	Account string   `json:"account"`
-	Records []Record `json:"records"`
+	ID           string   `json:"id,omitempty"`
+	ZoneID       string   `json:"zoneId"`
+	OwnerGroupID string   `json:"ownerGroupId,omitempty"`
+	Name         string   `json:"name,omitempty"`
+	Type         string   `json:"type"`
+	Status       string   `json:"status,omitempty"`
+	Created      string   `json:"created,omitempty"`
+	Updated      string   `json:"updated,omitempty"`
+	TTL          int      `json:"ttl"`
+	Account      string   `json:"account"`
+	Records      []Record `json:"records"`
 }
 
 // RecordSetUpdateResponse represents
@@ -257,12 +259,13 @@ type GroupChanges struct {
 	Changes []GroupChange `json:"changes"`
 }
 
-// BatchRecordChanges represents a list of record changes.
+// BatchRecordChanges represents a list of record changes,
+// as returned by the list batch changes VinylDNS API endpoint.
 type BatchRecordChanges struct {
 	BatchChanges []RecordChange `json:"batchChanges,omitempty"`
 }
 
-// RecordChange is represents a batch record change.
+// RecordChange represents an individual batch record change.
 type RecordChange struct {
 	ID               string     `json:"id,omitempty"`
 	Status           string     `json:"status,omitempty"`
@@ -279,12 +282,14 @@ type RecordChange struct {
 	UserID           string     `json:"userId,omitempty"`
 	CreatedTimestamp string     `json:"createdTimestamp,omitempty"`
 	Record           RecordData `json:"data,omitempty"`
+	OwnerGroupID     string     `json:"ownerGroupId,omitempty"`
 }
 
 // BatchRecordChangeUpdateResponse is represents a batch record change create or update response
 type BatchRecordChangeUpdateResponse struct {
-	Comments string         `json:"comments,omitempty"`
-	Changes  []RecordChange `json:"changes,omitempty"`
+	Comments     string         `json:"comments,omitempty"`
+	OwnerGroupID string         `json:"ownerGroupId,omitempty"`
+	Changes      []RecordChange `json:"changes,omitempty"`
 }
 
 // RecordData is represents a batch record change record data.
@@ -294,7 +299,7 @@ type RecordData struct {
 	PTRDName string `json:"ptrdname,omitempty"`
 }
 
-// BatchRecordChange is represents a batch record change API response.
+// BatchRecordChange represents a batch record change API response.
 type BatchRecordChange struct {
 	ID               string         `json:"id,omitempty"`
 	UserName         string         `json:"userName,omitempty"`
@@ -302,5 +307,6 @@ type BatchRecordChange struct {
 	Status           string         `json:"status,omitempty"`
 	Comments         string         `json:"comments,omitempty"`
 	CreatedTimestamp string         `json:"createdTimestamp,omitempty"`
+	OwnerGroupID     string         `json:"ownerGroupId,omitempty"`
 	Changes          []RecordChange `json:"changes,omitempty"`
 }
