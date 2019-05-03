@@ -213,7 +213,7 @@ func TestRecordSetCreate(t *testing.T) {
 		}},
 	}
 
-	r, err := client.RecordSetCreate("123", rs)
+	r, err := client.RecordSetCreate(rs)
 	if err != nil {
 		t.Log(pretty.PrettyFormat(r))
 		t.Error(err)
