@@ -38,9 +38,9 @@ import "github.com/vinyldns/go-vinyldns/vinyldns"
 client := vinyldns.NewClientFromEnv()
 ```
 
-See `vinyldns/resources.go` for the various `vinyldns` resource structs.
+See `vinyldns/${resource}_resources.go` files for the various `vinyldns` resource structs.
 
-See `vinyldns/api.go` for the various `vinyldns` API methods.
+See `vinyldns/${resource}.go` files for the various `vinyldns` API methods.
 
 ## Development
 
