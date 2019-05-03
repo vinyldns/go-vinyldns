@@ -245,6 +245,7 @@ func TestRecordSetUpdate(t *testing.T) {
 
 	rs := &RecordSet{
 		ZoneID: "123",
+		ID:     "456",
 		Name:   "name",
 		Type:   "CNAME",
 		TTL:    200,
@@ -253,7 +254,7 @@ func TestRecordSetUpdate(t *testing.T) {
 		}},
 	}
 
-	r, err := client.RecordSetUpdate("123", "456", rs)
+	r, err := client.RecordSetUpdate(rs)
 	if err != nil {
 		t.Log(pretty.PrettyFormat(r))
 		t.Error(err)
