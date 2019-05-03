@@ -146,7 +146,7 @@ func TestRecordSetCreateIntegrationARecord(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	rc, err := c.RecordSetCreate(zs[0].ID, &RecordSet{
+	rc, err := c.RecordSetCreate(&RecordSet{
 		Name:   "integration-test",
 		ZoneID: zs[0].ID,
 		Type:   "A",
@@ -186,7 +186,7 @@ func TestRecordSetCreateIntegrationNSRecord(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	rc, err := c.RecordSetCreate(zs[0].ID, &RecordSet{
+	rc, err := c.RecordSetCreate(&RecordSet{
 		Name:   "integration-test",
 		ZoneID: zs[0].ID,
 		Type:   "NS",
@@ -210,6 +210,54 @@ func TestRecordSetCreateIntegrationNSRecord(t *testing.T) {
 			t.Error(fmt.Sprintf("unable to get record set %s", createdID))
 		}
 		if err == nil && rg.ID == createdID {
+			break
+		}
+
+		if i == (limit - 1) {
+			fmt.Printf("%d retries reached in polling for record set %s", limit, createdID)
+			t.Error(err)
+		}
+	}
+}
+
+func TestRecordSetUpdateIntegrationARecord(t *testing.T) {
+	c := client()
+	zs, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+	rs := &RecordSet{
+		Name:   "integration-test-record-set-update",
+		ZoneID: zs[0].ID,
+		Type:   "A",
+		TTL:    60,
+		Records: []Record{
+			{
+				Address: "127.0.0.1",
+			},
+		},
+	}
+	rc, err := c.RecordSetCreate(rs)
+	if err != nil {
+		t.Error(err)
+	}
+	createdID := rc.RecordSet.ID
+	limit := 10
+	for i := 0; i < limit; time.Sleep(10 * time.Second) {
+		i++
+
+		rg, err := c.RecordSet(zs[0].ID, createdID)
+		if err == nil && rg.ID != createdID {
+			t.Error(fmt.Sprintf("unable to get record set %s", createdID))
+		}
+		if err == nil && rg.ID == createdID {
+			updatedName := "updated-integration-test-record-set-update"
+			rs.ID = createdID
+			rs.Name = updatedName
+			u, err := c.RecordSetUpdate(rs)
+			if err == nil && u.RecordSet.ID != createdID && u.RecordSet.Name != updatedName {
+				t.Error(fmt.Sprintf("unable to updated record set %s", createdID))
+			}
 			break
 		}
 

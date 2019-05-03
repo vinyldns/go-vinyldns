@@ -127,13 +127,13 @@ func (c *Client) RecordSet(zoneID, recordSetID string) (RecordSet, error) {
 }
 
 // RecordSetCreate creates the RecordSet it's passed in the Zone whose ID it's passed.
-func (c *Client) RecordSetCreate(zoneID string, rs *RecordSet) (*RecordSetUpdateResponse, error) {
+func (c *Client) RecordSetCreate(rs *RecordSet) (*RecordSetUpdateResponse, error) {
 	rsJSON, err := json.Marshal(rs)
 	if err != nil {
 		return nil, err
 	}
 	var resource = &RecordSetUpdateResponse{}
-	err = resourceRequest(c, recordSetsEP(c, zoneID), "POST", rsJSON, resource)
+	err = resourceRequest(c, recordSetsEP(c, rs.ZoneID), "POST", rsJSON, resource)
 	if err != nil {
 		return &RecordSetUpdateResponse{}, err
 	}
@@ -142,13 +142,13 @@ func (c *Client) RecordSetCreate(zoneID string, rs *RecordSet) (*RecordSetUpdate
 }
 
 // RecordSetUpdate updates the RecordSet matching the Zone ID and RecordSetID it's passed.
-func (c *Client) RecordSetUpdate(zoneID, recordSetID string, rs *RecordSet) (*RecordSetUpdateResponse, error) {
+func (c *Client) RecordSetUpdate(rs *RecordSet) (*RecordSetUpdateResponse, error) {
 	rsJSON, err := json.Marshal(rs)
 	if err != nil {
 		return nil, err
 	}
 	var resource = &RecordSetUpdateResponse{}
-	err = resourceRequest(c, recordSetEP(c, zoneID, recordSetID), "PUT", rsJSON, resource)
+	err = resourceRequest(c, recordSetEP(c, rs.ZoneID, rs.ID), "PUT", rsJSON, resource)
 	if err != nil {
 		return &RecordSetUpdateResponse{}, err
 	}
