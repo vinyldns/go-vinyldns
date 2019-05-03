@@ -50,57 +50,6 @@ type ListFilter struct {
 	MaxItems   int
 }
 
-// User represents a vinyldns user.
-type User struct {
-	ID        string `json:"id,omitempty"`
-	UserName  string `json:"userName,omitempty"`
-	FirstName string `json:"firstName,omitempty"`
-	LastName  string `json:"lastName,omitempty"`
-	Email     string `json:"email,omitempty"`
-	Created   string `json:"created,omitempty"`
-}
-
-// Groups is a slice of groups
-type Groups struct {
-	Groups []Group `json:"groups"`
-}
-
-// Group represents a vinyldns group.
-type Group struct {
-	ID          string `json:"id,omitempty"`
-	Name        string `json:"name"`
-	Email       string `json:"email,omitempty"`
-	Description string `json:"description,omitempty"`
-	Status      string `json:"status,omitempty"`
-	Created     string `json:"created,omitempty"`
-	Members     []User `json:"members"`
-	Admins      []User `json:"admins"`
-}
-
-// GroupAdmins is a slice of Users
-type GroupAdmins struct {
-	GroupAdmins []User `json:"admins"`
-}
-
-// GroupMembers is a slice of Users
-type GroupMembers struct {
-	GroupMembers []User `json:"members"`
-}
-
-// GroupChange represents a group change event object.
-type GroupChange struct {
-	UserID     string `json:"userId,omitempty"`
-	Created    string `json:"created,omitempty"`
-	ChangeType string `json:"changeType,omitempty"`
-	NewGroup   Group  `json:"newGroup,omitempty"`
-	OldGroup   Group  `json:"oldGroup,omitempty"`
-}
-
-// GroupChanges is represents the group changes.
-type GroupChanges struct {
-	Changes []GroupChange `json:"changes"`
-}
-
 // BatchRecordChanges represents a list of record changes,
 // as returned by the list batch changes VinylDNS API endpoint.
 type BatchRecordChanges struct {
