@@ -255,7 +255,7 @@ func TestRecordSetUpdateIntegrationARecord(t *testing.T) {
 			rs.ID = createdID
 			rs.Name = updatedName
 			u, err := c.RecordSetUpdate(rs)
-			if err == nil && u.ID != createdID && u.Name != updatedName {
+			if err == nil && u.RecordSet.ID != createdID && u.RecordSet.Name != updatedName {
 				t.Error(fmt.Sprintf("unable to updated record set %s", createdID))
 			}
 			break
