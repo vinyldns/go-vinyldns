@@ -152,6 +152,23 @@ func TestZonesListAllIntegrationFilterForNonexistentName(t *testing.T) {
 	}
 }
 
+func TestZoneChanges(t *testing.T) {
+	c := client()
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	changes, err := c.ZoneChanges(zones[0].ID)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(changes) > 0 {
+		t.Error("Expected ZoneChanges to yield results")
+	}
+}
+
 func TestRecordSetCreateIntegrationARecord(t *testing.T) {
 	c := client()
 	zs, err := c.ZonesListAll(ListFilter{})
