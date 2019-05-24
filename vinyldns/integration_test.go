@@ -126,6 +126,18 @@ func TestZoneCreateIntegration(t *testing.T) {
 	}
 }
 
+func TestZoneByNameIntegration(t *testing.T) {
+	c := client()
+	z, err := c.ZoneByName("ok")
+	if err != nil {
+		t.Error(err)
+	}
+
+	if z.Name != "ok." {
+		t.Error(fmt.Sprintf("unable to get ZoneByName %s", "ok."))
+	}
+}
+
 func TestZonesListAllIntegrationFilterForNonexistentName(t *testing.T) {
 	c := client()
 	zones, err := c.ZonesListAll(ListFilter{

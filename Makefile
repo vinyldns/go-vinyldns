@@ -1,4 +1,4 @@
-VERSION=0.9.1
+VERSION=0.9.2
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
 

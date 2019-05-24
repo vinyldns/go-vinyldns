@@ -217,6 +217,92 @@ func TestZone(t *testing.T) {
 	}
 }
 
+func TestZoneByName(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/name/vinyldns",
+			code:     200,
+			body:     zoneJSON,
+		},
+	})
+
+	defer server.Close()
+
+	z, err := client.ZoneByName("vinyldns")
+	if err != nil {
+		t.Log(pretty.PrettyFormat(z))
+		t.Error(err)
+	}
+
+	if z.Name != "vinyldns." {
+		t.Error("Expected zone.Name to have a value")
+	}
+	if z.Email != "some_user@foo.com" {
+		t.Error("Expected zone.Email to have a value")
+	}
+	if z.Status != "Active" {
+		t.Error("Expected zone.Status to have a value")
+	}
+	if z.Created != "2015-10-30T01:25:46Z" {
+		t.Error("Expected zone.Created to have a value")
+	}
+	if z.ID != "123" {
+		t.Error("Expected zone.ID to have a value")
+	}
+	if z.LatestSync == "" {
+		t.Error("Expected zone.LatestSync to have a value")
+	}
+	if z.Updated == "" {
+		t.Error("Expected zone.Updated to have a value")
+	}
+	if z.AdminGroupID == "" {
+		t.Error("Expected zone.AdminGroupID to have a value")
+	}
+	if z.Connection.Name != "vinyldns." {
+		t.Error("Expected zone.Connection.Name to have a value")
+	}
+	if z.Connection.KeyName != "vinyldns." {
+		t.Error("Expected zone.Connection.KeyName to have a value")
+	}
+	if z.Connection.Key != "OBF:1:ABC" {
+		t.Error("Expected zone.Connection.Key to have a value")
+	}
+	if z.Connection.PrimaryServer != "127.0.0.1" {
+		t.Error("Expected zone.Connection.PrimaryServer to have a value")
+	}
+	if z.TransferConnection.Name != "vinyldns." {
+		t.Error("Expected zone.TransferConnection.Name to have a value")
+	}
+	if z.TransferConnection.KeyName != "vinyldns." {
+		t.Error("Expected zone.TransferConnection.KeyName to have a value")
+	}
+	if z.TransferConnection.Key != "OBF:1:ABC+5" {
+		t.Error("Expected zone.TransferConnection.Key to have a value")
+	}
+	if z.TransferConnection.PrimaryServer != "127.0.0.1" {
+		t.Error("Expected zone.TransferConnection.PrimaryServer to have a value")
+	}
+
+	rule := z.ACL.Rules[0]
+	if rule.AccessLevel != "Read" {
+		t.Error("Expected rule.AccessLevel to be Read")
+	}
+	if rule.Description != "test-acl-group-id" {
+		t.Error("Expected rule.Description to be test-acl-group-id")
+	}
+	if rule.GroupID != "123" {
+		t.Error("Expected rule.GroupId to be 123")
+	}
+	if rule.RecordMask != "www-*" {
+		t.Error("Expected rule.RecordMask to be www-*")
+	}
+	for _, rt := range rule.RecordTypes {
+		if rt != "A" && rt != "AAAA" && rt != "CNAME" {
+			t.Error("Expected rule.RecordTypes to be A, AAAA, CNAME")
+		}
+	}
+}
+
 func TestZoneCreate(t *testing.T) {
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{

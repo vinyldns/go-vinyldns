@@ -63,6 +63,23 @@ func (c *Client) Zone(id string) (Zone, error) {
 	return zone.Zone, nil
 }
 
+// ZoneByID retrieves the Zone whose ID it's passed.
+// It is a version of Zone whose func name is a bit more explicit.
+func (c *Client) ZoneByID(id string) (Zone, error) {
+	return c.Zone(id)
+}
+
+// ZoneByName retrieves the Zone whose name it's passed.
+func (c *Client) ZoneByName(name string) (Zone, error) {
+	zone := &ZoneResponse{}
+	err := resourceRequest(c, zoneNameEP(c, name), "GET", nil, zone)
+	if err != nil {
+		return Zone{}, err
+	}
+
+	return zone.Zone, nil
+}
+
 // ZoneCreate creates the Zone it's passed.
 func (c *Client) ZoneCreate(z *Zone) (*ZoneUpdateResponse, error) {
 	zJSON, err := json.Marshal(z)
