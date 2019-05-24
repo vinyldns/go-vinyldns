@@ -462,19 +462,19 @@ func TestZoneChanges(t *testing.T) {
 		t.Error("Expected ZoneChanges.ZoneID to have a value")
 	}
 	if zc.UserID != "userId1" {
-		t.Error("Expected ZoneHistory.ZoneChanges[0].UserId to have a value")
+		t.Error("Expected ZoneChanges.ZoneChanges[0].UserID to have a value")
 	}
 	if zc.ChangeType != "Create" {
-		t.Error("Expected ZoneHistory.ZoneChanges[0].ChangeType to have a value")
+		t.Error("Expected ZoneChanges.ZoneChanges[0].ChangeType to have a value")
 	}
 	if zc.Status != "Complete" {
-		t.Error("Expected ZoneHistory.ZoneChanges[0].Status to have a value")
+		t.Error("Expected ZoneChanges.ZoneChanges[0].Status to have a value")
 	}
 	if zc.ID != "change123" {
-		t.Error("Expected ZoneHistory.ZoneChanges[0].Id to have a value")
+		t.Error("Expected ZoneChanges.ZoneChanges[0].ID to have a value")
 	}
 	if zc.Zone.Name != "vinyldnstest.sys.vinyldns.net." {
-		t.Error("Expected ZoneHistory.ZoneChange.Zone.Name to have a value")
+		t.Error("Expected ZoneChanges.ZoneChanges[0].Zone.Name to have a value")
 	}
 }
 
