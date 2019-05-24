@@ -80,6 +80,9 @@ type Zones struct {
 type ZoneChanges struct {
 	ZoneID      string       `json:"zoneId"`
 	ZoneChanges []ZoneChange `json:"zoneChanges"`
+	StartFrom   string       `json:"startFrom"`
+	MaxItems    int          `json:"maxItems"`
+	NextID      string       `json:"nextId"`
 }
 
 // ZoneChange represents a zone change

@@ -12,7 +12,7 @@ limitations under the License.
 
 package vinyldns
 
-// ZonesList retrieves the list of zones with the List criteria passed.
+// zonesList retrieves the list of zones with the List criteria passed.
 func (c *Client) zonesList(filter ListFilter) (*Zones, error) {
 	zones := &Zones{}
 	err := resourceRequest(c, zonesListEP(c, filter), "GET", nil, zones)
@@ -21,4 +21,15 @@ func (c *Client) zonesList(filter ListFilter) (*Zones, error) {
 	}
 
 	return zones, nil
+}
+
+// zoneChangesList retrieves the list of zone changes with the List criteria passed.
+func (c *Client) zoneChangesList(zoneID string, filter ListFilter) (*ZoneChanges, error) {
+	changes := &ZoneChanges{}
+	err := resourceRequest(c, zoneChangesEP(c, zoneID, filter), "GET", nil, changes)
+	if err != nil {
+		return changes, err
+	}
+
+	return changes, nil
 }

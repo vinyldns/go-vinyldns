@@ -98,7 +98,7 @@ func TestZoneNameEP(t *testing.T) {
 }
 
 func TestZoneChangesEP(t *testing.T) {
-	zone := zoneChangesEP(c, "123")
+	zone := zoneChangesEP(c, "123", ListFilter{})
 	expected := "http://host.com/zones/123/changes"
 
 	if zone != expected {

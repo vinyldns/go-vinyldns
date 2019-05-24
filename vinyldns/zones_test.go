@@ -478,6 +478,48 @@ func TestZoneChanges(t *testing.T) {
 	}
 }
 
+func TestZoneChangesListAll(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/changes?maxItems=1",
+			code:     200,
+			body:     zoneChangesListJSON1,
+		},
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/changes?startFrom=2&maxItems=1",
+			code:     200,
+			body:     zoneChangesListJSON2,
+		},
+	})
+
+	defer server.Close()
+
+	if _, err := client.ZoneChangesListAll("123", ListFilter{
+		MaxItems: 200,
+	}); err == nil {
+		t.Error("Expected error -- MaxItems must be between 1 and 100")
+	}
+
+	changes, err := client.ZoneChangesListAll("123", ListFilter{
+		MaxItems: 1,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(changes) != 2 {
+		t.Error("Expected 2 ZoneChanges; got ", len(changes))
+	}
+
+	if changes[0].ID != "1" {
+		t.Error("Expected Zone.ID to be 1")
+	}
+
+	if changes[1].ID != "2" {
+		t.Error("Expected Zone.ID to be 2")
+	}
+}
+
 func TestZoneChange(t *testing.T) {
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{

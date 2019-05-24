@@ -164,7 +164,28 @@ func TestZoneChangesIntegration(t *testing.T) {
 		t.Error(err)
 	}
 
-	if len(changes.ID) != zones[0].ID {
+	if changes.ZoneID != zones[0].ID {
+		t.Error("Expected ZoneChanges to yield correct ID")
+	}
+
+	if len(changes.ZoneChanges) > 0 {
+		t.Error("Expected ZoneChanges to yield results")
+	}
+}
+
+func TestZoneChangesListAllIntegration(t *testing.T) {
+	c := client()
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	changes, err := c.ZoneChangesListAll(zones[0].ID, ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if changes.ZoneID != zones[0].ID {
 		t.Error("Expected ZoneChanges to yield correct ID")
 	}
 

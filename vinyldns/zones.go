@@ -140,12 +140,36 @@ func (c *Client) ZoneExists(zoneID string) (bool, error) {
 // ZoneChanges retrieves the ZoneChanges for the Zone whose ID it's passed.
 func (c *Client) ZoneChanges(id string) (*ZoneChanges, error) {
 	zh := &ZoneChanges{}
-	err := resourceRequest(c, zoneChangesEP(c, id), "GET", nil, zh)
+	err := resourceRequest(c, zoneChangesEP(c, id, ListFilter{}), "GET", nil, zh)
 	if err != nil {
 		return &ZoneChanges{}, err
 	}
 
 	return zh, nil
+}
+
+// ZoneChangesListAll retrieves the complete list of zone changes with the ListFilter criteria passed.
+// Handles paging through results on the user's behalf.
+func (c *Client) ZoneChangesListAll(zoneID string, filter ListFilter) ([]ZoneChange, error) {
+	if filter.MaxItems > 100 {
+		return nil, fmt.Errorf("MaxItems must be between 1 and 100")
+	}
+
+	changes := []ZoneChange{}
+
+	for {
+		resp, err := c.zoneChangesList(zoneID, filter)
+		if err != nil {
+			return nil, err
+		}
+
+		changes = append(changes, resp.ZoneChanges...)
+		filter.StartFrom = resp.NextID
+
+		if len(filter.StartFrom) == 0 {
+			return changes, nil
+		}
+	}
 }
 
 // ZoneChange retrieves the ZoneChange matching the Zone ID and
