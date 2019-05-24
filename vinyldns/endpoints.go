@@ -48,6 +48,10 @@ func zoneEP(c *Client, id string) string {
 	return concatStrs("", zonesEP(c), "/", id)
 }
 
+func zoneNameEP(c *Client, name string) string {
+	return concatStrs("", zonesEP(c), "/name/", name)
+}
+
 func zoneHistoryEP(c *Client, id string) string {
 	return concatStrs("", zoneEP(c, id), "/history")
 }
