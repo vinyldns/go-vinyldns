@@ -97,14 +97,14 @@ func TestZoneNameEP(t *testing.T) {
 	}
 }
 
-func TestZoneHistoryEP(t *testing.T) {
-	zone := zoneHistoryEP(c, "123")
-	expected := "http://host.com/zones/123/history"
+func TestZoneChangesEP(t *testing.T) {
+	zone := zoneChangesEP(c, "123")
+	expected := "http://host.com/zones/123/changes"
 
 	if zone != expected {
 		fmt.Printf("Expected: %s", expected)
 		fmt.Printf("Actual: %s", zone)
-		t.Error("zoneHistoryEP should return the right endpoint")
+		t.Error("zoneChangesEP should return the right endpoint")
 	}
 }
 

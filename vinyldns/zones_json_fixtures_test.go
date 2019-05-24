@@ -203,7 +203,7 @@ const (
 		"id": "ccf116b8-f72b-4507-b042-3c6cc64c58fd"
 	}`
 
-	zoneHistoryJSON = `{
+	zoneChangesJSON = `{
 		"zoneId": "123",
 		"zoneChanges": [
 			{
@@ -235,54 +235,6 @@ const (
 				"status": "Complete",
 				"created": "2015-10-30T22:47:38Z",
 				"id": "change123"
-			}
-		],
-		"recordSetChanges": [
-			{
-				"zone": {
-					"name": "vinyldnstest.sys.vinyldns.net.",
-					"email": "paul_cleary@foo.com",
-					"status": "Active",
-					"created": "2015-10-30T22:47:38Z",
-					"id": "2d9f4ec0-0596-4040-a953-d14e2cca8982",
-					"connection": {
-						"name": "vinyldnstest.sys.vinyldns.net.",
-						"keyName": "cap_all.vinyldns.com",
-						"key": "xxx",
-						"primaryServer": "int-ddns01.resource.vinyldns.net"
-					},
-					"transferConnection": {
-						"name": "vinyldns.",
-						"keyName": "vinyldns.",
-						"key": "OBF:1:ABC+5",
-						"primaryServer": "127.0.0.1"
-					},
-					"adminGroupId": "c314836d-17db-4a57-b849-eb1feffe0ae7",
-					"acl": {
-						"rules": []
-					}
-				},
-				"recordSet": {
-					"id": "rs123",
-					"zoneId": "2d9f4ec0-0596-4040-a953-d14e2cca8982",
-					"name": "bind9",
-					"type": "A",
-					"status": "Active",
-					"created": "2015-11-02T13:59:48Z",
-					"updated": "2015-11-02T13:59:51Z",
-					"ttl": 300,
-					"records": [
-						{
-							"address": "127.0.0.1"
-						}
-					],
-					"account": "account-test-2"
-				},
-				"userId": "account",
-				"changeType": "Create",
-				"status": "Complete",
-				"created": "2015-11-02T13:59:48Z",
-				"id": "13c0f664-58c2-4b1a-9c46-086c3658f861"
 			}
 		]
 	}`

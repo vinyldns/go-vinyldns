@@ -52,8 +52,8 @@ func zoneNameEP(c *Client, name string) string {
 	return concatStrs("", zonesEP(c), "/name/", name)
 }
 
-func zoneHistoryEP(c *Client, id string) string {
-	return concatStrs("", zoneEP(c, id), "/history")
+func zoneChangesEP(c *Client, id string) string {
+	return concatStrs("", zoneEP(c, id), "/changes")
 }
 
 func recordSetsEP(c *Client, zoneID string) string {

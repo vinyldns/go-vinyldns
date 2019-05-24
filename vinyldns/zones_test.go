@@ -441,26 +441,25 @@ func TestZoneExists_no(t *testing.T) {
 	}
 }
 
-func TestZoneHistory(t *testing.T) {
+func TestZoneChanges(t *testing.T) {
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
-			endpoint: "http://host.com/zones/123/history",
+			endpoint: "http://host.com/zones/123/changes",
 			code:     200,
-			body:     zoneHistoryJSON,
+			body:     zoneChangesJSON,
 		},
 	})
 
 	defer server.Close()
 
-	z, err := client.ZoneHistory("123")
+	z, err := client.ZoneChanges("123")
 	zc := z.ZoneChanges[0]
-	rs := z.RecordSetChanges[0]
 	if err != nil {
 		t.Log(pretty.PrettyFormat(z))
 		t.Error(err)
 	}
 	if z.ZoneID != "123" {
-		t.Error("Expected ZoneHistory.ZoneId to have a value")
+		t.Error("Expected ZoneChanges.ZoneID to have a value")
 	}
 	if zc.UserID != "userId1" {
 		t.Error("Expected ZoneHistory.ZoneChanges[0].UserId to have a value")
@@ -477,38 +476,14 @@ func TestZoneHistory(t *testing.T) {
 	if zc.Zone.Name != "vinyldnstest.sys.vinyldns.net." {
 		t.Error("Expected ZoneHistory.ZoneChange.Zone.Name to have a value")
 	}
-	if rs.UserID != "account" {
-		t.Error("Expected ZoneHistory.RecordSetChange.UserId to have a value")
-	}
-	if rs.ChangeType != "Create" {
-		t.Error("Expected ZoneHistory.RecordSetChange.ChangeType to have a value")
-	}
-	if rs.Status != "Complete" {
-		t.Error("Expected ZoneHistory.RecordSetChange.Status to have a value")
-	}
-	if rs.Created != "2015-11-02T13:59:48Z" {
-		t.Error("Expected ZoneHistory.RecordSetChange.Status to have a value")
-	}
-	if rs.ID != "13c0f664-58c2-4b1a-9c46-086c3658f861" {
-		t.Error("Expected ZoneHistory.RecordSetChange.Status to have a value")
-	}
-	if rs.Zone.Name != "vinyldnstest.sys.vinyldns.net." {
-		t.Error("Expected ZoneHistory.RecordSetChange.Zone.Name to have a value")
-	}
-	if rs.RecordSet.ID != "rs123" {
-		t.Error("Expected ZoneHistory.RecordSetChange.RecordSet.Id to have a value")
-	}
-	if rs.RecordSet.Records[0].Address != "127.0.0.1" {
-		t.Error("Expected ZoneHistory.RecordSetChange.RecordSet.Records[0].Address to have a value")
-	}
 }
 
 func TestZoneChange(t *testing.T) {
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
-			endpoint: "http://host.com/zones/123/history",
+			endpoint: "http://host.com/zones/123/changes",
 			code:     200,
-			body:     zoneHistoryJSON,
+			body:     zoneChangesJSON,
 		},
 	})
 
@@ -520,7 +495,7 @@ func TestZoneChange(t *testing.T) {
 		t.Error(err)
 	}
 	if z.UserID != "userId1" {
-		t.Error("Expected ZoneChange.UserId to have a value")
+		t.Error("Expected ZoneChange.UserID to have a value")
 	}
 }
 

@@ -137,12 +137,12 @@ func (c *Client) ZoneExists(zoneID string) (bool, error) {
 	return true, nil
 }
 
-// ZoneHistory retrieves the ZoneHistory for the Zone whose ID it's passed.
-func (c *Client) ZoneHistory(id string) (*ZoneHistory, error) {
-	zh := &ZoneHistory{}
-	err := resourceRequest(c, zoneHistoryEP(c, id), "GET", nil, zh)
+// ZoneChanges retrieves the ZoneChanges for the Zone whose ID it's passed.
+func (c *Client) ZoneChanges(id string) (*ZoneChanges, error) {
+	zh := &ZoneChanges{}
+	err := resourceRequest(c, zoneChangesEP(c, id), "GET", nil, zh)
 	if err != nil {
-		return &ZoneHistory{}, err
+		return &ZoneChanges{}, err
 	}
 
 	return zh, nil
@@ -152,7 +152,7 @@ func (c *Client) ZoneHistory(id string) (*ZoneHistory, error) {
 // and ZoneChange ID it's passed.
 func (c *Client) ZoneChange(zoneID, zoneChangeID string) (ZoneChange, error) {
 	zc := ZoneChange{}
-	history, err := c.ZoneHistory(zoneID)
+	history, err := c.ZoneChanges(zoneID)
 	if err != nil {
 		return zc, err
 	}
