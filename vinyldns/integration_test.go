@@ -152,7 +152,7 @@ func TestZonesListAllIntegrationFilterForNonexistentName(t *testing.T) {
 	}
 }
 
-func TestZoneChanges(t *testing.T) {
+func TestZoneChangesIntegration(t *testing.T) {
 	c := client()
 	zones, err := c.ZonesListAll(ListFilter{})
 	if err != nil {
@@ -164,7 +164,11 @@ func TestZoneChanges(t *testing.T) {
 		t.Error(err)
 	}
 
-	if len(changes) > 0 {
+	if len(changes.ID) != zones[0].ID {
+		t.Error("Expected ZoneChanges to yield correct ID")
+	}
+
+	if len(changes.ZoneChanges) > 0 {
 		t.Error("Expected ZoneChanges to yield results")
 	}
 }
