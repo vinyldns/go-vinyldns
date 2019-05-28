@@ -52,8 +52,27 @@ func zoneNameEP(c *Client, name string) string {
 	return concatStrs("", zonesEP(c), "/name/", name)
 }
 
-func zoneHistoryEP(c *Client, id string) string {
-	return concatStrs("", zoneEP(c, id), "/history")
+func zoneChangesEP(c *Client, id string, f ListFilter) string {
+	params := []string{}
+	query := "?"
+
+	if f.NameFilter != "" {
+		params = append(params, fmt.Sprintf("nameFilter=%s", f.NameFilter))
+	}
+
+	if f.StartFrom != "" {
+		params = append(params, fmt.Sprintf("startFrom=%s", f.StartFrom))
+	}
+
+	if f.MaxItems != 0 {
+		params = append(params, fmt.Sprintf("maxItems=%d", f.MaxItems))
+	}
+
+	if len(params) == 0 {
+		query = ""
+	}
+
+	return concatStrs("", zoneEP(c, id), "/changes", query, strings.Join(params, "&"))
 }
 
 func recordSetsEP(c *Client, zoneID string) string {

@@ -76,11 +76,13 @@ type Zones struct {
 	NextID    string `json:"nextId"`
 }
 
-// ZoneHistory represents the zone history
-type ZoneHistory struct {
-	ZoneID           string            `json:"zoneId"`
-	ZoneChanges      []ZoneChange      `json:"zoneChanges"`
-	RecordSetChanges []RecordSetChange `json:"recordSetChanges"`
+// ZoneChanges represents the zone changes
+type ZoneChanges struct {
+	ZoneID      string       `json:"zoneId"`
+	ZoneChanges []ZoneChange `json:"zoneChanges"`
+	StartFrom   string       `json:"startFrom"`
+	MaxItems    int          `json:"maxItems"`
+	NextID      string       `json:"nextId"`
 }
 
 // ZoneChange represents a zone change
