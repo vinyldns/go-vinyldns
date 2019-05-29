@@ -387,6 +387,23 @@ func TestRecordSetDeleteIntegration(t *testing.T) {
 	}
 }
 
+func TestRecordSetChangesListAllIntegration(t *testing.T) {
+	c := client()
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	changes, err := c.RecordSetChangesListAll(zones[0].ID, ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(changes) <= 0 {
+		t.Error("Expected RecordSetChangesListAll to yield results")
+	}
+}
+
 func TestZoneDeleteIntegration(t *testing.T) {
 	c := client()
 	zs, err := c.ZonesListAll(ListFilter{})
