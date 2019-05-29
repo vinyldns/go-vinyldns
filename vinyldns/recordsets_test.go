@@ -303,6 +303,48 @@ func TestRecordSetDelete(t *testing.T) {
 	}
 }
 
+func TestRecordSetChangesListAll(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsetchanges?maxItems=1",
+			code:     200,
+			body:     recordSetChangesJSON1,
+		},
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsetchanges?startFrom=2&maxItems=1",
+			code:     200,
+			body:     recordSetChangesJSON2,
+		},
+	})
+
+	defer server.Close()
+
+	if _, err := client.RecordSetChangesListAll("123", ListFilter{
+		MaxItems: 200,
+	}); err == nil {
+		t.Error("Expected error -- MaxItems must be between 1 and 100")
+	}
+
+	changes, err := client.RecordSetChangesListAll("123", ListFilter{
+		MaxItems: 1,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(changes) != 2 {
+		t.Error("Expected 2 records; got ", len(changes))
+	}
+
+	if changes[0].ID != "1" {
+		t.Error("Expected RecordSetChange.ID to be 1")
+	}
+
+	if changes[1].ID != "2" {
+		t.Error("Expected RecordSetChange.ID to be 2")
+	}
+}
+
 func TestRecordSetChange(t *testing.T) {
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
