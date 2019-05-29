@@ -153,6 +153,12 @@ const (
 			"account":"vinyldns"
 	}}`
 
+	recordSetChangesListNoneJSON = `{
+		"zoneId": "123",
+		"maxItems": 100,
+		"recordSetChanges": []
+	}`
+
 	recordSetChangesJSON1 = `{
 		"zoneId": "123",
 		"startFrom": "1",

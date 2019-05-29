@@ -303,6 +303,36 @@ func TestRecordSetDelete(t *testing.T) {
 	}
 }
 
+func TestRecordSetChangessListAllWhenNoneExist(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsetchanges",
+			code:     200,
+			body:     recordSetChangesListNoneJSON,
+		},
+	})
+
+	defer server.Close()
+
+	changes, err := client.RecordSetChangesListAll("123", ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(changes) != 0 {
+		t.Error("Expected 0 changes; got ", len(changes))
+	}
+
+	j, err := json.Marshal(changes)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if string(j) != "[]" {
+		t.Error("Expected string-converted marshaled JSON to be '[]'; got ", string(j))
+	}
+}
+
 func TestRecordSetChangesListAll(t *testing.T) {
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
