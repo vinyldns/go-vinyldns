@@ -278,3 +278,28 @@ func TestBatchRecordChangeEP(t *testing.T) {
 		t.Error("batchRecordChangeEP should return the right endpoint")
 	}
 }
+
+func TestBuildQuery(t *testing.T) {
+	query := buildQuery(ListFilter{
+		MaxItems:   1,
+		NameFilter: "foo",
+	}, "theNameFilter")
+	expected := "?theNameFilter=foo&maxItems=1"
+
+	if query != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", query)
+		t.Error("buildQuery should return the right string")
+	}
+}
+
+func TestBuildQueryWithNoQuery(t *testing.T) {
+	query := buildQuery(ListFilter{}, "")
+	expected := ""
+
+	if query != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", query)
+		t.Error("buildQuery should return the right string")
+	}
+}
