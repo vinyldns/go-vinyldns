@@ -167,6 +167,41 @@ func (c *Client) RecordSetDelete(zoneID, recordSetID string) (*RecordSetUpdateRe
 	return resource, nil
 }
 
+// RecordSetChanges retrieves the RecordSetChanges response for the Zone and ListFilter it's passed.
+func (c *Client) RecordSetChanges(zoneID string, f ListFilter) (*RecordSetChanges, error) {
+	rsc := &RecordSetChanges{}
+	err := resourceRequest(c, recordSetChangesEP(c, zoneID, f), "GET", nil, rsc)
+	if err != nil {
+		return &RecordSetChanges{}, err
+	}
+
+	return rsc, nil
+}
+
+// RecordSetChangesListAll retrieves the complete list of record set changes for the Zone ListFilter criteria passed.
+// Handles paging through results on the user's behalf.
+func (c *Client) RecordSetChangesListAll(zoneID string, filter ListFilter) ([]RecordSetChange, error) {
+	if filter.MaxItems > 100 {
+		return nil, fmt.Errorf("MaxItems must be between 1 and 100")
+	}
+
+	rsc := []RecordSetChange{}
+
+	for {
+		resp, err := c.RecordSetChanges(zoneID, filter)
+		if err != nil {
+			return nil, err
+		}
+
+		rsc = append(rsc, resp.RecordSetChanges...)
+		filter.StartFrom = resp.NextID
+
+		if len(filter.StartFrom) == 0 {
+			return rsc, nil
+		}
+	}
+}
+
 // RecordSetChange retrieves the RecordSetChange matching the Zone, RecordSet, and Change IDs
 // it's passed.
 func (c *Client) RecordSetChange(zoneID, recordSetID, changeID string) (*RecordSetChange, error) {

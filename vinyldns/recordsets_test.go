@@ -303,6 +303,78 @@ func TestRecordSetDelete(t *testing.T) {
 	}
 }
 
+func TestRecordSetChangessListAllWhenNoneExist(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsetchanges",
+			code:     200,
+			body:     recordSetChangesListNoneJSON,
+		},
+	})
+
+	defer server.Close()
+
+	changes, err := client.RecordSetChangesListAll("123", ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(changes) != 0 {
+		t.Error("Expected 0 changes; got ", len(changes))
+	}
+
+	j, err := json.Marshal(changes)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if string(j) != "[]" {
+		t.Error("Expected string-converted marshaled JSON to be '[]'; got ", string(j))
+	}
+}
+
+func TestRecordSetChangesListAll(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsetchanges?maxItems=1",
+			code:     200,
+			body:     recordSetChangesJSON1,
+		},
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsetchanges?startFrom=2&maxItems=1",
+			code:     200,
+			body:     recordSetChangesJSON2,
+		},
+	})
+
+	defer server.Close()
+
+	if _, err := client.RecordSetChangesListAll("123", ListFilter{
+		MaxItems: 200,
+	}); err == nil {
+		t.Error("Expected error -- MaxItems must be between 1 and 100")
+	}
+
+	changes, err := client.RecordSetChangesListAll("123", ListFilter{
+		MaxItems: 1,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(changes) != 2 {
+		t.Error("Expected 2 records; got ", len(changes))
+	}
+
+	if changes[0].ID != "1" {
+		t.Error("Expected RecordSetChange.ID to be 1")
+	}
+
+	if changes[1].ID != "2" {
+		t.Error("Expected RecordSetChange.ID to be 2")
+	}
+}
+
 func TestRecordSetChange(t *testing.T) {
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{

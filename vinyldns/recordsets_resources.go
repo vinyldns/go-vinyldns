@@ -24,6 +24,16 @@ type RecordSetChange struct {
 	ID         string    `json:"id"`
 }
 
+// RecordSetChanges represents a recordset changes response
+type RecordSetChanges struct {
+	RecordSetChanges []RecordSetChange `json:"recordSetChanges"`
+	ZoneID           string            `json:"zoneId,omitempty"`
+	StartFrom        string            `json:"startFrom,omitempty"`
+	NextID           string            `json:"nextId,omitempty"`
+	MaxItems         int               `json:"maxItems,omitempty"`
+	Status           string            `json:"status,omitempty"`
+}
+
 // RecordSet represents a DNS record set.
 type RecordSet struct {
 	ID           string   `json:"id,omitempty"`

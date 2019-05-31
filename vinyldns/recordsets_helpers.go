@@ -12,7 +12,7 @@ limitations under the License.
 
 package vinyldns
 
-// recordSetsList retrieves the list of zones with the List criteria passed.
+// recordSetsList retrieves the list of record sets with the List criteria passed.
 func (c *Client) recordSetsList(zoneID string, filter ListFilter) (*RecordSetsResponse, error) {
 	recordSets := &RecordSetsResponse{}
 	err := resourceRequest(c, recordSetsListEP(c, zoneID, filter), "GET", nil, recordSets)

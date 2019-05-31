@@ -387,6 +387,59 @@ func TestRecordSetDeleteIntegration(t *testing.T) {
 	}
 }
 
+func TestRecordSetChangesIntegration(t *testing.T) {
+	c := client()
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	changes, err := c.RecordSetChanges(zones[0].ID, ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(changes.RecordSetChanges) <= 0 {
+		t.Error("Expected RecordSetChanges to return results")
+	}
+}
+
+func TestRecordSetChangesIntegrationWithMaxItems(t *testing.T) {
+	c := client()
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	changes, err := c.RecordSetChanges(zones[0].ID, ListFilter{
+		MaxItems: 1,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(changes.RecordSetChanges) > 1 {
+		t.Error("Expected RecordSetChanges to return only 1 results")
+	}
+}
+
+func TestRecordSetChangesListAllIntegration(t *testing.T) {
+	c := client()
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	changes, err := c.RecordSetChangesListAll(zones[0].ID, ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(changes) <= 0 {
+		t.Error("Expected RecordSetChangesListAll to yield results")
+	}
+}
+
 func TestZoneDeleteIntegration(t *testing.T) {
 	c := client()
 	zs, err := c.ZonesListAll(ListFilter{})

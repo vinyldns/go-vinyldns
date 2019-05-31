@@ -166,6 +166,31 @@ func TestRecordSetEP(t *testing.T) {
 	}
 }
 
+func TestRecordSetChangesEP(t *testing.T) {
+	rsc := recordSetChangesEP(c, "123", ListFilter{})
+	expected := "http://host.com/zones/123/recordsetchanges"
+
+	if rsc != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", rsc)
+		t.Error("recordSetChangesEP should return the right endpoint")
+	}
+}
+
+func TestRecordSetChangesEPWithQuery(t *testing.T) {
+	rsc := recordSetChangesEP(c, "123", ListFilter{
+		MaxItems:  3,
+		StartFrom: "1",
+	})
+	expected := "http://host.com/zones/123/recordsetchanges?startFrom=1&maxItems=3"
+
+	if rsc != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", rsc)
+		t.Error("recordSetChangesEP should return the right endpoint")
+	}
+}
+
 func TestRecordSetChangeEP(t *testing.T) {
 	rsc := recordSetChangeEP(c, "123", "456", "789")
 	expected := "http://host.com/zones/123/recordsets/456/changes/789"
@@ -251,5 +276,30 @@ func TestBatchRecordChangeEP(t *testing.T) {
 		fmt.Printf("Expected: %s", expected)
 		fmt.Printf("Actual: %s", brc)
 		t.Error("batchRecordChangeEP should return the right endpoint")
+	}
+}
+
+func TestBuildQuery(t *testing.T) {
+	query := buildQuery(ListFilter{
+		MaxItems:   1,
+		NameFilter: "foo",
+	}, "theNameFilter")
+	expected := "?theNameFilter=foo&maxItems=1"
+
+	if query != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", query)
+		t.Error("buildQuery should return the right string")
+	}
+}
+
+func TestBuildQueryWithNoQuery(t *testing.T) {
+	query := buildQuery(ListFilter{}, "")
+	expected := ""
+
+	if query != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", query)
+		t.Error("buildQuery should return the right string")
 	}
 }
