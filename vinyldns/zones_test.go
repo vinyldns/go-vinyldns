@@ -601,29 +601,3 @@ func TestZoneChange(t *testing.T) {
 		t.Error("Expected ZoneChange.UserID to have a value")
 	}
 }
-
-func TestRecordSets(t *testing.T) {
-	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
-			endpoint: "http://host.com/zones/123/recordsets",
-			code:     200,
-			body:     recordSetsJSON,
-		},
-	})
-
-	defer server.Close()
-
-	rs, err := client.RecordSets("123")
-	if err != nil {
-		t.Log(pretty.PrettyFormat(rs))
-		t.Error(err)
-	}
-	if len(rs) != 2 {
-		t.Error("Expected 2 Record Sets")
-	}
-	for _, r := range rs {
-		if r.ID == "" {
-			t.Error("Expected RecordSet.Id to have a value")
-		}
-	}
-}
