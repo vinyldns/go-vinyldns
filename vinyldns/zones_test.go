@@ -487,6 +487,10 @@ func TestZoneExists_no(t *testing.T) {
 }
 
 func TestZoneChanges(t *testing.T) {
+	zoneChangesJSON, err := readFile("test-fixtures/zones/zone-changes.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/changes",
@@ -566,6 +570,10 @@ func TestZoneChangesListAll(t *testing.T) {
 }
 
 func TestZoneChange(t *testing.T) {
+	zoneChangesJSON, err := readFile("test-fixtures/zones/zone-changes.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/changes",
