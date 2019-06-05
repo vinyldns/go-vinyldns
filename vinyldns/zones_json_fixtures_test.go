@@ -13,69 +13,6 @@ limitations under the License.
 package vinyldns
 
 const (
-	zonesJSON = `{
-		"zones": [{
-			"name": "vinyldns.",
-			"email": "some_user@foo.com",
-			"status": "Active",
-			"created": "2015-10-30T01:25:46Z",
-			"id": "8f922062-25f2-4a9d-b5ed-d9368f32bd29",
-			"connection": {
-				"name": "vinyldns.",
-				"keyName": "vinyldns.",
-				"key": "OBF:1:ABC+5",
-				"primaryServer": "127.0.0.1"
-			},
-			"transferConnection": {
-				"name": "vinyldns.",
-				"keyName": "vinyldns.",
-				"key": "OBF:1:ABC+5",
-				"primaryServer": "127.0.0.1"
-			},
-			"adminGroupId": "c314836d-17db-4a57-b849-eb1feffe0ae7",
-			"acl": {
-				"rules": [
-					{
-						"accessLevel": "Read",
-						"description": "test-acl-group-id",
-						"groupId": "123",
-						"recordMask": "www-*",
-						"recordTypes": ["A", "AAAA", "CNAME"]
-					}
-				]
-			}
-		},{
-			"name": "vinyldnstest.sys.vinyldns.net.",
-			"email": "another_user@foo.com",
-			"status": "Active",
-			"created": "2015-10-30T22:47:38Z",
-			"id": "2d9f4ef0-0596-4040-a953-d14e2cca8982",
-			"connection": {
-				"name": "vinyldnstest.sys.vinyldns.net.",
-				"keyName": "all.vinyldns.com",
-				"key": "OBF:1:QRS==",
-				"primaryServer": "int-ttns01.resource.vinyldns.net"
-			},
-			"transferConnection": {
-				"name": "vinyldns.",
-				"keyName": "vinyldns.",
-				"key": "OBF:1:ABC+5",
-				"primaryServer": "127.0.0.1"
-			},
-			"adminGroupId": "c314836d-17db-4a57-b849-eb1feffe0ae7",
-			"acl": {
-				"rules": [
-					{
-						"accessLevel": "Read",
-						"description": "test-acl-group-id",
-						"groupId": "123",
-						"recordMask": "www-*",
-						"recordTypes": ["A", "AAAA", "CNAME"]
-					}
-				]
-			}
-		}]}`
-
 	zonesListJSON1 = `{
 		"nextId": "2",
 		"maxItems": 1,

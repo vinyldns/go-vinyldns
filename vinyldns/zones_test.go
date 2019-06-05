@@ -20,6 +20,10 @@ import (
 )
 
 func TestZones(t *testing.T) {
+	zonesJSON, err := readFile("test-fixtures/zones/zones.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones",
