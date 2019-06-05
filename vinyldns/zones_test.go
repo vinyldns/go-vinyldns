@@ -528,6 +528,14 @@ func TestZoneChanges(t *testing.T) {
 }
 
 func TestZoneChangesListAll(t *testing.T) {
+	zoneChangesListJSON1, err := readFile("test-fixtures/zones/zone-changes-list-1.json")
+	if err != nil {
+		t.Error(err)
+	}
+	zoneChangesListJSON2, err := readFile("test-fixtures/zones/zone-changes-list-2.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/changes?maxItems=1",
