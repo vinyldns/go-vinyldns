@@ -96,13 +96,13 @@ func (c *Client) ZoneCreate(z *Zone) (*ZoneUpdateResponse, error) {
 }
 
 // ZoneUpdate updates the Zone whose ID it's passed.
-func (c *Client) ZoneUpdate(zoneID string, z *Zone) (*ZoneUpdateResponse, error) {
+func (c *Client) ZoneUpdate(z *Zone) (*ZoneUpdateResponse, error) {
 	zJSON, err := json.Marshal(z)
 	if err != nil {
 		return nil, err
 	}
 	var resource = &ZoneUpdateResponse{}
-	err = resourceRequest(c, zoneEP(c, zoneID), "PUT", zJSON, resource)
+	err = resourceRequest(c, zoneEP(c, z.ID), "PUT", zJSON, resource)
 	if err != nil {
 		return &ZoneUpdateResponse{}, err
 	}
