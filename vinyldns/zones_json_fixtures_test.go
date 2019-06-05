@@ -13,63 +13,6 @@ limitations under the License.
 package vinyldns
 
 const (
-	zonesListNoneJSON = `{
-		"maxItems": 100,
-		"zones": []
-	}`
-
-	zoneJSON = `{
-		"zone":{
-			"name":"vinyldns.",
-			"email":"some_user@foo.com",
-			"status":"Active",
-			"created":"2015-10-30T01:25:46Z",
-			"updated":"2015-10-30T01:25:46Z",
-			"latestSync":"2015-10-30T01:25:46Z",
-			"id":"123",
-			"connection":{
-				"name":"vinyldns.",
-				"keyName":"vinyldns.",
-				"key":"OBF:1:ABC",
-				"primaryServer":"127.0.0.1"
-			},
-			"transferConnection": {
-				"name": "vinyldns.",
-				"keyName": "vinyldns.",
-				"key": "OBF:1:ABC+5",
-				"primaryServer": "127.0.0.1"
-			},
-			"adminGroupId": "c314836d-17db-4a57-b849-eb1feffe0ae7",
-			"acl": {
-				"rules": [
-					{
-						"accessLevel": "Read",
-						"description": "test-acl-group-id",
-						"groupId": "123",
-						"recordMask": "www-*",
-						"recordTypes": ["A", "AAAA", "CNAME"]
-					}
-				]
-			}
-		}
-	}`
-
-	zoneUpdateResponseJSON = `{
-		"zone": {
-			"name": "test.",
-			"email": "paul_cleary@foo.com",
-			"status": "Active",
-			"created": "2015-11-02T15:25:29Z",
-			"id": "beb024cb-d31a-4fb3-bf9c-f08bf378d404",
-			"adminGroupId": "c314836d-17db-4a57-b849-eb1feffe0ae7"
-		},
-		"userId": "pclear",
-		"changeType": "Update",
-		"status": "Complete",
-		"created": "2015-11-02T15:25:29Z",
-		"id": "ccf116b8-f72b-4507-b042-3c6cc64c58fd"
-	}`
-
 	zoneChangesJSON = `{
 		"zoneId": "123",
 		"zoneChanges": [

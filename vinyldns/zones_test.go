@@ -114,6 +114,10 @@ func TestZonesListAll(t *testing.T) {
 }
 
 func TestZonesListAllWhenNone(t *testing.T) {
+	zonesListNoneJSON, err := readFile("test-fixtures/zones/zones-list-none.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones",
@@ -144,6 +148,10 @@ func TestZonesListAllWhenNone(t *testing.T) {
 }
 
 func TestZone(t *testing.T) {
+	zoneJSON, err := readFile("test-fixtures/zones/zone.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123",
@@ -230,6 +238,10 @@ func TestZone(t *testing.T) {
 }
 
 func TestZoneByName(t *testing.T) {
+	zoneJSON, err := readFile("test-fixtures/zones/zone.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/name/vinyldns",
@@ -316,6 +328,10 @@ func TestZoneByName(t *testing.T) {
 }
 
 func TestZoneCreate(t *testing.T) {
+	zoneUpdateResponseJSON, err := readFile("test-fixtures/zones/zone-update.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones",
@@ -352,6 +368,10 @@ func TestZoneCreate(t *testing.T) {
 }
 
 func TestZoneUpdate(t *testing.T) {
+	zoneUpdateResponseJSON, err := readFile("test-fixtures/zones/zone-update.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123",
@@ -389,6 +409,10 @@ func TestZoneUpdate(t *testing.T) {
 }
 
 func TestZoneDelete(t *testing.T) {
+	zoneUpdateResponseJSON, err := readFile("test-fixtures/zones/zone-update.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123",
@@ -413,11 +437,15 @@ func TestZoneDelete(t *testing.T) {
 }
 
 func TestZoneExists_yes(t *testing.T) {
+	zoneJSON, err := readFile("test-fixtures/zones/zone.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123",
 			code:     200,
-			body:     zoneUpdateResponseJSON,
+			body:     zoneJSON,
 		},
 	})
 
@@ -434,11 +462,15 @@ func TestZoneExists_yes(t *testing.T) {
 }
 
 func TestZoneExists_no(t *testing.T) {
+	zoneJSON, err := readFile("test-fixtures/zones/zone.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123",
 			code:     404,
-			body:     zoneUpdateResponseJSON,
+			body:     zoneJSON,
 		},
 	})
 
