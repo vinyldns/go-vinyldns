@@ -19,6 +19,10 @@ import (
 )
 
 func TestGroupCreate(t *testing.T) {
+	groupJSON, err := readFile("test-fixtures/groups/group.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/groups",
@@ -52,6 +56,10 @@ func TestGroupCreate(t *testing.T) {
 }
 
 func TestGroupUpdate(t *testing.T) {
+	groupJSON, err := readFile("test-fixtures/groups/group.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/groups/123",
@@ -86,6 +94,10 @@ func TestGroupUpdate(t *testing.T) {
 }
 
 func TestGroupDelete(t *testing.T) {
+	groupJSON, err := readFile("test-fixtures/groups/group.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/groups/123",
@@ -113,6 +125,10 @@ func TestGroupDelete(t *testing.T) {
 }
 
 func TestGroups(t *testing.T) {
+	groupsJSON, err := readFile("test-fixtures/groups/groups.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/groups",
@@ -151,6 +167,10 @@ func TestGroups(t *testing.T) {
 }
 
 func TestGroup(t *testing.T) {
+	groupJSON, err := readFile("test-fixtures/groups/group.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/groups/123",
@@ -178,6 +198,10 @@ func TestGroup(t *testing.T) {
 }
 
 func TestGroupAdmins(t *testing.T) {
+	groupAdminsJSON, err := readFile("test-fixtures/groups/group-admins.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/groups/123/admins",
@@ -201,6 +225,10 @@ func TestGroupAdmins(t *testing.T) {
 }
 
 func TestGroupMembers(t *testing.T) {
+	groupMembersJSON, err := readFile("test-fixtures/groups/group-members.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/groups/123/members",
@@ -224,6 +252,10 @@ func TestGroupMembers(t *testing.T) {
 }
 
 func TestGroupActivity(t *testing.T) {
+	groupActivityJSON, err := readFile("test-fixtures/groups/group-activity.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/groups/123/activity",

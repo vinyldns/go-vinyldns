@@ -1,0 +1,51 @@
+{
+  "maxItems": 100,
+  "changes": [
+    {
+      "newGroup": {
+        "status": "Active",
+        "name": "test-list-group-activity-max-item-success",
+        "created": "2017-03-02T18:49:58Z",
+        "id": "1555bac7-0343-4d11-800f-955afb481818",
+        "admins": [
+          {
+            "id": "ok"
+          }
+        ],
+        "members": [
+          {
+            "id": "dummy199"
+          },
+          {
+            "id": "ok"
+          }
+        ],
+        "email": "test@test.com"
+      },
+      "created": "1488480605378",
+      "userId": "some-user",
+      "changeType": "Update",
+      "oldGroup": {
+        "status": "Active",
+        "name": "test-list-group-activity-max-item-success",
+        "created": "2017-03-02T18:49:58Z",
+        "id": "1555bac7-0343-4d11-800f-955afb481818",
+        "admins": [
+          {
+            "id": "ok"
+          }
+        ],
+        "members": [
+          {
+            "id": "dummy198"
+          },
+          {
+            "id": "ok"
+          }
+        ],
+        "email": "test@test.com"
+      },
+      "id": "11abb88b-c47d-469b-bc2d-6656e00711cf"
+    }
+  ]
+}

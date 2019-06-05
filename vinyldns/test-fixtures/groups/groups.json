@@ -1,0 +1,39 @@
+{
+  "maxItems": 100,
+  "groups": [
+    {
+      "id": "93887728-2b26-4749-ba69-98871dda9cc0",
+      "name": "some-other-group",
+      "email": "test@vinyldns.com",
+      "created": "2017-03-02T16:23:07Z",
+      "status": "Active",
+      "members": [
+        {
+          "id": "2764183c-5e75-4ae6-8833-503cd5f4dcb0"
+        }
+      ],
+      "admins": [
+        {
+          "id": "2764183c-5e75-4ae6-8833-503cd5f4dcb0"
+        }
+      ]
+    },
+    {
+      "id": "aa1ea217-70a7-4350-b22b-c7e2f2158fb9",
+      "name": "some-group",
+      "email": "test@vinyldns.com",
+      "created": "2017-03-02T16:22:57Z",
+      "status": "Active",
+      "members": [
+        {
+          "id": "2764183c-5e75-4ae6-8833-503cd5f4dcb0"
+        }
+      ],
+      "admins": [
+        {
+          "id": "2764183c-5e75-4ae6-8833-503cd5f4dcb0"
+        }
+      ]
+    }
+  ]
+}
