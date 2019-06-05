@@ -1,0 +1,29 @@
+{
+  "batchChanges": [{
+    "userName": "vinyl201",
+    "status": "Complete",
+    "totalChanges": 5,
+    "userId": "vinyl",
+    "comments": "this is optional",
+    "createdTimestamp": "2018-05-11T18:12:13Z",
+    "id": "bd03175c-6fd7-419e-991c-3d5d1441d995"
+  },
+  {
+    "userName": "vinyl201",
+    "status": "Complete",
+    "totalChanges": 10,
+    "userId": "vinyl",
+    "comments": "this is optional",
+    "createdTimestamp": "2018-05-11T18:12:12Z",
+    "id": "c2ad84b0-e6de-4a70-aa28-e808d33deaa5"
+  },
+  {
+    "userName": "vinyl201",
+    "status": "Complete",
+    "totalChanges": 7,
+    "userId": "vinyl",
+    "comments": "this is optional",
+    "createdTimestamp": "2018-05-11T18:12:12Z",
+    "id": "2b827a33-7c4f-4623-8dd9-277c6fba0e54"
+  }]
+}

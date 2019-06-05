@@ -1,0 +1,14 @@
+{
+  "comments": "this is optional",
+  "changes": [
+    {
+      "changeType": "Add",
+      "inputName": "example.com.",
+      "type": "A",
+      "ttl": 3600,
+      "record": {
+        "address": "127.0.0.1"
+      }
+    }
+  ]
+}
