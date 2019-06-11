@@ -351,6 +351,7 @@ func TestZoneUpdate(t *testing.T) {
 	defer server.Close()
 
 	zone := &Zone{
+		ID:           "123",
 		Name:         "test.",
 		Email:        "email@email.com",
 		AdminGroupID: "123",
@@ -362,7 +363,7 @@ func TestZoneUpdate(t *testing.T) {
 		},
 	}
 
-	z, err := client.ZoneUpdate("123", zone)
+	z, err := client.ZoneUpdate(zone)
 	if err != nil {
 		t.Log(pretty.PrettyFormat(z))
 		t.Error(err)
