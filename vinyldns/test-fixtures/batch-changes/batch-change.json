@@ -1,0 +1,24 @@
+{
+  "userName": "vinyl201",
+  "status": "Pending",
+  "userId": "vinyl",
+  "comments": "this is optional",
+  "createdTimestamp": "2018-05-09T14:19:34Z",
+  "changes": [
+    {
+      "status": "Pending",
+      "changeType": "Add",
+      "ttl": 200,
+      "recordName": "parent.com.",
+      "type": "A",
+      "id": "7573ca11-3e30-45a8-9ba5-791f7d6ae7a7",
+      "zoneName": "parent.com.",
+      "inputName": "parent.com.",
+      "record": {
+        "address": "127.0.0.1"
+      },
+      "zoneId": "74e93bfc-7296-4b86-83d3-1ffcb0eb3d13"
+    }
+  ],
+  "id": "02bd95f4-a32c-443b-82eb-54dbaa55b31a"
+}

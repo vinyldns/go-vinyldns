@@ -20,6 +20,10 @@ import (
 )
 
 func TestZones(t *testing.T) {
+	zonesJSON, err := readFile("test-fixtures/zones/zones.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones",
@@ -60,6 +64,14 @@ func TestZones(t *testing.T) {
 }
 
 func TestZonesListAll(t *testing.T) {
+	zonesListJSON1, err := readFile("test-fixtures/zones/zones-list-1.json")
+	if err != nil {
+		t.Error(err)
+	}
+	zonesListJSON2, err := readFile("test-fixtures/zones/zones-list-2.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones?maxItems=1",
@@ -102,6 +114,10 @@ func TestZonesListAll(t *testing.T) {
 }
 
 func TestZonesListAllWhenNone(t *testing.T) {
+	zonesListNoneJSON, err := readFile("test-fixtures/zones/zones-list-none.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones",
@@ -132,6 +148,10 @@ func TestZonesListAllWhenNone(t *testing.T) {
 }
 
 func TestZone(t *testing.T) {
+	zoneJSON, err := readFile("test-fixtures/zones/zone.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123",
@@ -218,6 +238,10 @@ func TestZone(t *testing.T) {
 }
 
 func TestZoneByName(t *testing.T) {
+	zoneJSON, err := readFile("test-fixtures/zones/zone.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/name/vinyldns",
@@ -304,6 +328,10 @@ func TestZoneByName(t *testing.T) {
 }
 
 func TestZoneCreate(t *testing.T) {
+	zoneUpdateResponseJSON, err := readFile("test-fixtures/zones/zone-update.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones",
@@ -340,6 +368,10 @@ func TestZoneCreate(t *testing.T) {
 }
 
 func TestZoneUpdate(t *testing.T) {
+	zoneUpdateResponseJSON, err := readFile("test-fixtures/zones/zone-update.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123",
@@ -377,6 +409,10 @@ func TestZoneUpdate(t *testing.T) {
 }
 
 func TestZoneDelete(t *testing.T) {
+	zoneUpdateResponseJSON, err := readFile("test-fixtures/zones/zone-update.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123",
@@ -401,11 +437,15 @@ func TestZoneDelete(t *testing.T) {
 }
 
 func TestZoneExists_yes(t *testing.T) {
+	zoneJSON, err := readFile("test-fixtures/zones/zone.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123",
 			code:     200,
-			body:     zoneUpdateResponseJSON,
+			body:     zoneJSON,
 		},
 	})
 
@@ -422,11 +462,15 @@ func TestZoneExists_yes(t *testing.T) {
 }
 
 func TestZoneExists_no(t *testing.T) {
+	zoneJSON, err := readFile("test-fixtures/zones/zone.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123",
 			code:     404,
-			body:     zoneUpdateResponseJSON,
+			body:     zoneJSON,
 		},
 	})
 
@@ -443,6 +487,10 @@ func TestZoneExists_no(t *testing.T) {
 }
 
 func TestZoneChanges(t *testing.T) {
+	zoneChangesJSON, err := readFile("test-fixtures/zones/zone-changes.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/changes",
@@ -480,6 +528,14 @@ func TestZoneChanges(t *testing.T) {
 }
 
 func TestZoneChangesListAll(t *testing.T) {
+	zoneChangesListJSON1, err := readFile("test-fixtures/zones/zone-changes-list-1.json")
+	if err != nil {
+		t.Error(err)
+	}
+	zoneChangesListJSON2, err := readFile("test-fixtures/zones/zone-changes-list-2.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/changes?maxItems=1",
@@ -522,6 +578,10 @@ func TestZoneChangesListAll(t *testing.T) {
 }
 
 func TestZoneChange(t *testing.T) {
+	zoneChangesJSON, err := readFile("test-fixtures/zones/zone-changes.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/changes",
@@ -539,31 +599,5 @@ func TestZoneChange(t *testing.T) {
 	}
 	if z.UserID != "userId1" {
 		t.Error("Expected ZoneChange.UserID to have a value")
-	}
-}
-
-func TestRecordSets(t *testing.T) {
-	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
-			endpoint: "http://host.com/zones/123/recordsets",
-			code:     200,
-			body:     recordSetsJSON,
-		},
-	})
-
-	defer server.Close()
-
-	rs, err := client.RecordSets("123")
-	if err != nil {
-		t.Log(pretty.PrettyFormat(rs))
-		t.Error(err)
-	}
-	if len(rs) != 2 {
-		t.Error("Expected 2 Record Sets")
-	}
-	for _, r := range rs {
-		if r.ID == "" {
-			t.Error("Expected RecordSet.Id to have a value")
-		}
 	}
 }

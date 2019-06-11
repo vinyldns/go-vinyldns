@@ -1,0 +1,34 @@
+{
+  "recordSets": [{
+    "id": "6eb42765-818b-4966-89e8-1a34720c82a2",
+    "zoneId": "2d9f4ec0-0596-4040-a953-d14e2cca8982",
+    "name": "bind9",
+    "type": "A",
+    "status": "Active",
+    "created": "2015-11-02T14:02:08Z",
+    "updated": "2015-11-02T14:02:09Z",
+    "ttl": 300,
+    "records": [
+      {
+        "address": "127.0.0.1"
+      }
+    ],
+    "account": "account-test-2"
+  },
+  {
+    "id": "bba979b5-da30-4deb-9d8b-3f4a40e622c4",
+    "zoneId": "2d9f4ec0-0596-4040-a953-d14e2cca8982",
+    "name": "pjc-cname",
+    "type": "CNAME",
+    "status": "Active",
+    "created": "2015-11-02T15:51:59Z",
+    "updated": "2015-11-02T15:51:59Z",
+    "ttl": 200,
+    "records": [
+      {
+        "cname": "pjc-test."
+      }
+    ],
+    "account": "vinyldns"
+  }]
+}

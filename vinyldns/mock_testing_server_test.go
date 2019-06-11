@@ -15,6 +15,7 @@ package vinyldns
 import (
 	"crypto/tls"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -24,6 +25,15 @@ type testToolsConfig struct {
 	endpoint string
 	code     int
 	body     string
+}
+
+func readFile(file string) (string, error) {
+	b, err := ioutil.ReadFile(file)
+	if err != nil {
+		return "", err
+	}
+
+	return string(b), nil
 }
 
 func testTools(configs []testToolsConfig) (*httptest.Server, *Client) {

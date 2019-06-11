@@ -19,7 +19,45 @@ import (
 	"github.com/gobs/pretty"
 )
 
+func TestRecordSets(t *testing.T) {
+	recordSetsJSON, err := readFile("test-fixtures/recordsets/recordsets.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/recordsets",
+			code:     200,
+			body:     recordSetsJSON,
+		},
+	})
+
+	defer server.Close()
+
+	rs, err := client.RecordSets("123")
+	if err != nil {
+		t.Log(pretty.PrettyFormat(rs))
+		t.Error(err)
+	}
+	if len(rs) != 2 {
+		t.Error("Expected 2 Record Sets")
+	}
+	for _, r := range rs {
+		if r.ID == "" {
+			t.Error("Expected RecordSet.Id to have a value")
+		}
+	}
+}
+
 func TestRecordSetsListAll(t *testing.T) {
+	recordSetsListJSON1, err := readFile("test-fixtures/recordsets/recordsets-list-json-1.json")
+	if err != nil {
+		t.Error(err)
+	}
+	recordSetsListJSON2, err := readFile("test-fixtures/recordsets/recordsets-list-json-2.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/recordsets?maxItems=1",
@@ -62,6 +100,10 @@ func TestRecordSetsListAll(t *testing.T) {
 }
 
 func TestRecordSetsListAllWhenNoneExist(t *testing.T) {
+	recordSetsListNoneJSON, err := readFile("test-fixtures/recordsets/recordsets-list-none.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/recordsets",
@@ -92,6 +134,10 @@ func TestRecordSetsListAllWhenNoneExist(t *testing.T) {
 }
 
 func TestRecordSetCollector(t *testing.T) {
+	recordSetsJSON, err := readFile("test-fixtures/recordsets/recordsets.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/recordsets?maxItems=3",
@@ -142,6 +188,10 @@ func TestRecordSetCollector(t *testing.T) {
 }
 
 func TestRecordSet(t *testing.T) {
+	recordSetJSON, err := readFile("test-fixtures/recordsets/recordset.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/recordsets/456",
@@ -193,6 +243,10 @@ func TestRecordSet(t *testing.T) {
 }
 
 func TestRecordSetCreate(t *testing.T) {
+	recordSetUpdateResponseJSON, err := readFile("test-fixtures/recordsets/recordset-update.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/recordsets",
@@ -233,6 +287,10 @@ func TestRecordSetCreate(t *testing.T) {
 }
 
 func TestRecordSetUpdate(t *testing.T) {
+	recordSetUpdateResponseJSON, err := readFile("test-fixtures/recordsets/recordset-update.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/recordsets/456",
@@ -274,6 +332,10 @@ func TestRecordSetUpdate(t *testing.T) {
 }
 
 func TestRecordSetDelete(t *testing.T) {
+	recordSetUpdateResponseJSON, err := readFile("test-fixtures/recordsets/recordset-update.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/recordsets/456",
@@ -304,6 +366,10 @@ func TestRecordSetDelete(t *testing.T) {
 }
 
 func TestRecordSetChangessListAllWhenNoneExist(t *testing.T) {
+	recordSetChangesListNoneJSON, err := readFile("test-fixtures/recordsets/recordset-changes-list-none.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/recordsetchanges",
@@ -334,6 +400,14 @@ func TestRecordSetChangessListAllWhenNoneExist(t *testing.T) {
 }
 
 func TestRecordSetChangesListAll(t *testing.T) {
+	recordSetChangesJSON1, err := readFile("test-fixtures/recordsets/recordset-changes-list-1.json")
+	if err != nil {
+		t.Error(err)
+	}
+	recordSetChangesJSON2, err := readFile("test-fixtures/recordsets/recordset-changes-list-2.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/recordsetchanges?maxItems=1",
@@ -376,6 +450,10 @@ func TestRecordSetChangesListAll(t *testing.T) {
 }
 
 func TestRecordSetChange(t *testing.T) {
+	recordSetChangeJSON, err := readFile("test-fixtures/recordsets/recordset-change.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/recordsets/456/changes/789",

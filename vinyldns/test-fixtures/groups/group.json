@@ -1,0 +1,10 @@
+{
+  "id":"3094e07b-3b82-4fff-ac9d-f60dff223c2c",
+  "name":"test-group",
+  "email":"test@test.com",
+  "description":"this is a description",
+  "created":"2017-01-18T14:39:26Z",
+  "status":"Active",
+  "members":[{"id":"test-id"}],
+  "admins":[{"id":"test-id"}]
+}

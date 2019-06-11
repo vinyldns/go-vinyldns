@@ -19,11 +19,15 @@ import (
 )
 
 func TestBatchRecordChanges(t *testing.T) {
+	batchChangesJSON, err := readFile("test-fixtures/batch-changes/batch-changes.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/batchrecordchanges",
 			code:     200,
-			body:     batchRecordChangesJSON,
+			body:     batchChangesJSON,
 		},
 	})
 
@@ -45,11 +49,15 @@ func TestBatchRecordChanges(t *testing.T) {
 }
 
 func TestBatchRecordChange(t *testing.T) {
+	batchChangeJSON, err := readFile("test-fixtures/batch-changes/batch-change.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/batchrecordchanges/123",
 			code:     200,
-			body:     batchRecordChangeJSON,
+			body:     batchChangeJSON,
 		},
 	})
 
@@ -71,11 +79,15 @@ func TestBatchRecordChange(t *testing.T) {
 }
 
 func TestBatchRecordChangeCreate(t *testing.T) {
+	batchChangeCreateJSON, err := readFile("test-fixtures/batch-changes/batch-change-create.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		testToolsConfig{
 			endpoint: "http://host.com/zones/batchrecordchanges",
 			code:     200,
-			body:     batchRecordChangeCreateJSON,
+			body:     batchChangeCreateJSON,
 		},
 	})
 
