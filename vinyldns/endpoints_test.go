@@ -224,6 +224,45 @@ func TestGroupEp(t *testing.T) {
 	}
 }
 
+func TestGroupsListEP(t *testing.T) {
+	groups := groupsListEP(c, ListFilter{
+		NameFilter: "foo",
+		MaxItems:   2,
+		StartFrom:  "123",
+	})
+	expected := "http://host.com/groups?groupNameFilter=foo&startFrom=123&maxItems=2"
+
+	if groups != expected {
+		fmt.Printf("\nExpected: %s", expected)
+		fmt.Printf("\nActual: %s", groups)
+		t.Error("groupsListEP should return the right endpoint")
+	}
+}
+
+func TestGroupsListEPWithoutAllFilterParams(t *testing.T) {
+	groups := groupsListEP(c, ListFilter{
+		NameFilter: "foo",
+	})
+	expected := "http://host.com/groups?groupNameFilter=foo"
+
+	if groups != expected {
+		fmt.Printf("\nExpected: %s", expected)
+		fmt.Printf("\nActual: %s", groups)
+		t.Error("groupsListEP should return the right endpoint")
+	}
+}
+
+func TestGroupsListEPWithoutAnyFilterParams(t *testing.T) {
+	groups := groupsListEP(c, ListFilter{})
+	expected := "http://host.com/groups"
+
+	if groups != expected {
+		fmt.Printf("\nExpected: %s", expected)
+		fmt.Printf("\nActual: %s", groups)
+		t.Error("groupsListEP should return the right endpoint")
+	}
+}
+
 func TestGroupAdminsEp(t *testing.T) {
 	ga := groupAdminsEP(c, "123")
 	expected := "http://host.com/groups/123/admins"
