@@ -1,0 +1,22 @@
+{
+  "maxItems": 1,
+  "groups": [
+    {
+      "id": "2",
+      "name": "some-group",
+      "email": "test@vinyldns.com",
+      "created": "2017-03-02T16:23:07Z",
+      "status": "Active",
+      "members": [
+        {
+          "id": "2764183c-5e75-4ae6-8833-503cd5f4dcb0"
+        }
+      ],
+      "admins": [
+        {
+          "id": "2764183c-5e75-4ae6-8833-503cd5f4dcb0"
+        }
+      ]
+    }
+  ]
+}

@@ -24,7 +24,11 @@ type User struct {
 
 // Groups is a slice of groups
 type Groups struct {
-	Groups []Group `json:"groups"`
+	Groups          []Group `json:"groups"`
+	GroupNameFilter string  `json:"groupNameFilter,omitempty"`
+	MaxItems        int     `json:"maxItems,omitempty"`
+	NextID          string  `json:"nextId,omitempty"`
+	StartFrom       string  `json:"startFrom,omitempty"`
 }
 
 // Group represents a vinyldns group.

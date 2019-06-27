@@ -12,7 +12,10 @@ limitations under the License.
 
 package vinyldns
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // Groups retrieves a list of Groups that the requester is a part of.
 func (c *Client) Groups() ([]Group, error) {
@@ -23,6 +26,30 @@ func (c *Client) Groups() ([]Group, error) {
 	}
 
 	return groups.Groups, nil
+}
+
+// GroupsListAll retrieves the complete list of groups with the ListFilter criteria passed.
+// Handles paging through results on the user's behalf.
+func (c *Client) GroupsListAll(filter ListFilter) ([]Group, error) {
+	if filter.MaxItems > 100 {
+		return nil, fmt.Errorf("MaxItems must be between 1 and 100")
+	}
+
+	groups := []Group{}
+
+	for {
+		resp, err := c.groupsList(filter)
+		if err != nil {
+			return nil, err
+		}
+
+		groups = append(groups, resp.Groups...)
+		filter.StartFrom = resp.NextID
+
+		if len(filter.StartFrom) == 0 {
+			return groups, nil
+		}
+	}
 }
 
 // GroupCreate creates the Group it's passed.
@@ -49,6 +76,17 @@ func (c *Client) Group(groupID string) (*Group, error) {
 	}
 
 	return group, nil
+}
+
+// GroupByName gets the Group whose name it's passed.
+func (c *Client) GroupByName(name string) (*Group, error) {
+	groups := &Group{}
+	err := resourceRequest(c, groupsEP(c), "GET", nil, groups)
+	if err != nil {
+		return nil, err
+	}
+
+	return groups, nil
 }
 
 // GroupDelete deletes the Group whose ID it's passed.
