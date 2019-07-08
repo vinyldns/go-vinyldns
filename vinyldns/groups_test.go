@@ -166,6 +166,56 @@ func TestGroups(t *testing.T) {
 	}
 }
 
+func TestGroupsListAll(t *testing.T) {
+	groupsListJSON1, err := readFile("test-fixtures/groups/groups-list-1.json")
+	if err != nil {
+		t.Error(err)
+	}
+	groupsListJSON2, err := readFile("test-fixtures/groups/groups-list-2.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/groups?maxItems=1",
+			code:     200,
+			body:     groupsListJSON1,
+		},
+		testToolsConfig{
+			endpoint: "http://host.com/groups?startFrom=2&maxItems=1",
+			code:     200,
+			body:     groupsListJSON2,
+		},
+	})
+
+	defer server.Close()
+
+	if _, err := client.GroupsListAll(ListFilter{
+		MaxItems: 200,
+	}); err == nil {
+		t.Error("Expected error -- MaxItems must be between 1 and 100")
+	}
+
+	groups, err := client.GroupsListAll(ListFilter{
+		MaxItems: 1,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(groups) != 2 {
+		t.Error("Expected 2 Groups; got ", len(groups))
+	}
+
+	if groups[0].ID != "1" {
+		t.Error("Expected Group.ID to be 1")
+	}
+
+	if groups[1].ID != "2" {
+		t.Error("Expected Group.ID to be 2")
+	}
+}
+
 func TestGroup(t *testing.T) {
 	groupJSON, err := readFile("test-fixtures/groups/group.json")
 	if err != nil {

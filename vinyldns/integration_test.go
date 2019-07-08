@@ -62,6 +62,20 @@ func TestGroupCreateIntegration(t *testing.T) {
 	}
 }
 
+func TestGroupsListAllIntegrationFilterForNonexistentName(t *testing.T) {
+	c := client()
+	zones, err := c.ZonesListAll(ListFilter{
+		NameFilter: "foo",
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) > 0 {
+		t.Error("Expected GroupsListAll for groups named 'foo' to yield no results")
+	}
+}
+
 func TestGroupAdminsIntegration(t *testing.T) {
 	c := client()
 	groups, err := c.Groups()

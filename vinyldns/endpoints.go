@@ -69,6 +69,12 @@ func groupsEP(c *Client) string {
 	return concatStrs("", c.Host, "/groups")
 }
 
+func groupsListEP(c *Client, f ListFilter) string {
+	query := buildQuery(f, "groupNameFilter")
+
+	return concatStrs("", groupsEP(c), query)
+}
+
 func groupEP(c *Client, groupID string) string {
 	return concatStrs("", groupsEP(c), "/", groupID)
 }
