@@ -78,17 +78,6 @@ func (c *Client) Group(groupID string) (*Group, error) {
 	return group, nil
 }
 
-// GroupByName gets the Group whose name it's passed.
-func (c *Client) GroupByName(name string) (*Group, error) {
-	groups := &Group{}
-	err := resourceRequest(c, groupsEP(c), "GET", nil, groups)
-	if err != nil {
-		return nil, err
-	}
-
-	return groups, nil
-}
-
 // GroupDelete deletes the Group whose ID it's passed.
 func (c *Client) GroupDelete(groupID string) (*Group, error) {
 	group := &Group{}
