@@ -27,6 +27,15 @@ func TestNewConfigFromEnv(t *testing.T) {
 	expectSame(t, defaultConfig.AccessKey, accessKey, "defaultConfig.AccessKey")
 	expectSame(t, defaultConfig.SecretKey, secretKey, "defaultConfig.SecretKey")
 	expectSame(t, defaultConfig.Host, host, "defaultConfig.Host")
+	expectSame(t, defaultConfig.UserAgent, "go-vinyldns", "defaultConfig.UserAgent")
+}
+
+func TestNewConfigFromEnvWithExplicitUserAgent(t *testing.T) {
+	os.Setenv("VINYLDNS_USER_AGENT", "some customer UA")
+
+	defaultConfig := NewConfigFromEnv()
+
+	expectSame(t, defaultConfig.UserAgent, "some customer UA", "defaultConfig.UserAgent")
 }
 
 func TestNewClient(t *testing.T) {
@@ -34,17 +43,20 @@ func TestNewClient(t *testing.T) {
 		testAccessKey = "access granted"
 		testSecretKey = "this is very secret"
 		testHost      = "certainly.a.unique.host"
+		testUserAgent = "certainly.a.unique.userAgent"
 	)
 
 	client := NewClient(ClientConfiguration{
 		AccessKey: testAccessKey,
 		SecretKey: testSecretKey,
 		Host:      testHost,
+		UserAgent: testUserAgent,
 	})
 
 	expectSame(t, client.AccessKey, testAccessKey, "client.AccessKey")
 	expectSame(t, client.SecretKey, testSecretKey, "client.SecretKey")
 	expectSame(t, client.Host, testHost, "client.Host")
+	expectSame(t, client.UserAgent, testUserAgent, "client.UserAgent")
 }
 
 func envOrDefault(envVar, defaultValue string) string {
