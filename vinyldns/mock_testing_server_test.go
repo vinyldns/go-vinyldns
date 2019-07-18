@@ -65,6 +65,7 @@ func testTools(configs []testToolsConfig) (*httptest.Server, *Client) {
 		"accessToken",
 		"secretToken",
 		host,
+		"go-vinyldns testing",
 		&http.Client{Transport: tr},
 	}
 

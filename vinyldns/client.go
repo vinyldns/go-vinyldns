@@ -22,15 +22,22 @@ type ClientConfiguration struct {
 	AccessKey string
 	SecretKey string
 	Host      string
+	UserAgent string
 }
 
 // NewConfigFromEnv creates a new ClientConfiguration
 // using environment variables.
 func NewConfigFromEnv() ClientConfiguration {
+	ua := defaultUA()
+
+	if os.Getenv("VINYLDNS_USER_AGENT") != "" {
+		ua = os.Getenv("VINYLDNS_USER_AGENT")
+	}
 	return ClientConfiguration{
 		os.Getenv("VINYLDNS_ACCESS_KEY"),
 		os.Getenv("VINYLDNS_SECRET_KEY"),
 		os.Getenv("VINYLDNS_HOST"),
+		ua,
 	}
 }
 
@@ -39,6 +46,7 @@ type Client struct {
 	AccessKey  string
 	SecretKey  string
 	Host       string
+	UserAgent  string
 	HTTPClient *http.Client
 }
 
@@ -51,12 +59,21 @@ func NewClientFromEnv() *Client {
 // NewClient returns a new vinyldns client using
 // the client ClientConfiguration it's passed.
 func NewClient(config ClientConfiguration) *Client {
+	if config.UserAgent == "" {
+		config.UserAgent = defaultUA()
+	}
+
 	return &Client{
 		config.AccessKey,
 		config.SecretKey,
 		config.Host,
+		config.UserAgent,
 		&http.Client{},
 	}
+}
+
+func defaultUA() string {
+	return "go-vinyldns"
 }
 
 func logRequests() bool {

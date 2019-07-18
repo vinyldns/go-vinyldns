@@ -22,6 +22,7 @@ var c = &Client{
 	"accessKey",
 	"secretKey",
 	"http://host.com",
+	"go-vinyldns testing",
 	&http.Client{},
 }
 
