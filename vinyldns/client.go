@@ -46,8 +46,8 @@ type Client struct {
 	AccessKey  string
 	SecretKey  string
 	Host       string
-	UserAgent  string
 	HTTPClient *http.Client
+	UserAgent  string
 }
 
 // NewClientFromEnv returns a Client configured via
@@ -67,8 +67,8 @@ func NewClient(config ClientConfiguration) *Client {
 		config.AccessKey,
 		config.SecretKey,
 		config.Host,
-		config.UserAgent,
 		&http.Client{},
+		config.UserAgent,
 	}
 }
 
