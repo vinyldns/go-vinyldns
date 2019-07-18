@@ -20,7 +20,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/smartystreets/go-aws-auth"
+	awsauth "github.com/smartystreets/go-aws-auth"
 )
 
 func concat(arr []string) string {
@@ -48,6 +48,7 @@ func doClientReq(c *Client, method string, url string) (*http.Response, error) {
 	}
 
 	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("User-Agent", c.UserAgent)
 
 	awsauth.Sign4(req, awsauth.Credentials{
 		AccessKeyID:     c.AccessKey,
