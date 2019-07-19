@@ -13,6 +13,7 @@ limitations under the License.
 package vinyldns
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 )
@@ -73,7 +74,7 @@ func NewClient(config ClientConfiguration) *Client {
 }
 
 func defaultUA() string {
-	return "go-vinyldns"
+	return fmt.Sprintf("go-vinyldns %s", Version)
 }
 
 func logRequests() bool {
