@@ -31,8 +31,8 @@ type ClientConfiguration struct {
 func NewConfigFromEnv() ClientConfiguration {
 	ua := defaultUA()
 
-	if os.Getenv("VINYLDNS_USER_AGENT") != "" {
-		ua = os.Getenv("VINYLDNS_USER_AGENT")
+	if vua := os.Getenv("VINYLDNS_USER_AGENT"); vua != "" {
+		ua = vua
 	}
 	return ClientConfiguration{
 		os.Getenv("VINYLDNS_ACCESS_KEY"),
@@ -74,7 +74,7 @@ func NewClient(config ClientConfiguration) *Client {
 }
 
 func defaultUA() string {
-	return fmt.Sprintf("go-vinyldns / %s", Version)
+	return fmt.Sprintf("go-vinyldns/%s", Version)
 }
 
 func logRequests() bool {
