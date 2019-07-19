@@ -22,7 +22,7 @@ integration:
 	go test $(SOURCE) -tags=integration
 
 validate-version:
-	cat vinyldns/version.go | fgrep 'var Version = "$(VERSION)"'
+	cat vinyldns/version.go | grep 'var Version = "$(VERSION)"'
 
 start-api:
 	if [ ! -d "$(GOPATH)/src/$(VINYLDNS_REPO)" ]; then \
