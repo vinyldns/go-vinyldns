@@ -28,7 +28,7 @@ func TestNewConfigFromEnv(t *testing.T) {
 	expectSame(t, defaultConfig.AccessKey, accessKey, "defaultConfig.AccessKey")
 	expectSame(t, defaultConfig.SecretKey, secretKey, "defaultConfig.SecretKey")
 	expectSame(t, defaultConfig.Host, host, "defaultConfig.Host")
-	expectSame(t, defaultConfig.UserAgent, fmt.Sprintf("go-vinyldns %s", Version), "defaultConfig.UserAgent")
+	expectSame(t, defaultConfig.UserAgent, fmt.Sprintf("go-vinyldns/%s", Version), "defaultConfig.UserAgent")
 }
 
 func TestNewConfigFromEnvWithExplicitUserAgent(t *testing.T) {

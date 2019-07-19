@@ -34,7 +34,7 @@ func TestNewClientFromEnv(t *testing.T) {
 	if client.Host != "https://vinyldns-api.com" {
 		t.Error("NewClientFromEnv should set a Host from the environment")
 	}
-	if client.UserAgent != fmt.Sprintf("go-vinyldns %s", Version) {
+	if client.UserAgent != fmt.Sprintf("go-vinyldns/%s", Version) {
 		t.Error("NewClientFromEnv should set a default UserAgent if one is not present in the environment")
 	}
 

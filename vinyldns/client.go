@@ -74,7 +74,7 @@ func NewClient(config ClientConfiguration) *Client {
 }
 
 func defaultUA() string {
-	return fmt.Sprintf("go-vinyldns %s", Version)
+	return fmt.Sprintf("go-vinyldns / %s", Version)
 }
 
 func logRequests() bool {
