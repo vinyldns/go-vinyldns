@@ -27,6 +27,7 @@ func client() *Client {
 		"okAccessKey",
 		"okSecretKey",
 		"http://localhost:9000",
+		"go-vinyldns integration testing",
 	})
 }
 

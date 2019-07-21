@@ -23,6 +23,7 @@ var c = &Client{
 	"secretKey",
 	"http://host.com",
 	&http.Client{},
+	"go-vinyldns testing",
 }
 
 func TestZonesEP(t *testing.T) {

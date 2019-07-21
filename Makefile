@@ -1,8 +1,8 @@
-VERSION=0.9.7
+VERSION=0.9.8
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
 
-all: deps test start-api integration stop-api install
+all: deps test start-api integration stop-api validate-version install
 
 deps:
 	@go tool cover 2>/dev/null; if [ $$? -eq 3 ]; then \
@@ -20,6 +20,9 @@ test:
 
 integration:
 	go test $(SOURCE) -tags=integration
+
+validate-version:
+	cat vinyldns/version.go | grep 'var Version = "$(VERSION)"'
 
 start-api:
 	if [ ! -d "$(GOPATH)/src/$(VINYLDNS_REPO)" ]; then \

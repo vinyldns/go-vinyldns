@@ -13,6 +13,7 @@ limitations under the License.
 package vinyldns
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 )
@@ -22,15 +23,22 @@ type ClientConfiguration struct {
 	AccessKey string
 	SecretKey string
 	Host      string
+	UserAgent string
 }
 
 // NewConfigFromEnv creates a new ClientConfiguration
 // using environment variables.
 func NewConfigFromEnv() ClientConfiguration {
+	ua := defaultUA()
+
+	if vua := os.Getenv("VINYLDNS_USER_AGENT"); vua != "" {
+		ua = vua
+	}
 	return ClientConfiguration{
 		os.Getenv("VINYLDNS_ACCESS_KEY"),
 		os.Getenv("VINYLDNS_SECRET_KEY"),
 		os.Getenv("VINYLDNS_HOST"),
+		ua,
 	}
 }
 
@@ -40,6 +48,7 @@ type Client struct {
 	SecretKey  string
 	Host       string
 	HTTPClient *http.Client
+	UserAgent  string
 }
 
 // NewClientFromEnv returns a Client configured via
@@ -51,12 +60,21 @@ func NewClientFromEnv() *Client {
 // NewClient returns a new vinyldns client using
 // the client ClientConfiguration it's passed.
 func NewClient(config ClientConfiguration) *Client {
+	if config.UserAgent == "" {
+		config.UserAgent = defaultUA()
+	}
+
 	return &Client{
 		config.AccessKey,
 		config.SecretKey,
 		config.Host,
 		&http.Client{},
+		config.UserAgent,
 	}
+}
+
+func defaultUA() string {
+	return fmt.Sprintf("go-vinyldns/%s", Version)
 }
 
 func logRequests() bool {

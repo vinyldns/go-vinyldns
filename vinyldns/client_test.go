@@ -13,6 +13,7 @@ limitations under the License.
 package vinyldns
 
 import (
+	"fmt"
 	"os"
 	"testing"
 )
@@ -20,6 +21,7 @@ import (
 func TestNewClientFromEnv(t *testing.T) {
 	os.Setenv("VINYLDNS_ACCESS_KEY", "accessKey")
 	os.Setenv("VINYLDNS_SECRET_KEY", "secretKey")
+	os.Setenv("VINYLDNS_HOST", "https://vinyldns-api.com")
 
 	client := NewClientFromEnv()
 
@@ -29,4 +31,26 @@ func TestNewClientFromEnv(t *testing.T) {
 	if client.SecretKey != "secretKey" {
 		t.Error("NewClientFromEnv should set a SecretKey from the environment")
 	}
+	if client.Host != "https://vinyldns-api.com" {
+		t.Error("NewClientFromEnv should set a Host from the environment")
+	}
+	if client.UserAgent != fmt.Sprintf("go-vinyldns/%s", Version) {
+		t.Error("NewClientFromEnv should set a default UserAgent if one is not present in the environment")
+	}
+
+	os.Setenv("VINYLDNS_ACCESS_KEY", "")
+	os.Setenv("VINYLDNS_SECRET_KEY", "")
+	os.Setenv("VINYLDNS_HOST", "")
+}
+
+func TestNewClientFromEnvWithUserAgent(t *testing.T) {
+	os.Setenv("VINYLDNS_USER_AGENT", "foo")
+
+	client := NewClientFromEnv()
+
+	if client.UserAgent != "foo" {
+		t.Error("NewClientFromEnv should set a UserAgent from the environment if one is present")
+	}
+
+	os.Setenv("VINYLDNS_USER_AGENT", "")
 }
