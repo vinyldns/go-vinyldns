@@ -17,6 +17,7 @@ client := vinyldns.NewClient(vinyldns.ClientConfiguration{
   "accessKey",
   "secretKey",
   "my-vinyldns-host.com",
+  "my custom user agent",
 })
 
 // For example, fetch zones...
@@ -30,6 +31,9 @@ Alternatively, `NewClientFromEnv` instantiates a client from the following envir
 VINYLDNS_ACCESS_KEY=
 VINYLDNS_SECRET_KEY=
 VINYLDNS_HOST=
+
+# Optional; defaults to `go-vinyldns/<version>`
+VINYLDNS_USER_AGENT=
 ```
 
 ```golang
