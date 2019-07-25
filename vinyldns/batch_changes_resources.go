@@ -34,7 +34,7 @@ type RecordChange struct {
 	Comments         string     `json:"comments,omitempty"`
 	UserID           string     `json:"userId,omitempty"`
 	CreatedTimestamp string     `json:"createdTimestamp,omitempty"`
-	Record           RecordData `json:"data,omitempty"`
+	Record           RecordData `json:"record,omitempty"`
 	OwnerGroupID     string     `json:"ownerGroupId,omitempty"`
 }
 
