@@ -9,7 +9,7 @@ fmt:
 
 test:
 	go vet $(SOURCE)
-	go test $(SOURCE) -cover
+	GO111MODULE=on go test $(SOURCE) -cover
 
 integration:
 	go test $(SOURCE) -tags=integration
@@ -29,18 +29,13 @@ start-api:
 stop-api:
 	./../vinyldns/bin/remove-vinyl-containers.sh
 
-cover:
-	go test $(SOURCE) -coverprofile=coverage.out
-	go tool cover -html=coverage.out
-	rm coverage.out
-
 build:
-	go build -ldflags "-X main.version=$(VERSION)" $(SOURCE)
+	GO111MODULE=on go build -ldflags "-X main.version=$(VERSION)" $(SOURCE)
 
 install:
-	go install $(SOURCE)
+	GO111MODULE=on go install $(SOURCE)
 
-release: deps test
+release: test
 	go get github.com/aktau/github-release
 	github-release release \
 		--user vinyldns \
