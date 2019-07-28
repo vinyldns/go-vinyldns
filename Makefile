@@ -1,4 +1,4 @@
-VERSION=0.9.8
+VERSION=0.9.9
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
 
@@ -12,7 +12,7 @@ test:
 	GO111MODULE=on go test $(SOURCE) -cover
 
 integration:
-	go test $(SOURCE) -tags=integration
+	GO111MODULE=on go test $(SOURCE) -tags=integration
 
 validate-version:
 	cat vinyldns/version.go | grep 'var Version = "$(VERSION)"'
