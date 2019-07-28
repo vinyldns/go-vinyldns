@@ -2,14 +2,7 @@ VERSION=0.9.8
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
 
-all: deps test start-api integration stop-api validate-version install
-
-deps:
-	@go tool cover 2>/dev/null; if [ $$? -eq 3 ]; then \
-		go get -u golang.org/x/tools/cmd/cover; \
-	fi
-	go get -u github.com/golang/dep/cmd/dep
-	dep ensure
+all: test build start-api integration stop-api validate-version install
 
 fmt:
 	gofmt -s -w vinyldns
@@ -40,6 +33,9 @@ cover:
 	go test $(SOURCE) -coverprofile=coverage.out
 	go tool cover -html=coverage.out
 	rm coverage.out
+
+build:
+	go build -ldflags "-X main.version=$(VERSION)" $(SOURCE)
 
 install:
 	go install $(SOURCE)
