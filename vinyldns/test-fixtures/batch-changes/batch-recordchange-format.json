@@ -1,0 +1,22 @@
+{
+  "id": "id",
+  "status": "status",
+  "changeType": "changeType",
+  "recordName": "recordName",
+  "ttl": 1,
+  "type": "type",
+  "zoneName": "zoneName",
+  "inputName": "inputName",
+  "zoneID": "zoneId",
+  "totalChanges": 1,
+  "userName": "userName",
+  "comments": "comments",
+  "userId": "userId",
+  "createdTimeStamp": "createdTimeStamp",
+  "record": {
+    "address": "address",
+    "cname": "cname",
+    "ptrdname": "ptrdname"
+  },
+  "ownerGroupId": "ownerGroupId"
+}
