@@ -13,6 +13,8 @@ limitations under the License.
 package vinyldns
 
 import (
+	"encoding/json"
+	"reflect"
 	"testing"
 
 	"github.com/gobs/pretty"
@@ -24,7 +26,7 @@ func TestBatchRecordChanges(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/batchrecordchanges",
 			code:     200,
 			body:     batchChangesJSON,
@@ -48,13 +50,55 @@ func TestBatchRecordChanges(t *testing.T) {
 	}
 }
 
+func TestBatchRecordChangeEncoding(t *testing.T) {
+	recordChangeJSON, err := readFile("test-fixtures/batch-changes/batch-recordchange-format.json")
+	if err != nil {
+		t.Error(err)
+	}
+
+	var shouldBe RecordChange
+	err = json.Unmarshal([]byte(recordChangeJSON), &shouldBe)
+	if err != nil {
+		t.Error(err)
+	}
+
+	reference := RecordChange{
+		ID:               "id",
+		Status:           "status",
+		Comments:         "comments",
+		ChangeType:       "changeType",
+		RecordName:       "recordName",
+		TTL:              1,
+		Type:             "type",
+		ZoneName:         "zoneName",
+		InputName:        "inputName",
+		ZoneID:           "zoneId",
+		TotalChanges:     1,
+		UserName:         "userName",
+		UserID:           "userId",
+		CreatedTimestamp: "createdTimeStamp",
+		Record: RecordData{
+			Address:  "address",
+			CName:    "cname",
+			PTRDName: "ptrdname",
+		},
+		OwnerGroupID: "ownerGroupId",
+	}
+
+	if !reflect.DeepEqual(shouldBe, reference) {
+		t.Log(shouldBe)
+		t.Log(reference)
+		t.Error("Expected unmarshalled batch recordchange to match manually created one")
+	}
+}
+
 func TestBatchRecordChange(t *testing.T) {
 	batchChangeJSON, err := readFile("test-fixtures/batch-changes/batch-change.json")
 	if err != nil {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/batchrecordchanges/123",
 			code:     200,
 			body:     batchChangeJSON,
@@ -84,7 +128,7 @@ func TestBatchRecordChangeCreate(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/batchrecordchanges",
 			code:     200,
 			body:     batchChangeCreateJSON,
