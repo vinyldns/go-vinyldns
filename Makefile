@@ -2,24 +2,17 @@ VERSION=0.9.9
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
 
-all: deps test start-api integration stop-api validate-version install
-
-deps:
-	@go tool cover 2>/dev/null; if [ $$? -eq 3 ]; then \
-		go get -u golang.org/x/tools/cmd/cover; \
-	fi
-	go get -u github.com/golang/dep/cmd/dep
-	dep ensure
+all: test build start-api integration stop-api validate-version install
 
 fmt:
 	gofmt -s -w vinyldns
 
 test:
 	go vet $(SOURCE)
-	go test $(SOURCE) -cover
+	GO111MODULE=on go test $(SOURCE) -cover
 
 integration:
-	go test $(SOURCE) -tags=integration
+	GO111MODULE=on go test $(SOURCE) -tags=integration
 
 validate-version:
 	cat vinyldns/version.go | grep 'var Version = "$(VERSION)"'
@@ -36,15 +29,13 @@ start-api:
 stop-api:
 	./../vinyldns/bin/remove-vinyl-containers.sh
 
-cover:
-	go test $(SOURCE) -coverprofile=coverage.out
-	go tool cover -html=coverage.out
-	rm coverage.out
+build:
+	GO111MODULE=on go build -ldflags "-X main.version=$(VERSION)" $(SOURCE)
 
 install:
-	go install $(SOURCE)
+	GO111MODULE=on go install $(SOURCE)
 
-release: deps test
+release: test
 	go get github.com/aktau/github-release
 	github-release release \
 		--user vinyldns \
