@@ -1,6 +1,7 @@
 VERSION=0.9.9
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
+VINYLDNS_VERSION=0.9.3
 
 all: test build start-api integration stop-api validate-version install
 
@@ -18,16 +19,19 @@ validate-version:
 	cat vinyldns/version.go | grep 'var Version = "$(VERSION)"'
 
 start-api:
-	if [ ! -d "$(GOPATH)/src/$(VINYLDNS_REPO)" ]; then \
-		echo "$(VINYLDNS_REPO) not found in your GOPATH (necessary for acceptance tests), getting..."; \
-		git clone https://$(VINYLDNS_REPO) $(GOPATH)/src/$(VINYLDNS_REPO); \
+	if [ ! -d "$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION)" ]; then \
+		echo "$(VINYLDNS_REPO)-$(VINYLDNS_VERSION) not found in your GOPATH (necessary for acceptance tests), getting..."; \
+		git clone \
+			--branch v$(VINYLDNS_VERSION) \
+			https://$(VINYLDNS_REPO) \
+			$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION); \
 	fi
-	$(GOPATH)/src/$(VINYLDNS_REPO)/bin/docker-up-vinyldns.sh \
+	$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION)/bin/docker-up-vinyldns.sh \
 		--api-only \
-		--version 0.9.3
+		--version $(VINYLDNS_VERSION)
 
 stop-api:
-	./../vinyldns/bin/remove-vinyl-containers.sh
+	$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION)/bin/remove-vinyl-containers.sh
 
 build:
 	GO111MODULE=on go build -ldflags "-X main.version=$(VERSION)" $(SOURCE)
