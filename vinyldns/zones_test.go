@@ -60,6 +60,15 @@ func TestZones(t *testing.T) {
 		if z.AdminGroupID == "" {
 			t.Error("Expected zone.AdminGroupID to have a value")
 		}
+		if z.Account == "" {
+			t.Error("Expected zone.Account to have a value")
+		}
+		if z.BackendID == "" {
+			t.Error("Expected zone.BackendID to have a value")
+		}
+		if z.AccessLevel == "" {
+			t.Error("Expected zone.AccessLevel to have a value")
+		}
 	}
 }
 
@@ -192,6 +201,15 @@ func TestZone(t *testing.T) {
 	if z.AdminGroupID == "" {
 		t.Error("Expected zone.AdminGroupID to have a value")
 	}
+	if z.Account == "" {
+		t.Error("Expected zone.Account to have a value")
+	}
+	if z.BackendID == "" {
+		t.Error("Expected zone.BackendID to have a value")
+	}
+	if z.AccessLevel == "" {
+		t.Error("Expected zone.AccessLevel to have a value")
+	}
 	if z.Connection.Name != "vinyldns." {
 		t.Error("Expected zone.Connection.Name to have a value")
 	}
@@ -281,6 +299,15 @@ func TestZoneByName(t *testing.T) {
 	}
 	if z.AdminGroupID == "" {
 		t.Error("Expected zone.AdminGroupID to have a value")
+	}
+	if z.Account == "" {
+		t.Error("Expected zone.Account to have a value")
+	}
+	if z.BackendID == "" {
+		t.Error("Expected zone.BackendID to have a value")
+	}
+	if z.AccessLevel == "" {
+		t.Error("Expected zone.AccessLevel to have a value")
 	}
 	if z.Connection.Name != "vinyldns." {
 		t.Error("Expected zone.Connection.Name to have a value")

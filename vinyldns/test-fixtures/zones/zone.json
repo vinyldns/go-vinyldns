@@ -20,6 +20,9 @@
       "primaryServer": "127.0.0.1"
     },
     "adminGroupId": "c314836d-17db-4a57-b849-eb1feffe0ae7",
+    "account": "c314836d-17db-4a57-b849-eb1feffe0ae7",
+    "backendId":"func-test-backend",
+    "accessLevel": "Delete",
     "acl": {
       "rules": [
         {
