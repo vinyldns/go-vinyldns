@@ -48,12 +48,6 @@ See `vinyldns/${resource}.go` files for the various `vinyldns` API methods.
 
 ## Development
 
-Install dependencies:
-
-```
-make deps
-```
-
 Run tests w/ code coverage:
 
 ```
