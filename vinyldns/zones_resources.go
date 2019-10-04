@@ -45,10 +45,14 @@ type Zone struct {
 	AdminGroupID       string          `json:"adminGroupId,omitempty"`
 	LatestSync         string          `json:"latestSync,omitempty"`
 	Updated            string          `json:"updated,omitempty"`
+	Account            string          `json:"account,omitempty"`
+	BackendID          string          `json:"backendId,omitempty"`
+	AccessLevel        string          `json:"accessLevel,omitempty"`
 	Connection         *ZoneConnection `json:"connection,omitempty"`
 	TransferConnection *ZoneConnection `json:"transferConnection,omitempty"`
 	ACL                *ZoneACL        `json:"acl,omitempty"`
 	Shared             bool            `json:"shared,omitempty"`
+	IsTest             bool            `json:"isTest,omitempty"`
 }
 
 // ZoneResponse represents the JSON response
