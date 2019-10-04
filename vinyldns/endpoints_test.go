@@ -94,7 +94,7 @@ func TestZoneSyncEP(t *testing.T) {
 	if zone != expected {
 		fmt.Printf("Expected: %s", expected)
 		fmt.Printf("Actual: %s", zone)
-		t.Error("zoneEP should return the right endpoint")
+		t.Error("zoneSyncEP should return the right endpoint")
 	}
 }
 
