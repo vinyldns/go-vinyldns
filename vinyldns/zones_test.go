@@ -514,7 +514,7 @@ func TestZoneExists_no(t *testing.T) {
 }
 
 func TestZoneChanges(t *testing.T) {
-	zoneSyncJSON, err := readFile("test-fixtures/zones/zone-changes.json")
+	zoneChangesJSON, err := readFile("test-fixtures/zones/zone-changes.json")
 	if err != nil {
 		t.Error(err)
 	}
@@ -522,7 +522,7 @@ func TestZoneChanges(t *testing.T) {
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/changes",
 			code:     200,
-			body:     zoneSyncJSON,
+			body:     zoneChangesJSON,
 		},
 	})
 
@@ -555,7 +555,7 @@ func TestZoneChanges(t *testing.T) {
 }
 
 func TestZoneSync(t *testing.T) {
-	zoneChangesJSON, err := readFile("test-fixtures/zones/zone-sync.json")
+	zoneSyncJSON, err := readFile("test-fixtures/zones/zone-sync.json")
 	if err != nil {
 		t.Error(err)
 	}
@@ -563,7 +563,7 @@ func TestZoneSync(t *testing.T) {
 		testToolsConfig{
 			endpoint: "http://host.com/zones/123/sync",
 			code:     200,
-			body:     zoneChangesJSON,
+			body:     zoneSyncJSON,
 		},
 	})
 
