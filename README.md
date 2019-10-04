@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/vinyldns/go-vinyldns.svg?branch=master)](https://travis-ci.org/vinyldns/go-vinyldns) [![Go Report Card](https://goreportcard.com/badge/github.com/vinyldns/go-vinyldns)](https://goreportcard.com/report/github.com/vinyldns/go-vinyldns)
+[![Build Status](https://travis-ci.org/vinyldns/go-vinyldns.svg?branch=master)](https://travis-ci.org/vinyldns/go-vinyldns) [![Go Report Card](https://goreportcard.com/badge/github.com/vinyldns/go-vinyldns)](https://goreportcard.com/report/github.com/vinyldns/go-vinyldns) [![Godoc](https://godoc.org/github.com/vinyldns/go-vinyldns/vinyldns?status.svg)](https://godoc.org/github.com/vinyldns/go-vinyldns/vinyldns)
 
 # vinyldns
 
@@ -47,12 +47,6 @@ See `vinyldns/${resource}_resources.go` files for the various `vinyldns` resourc
 See `vinyldns/${resource}.go` files for the various `vinyldns` API methods.
 
 ## Development
-
-Install dependencies:
-
-```
-make deps
-```
 
 Run tests w/ code coverage:
 
