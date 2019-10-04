@@ -190,3 +190,14 @@ func (c *Client) ZoneChange(zoneID, zoneChangeID string) (ZoneChange, error) {
 
 	return zc, nil
 }
+
+// ZoneSync triggers the sync process of VinyIDNS zone info with existing zone
+func (c *Client) ZoneSync(zoneId string) (ZoneChange, error) {
+	zc := ZoneChange{}
+	err := resourceRequest(c, zoneSyncEP(c, zoneId), "POST", nil, &zc)
+	if err != nil {
+		return zc, err
+	}
+
+	return zc, nil
+}

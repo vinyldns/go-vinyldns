@@ -25,7 +25,7 @@ func TestZones(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones",
 			code:     202,
 			body:     zonesJSON,
@@ -82,12 +82,12 @@ func TestZonesListAll(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones?maxItems=1",
 			code:     200,
 			body:     zonesListJSON1,
 		},
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones?startFrom=2&maxItems=1",
 			code:     200,
 			body:     zonesListJSON2,
@@ -128,7 +128,7 @@ func TestZonesListAllWhenNone(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones",
 			code:     200,
 			body:     zonesListNoneJSON,
@@ -162,7 +162,7 @@ func TestZone(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123",
 			code:     200,
 			body:     zoneJSON,
@@ -261,7 +261,7 @@ func TestZoneByName(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/name/vinyldns",
 			code:     200,
 			body:     zoneJSON,
@@ -360,7 +360,7 @@ func TestZoneCreate(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones",
 			code:     200,
 			body:     zoneUpdateResponseJSON,
@@ -400,7 +400,7 @@ func TestZoneUpdate(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123",
 			code:     200,
 			body:     zoneUpdateResponseJSON,
@@ -441,7 +441,7 @@ func TestZoneDelete(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123",
 			code:     200,
 			body:     zoneUpdateResponseJSON,
@@ -469,7 +469,7 @@ func TestZoneExists_yes(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123",
 			code:     200,
 			body:     zoneJSON,
@@ -494,7 +494,7 @@ func TestZoneExists_no(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123",
 			code:     404,
 			body:     zoneJSON,
@@ -519,7 +519,7 @@ func TestZoneChanges(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/changes",
 			code:     200,
 			body:     zoneChangesJSON,
@@ -554,6 +554,42 @@ func TestZoneChanges(t *testing.T) {
 	}
 }
 
+func TestZoneSync(t *testing.T) {
+	zoneChangesJSON, err := readFile("test-fixtures/zones/zone-sync.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/zones/123/sync",
+			code:     200,
+			body:     zoneChangesJSON,
+		},
+	})
+
+	defer server.Close()
+	z, err := client.ZoneSync("123")
+	if err != nil {
+		t.Log(pretty.PrettyFormat(z))
+		t.Error(err)
+	}
+	if z.Zone.ID != "123" {
+		t.Error("Expected ZoneChange.Zone.ID to have a value")
+	}
+	if z.Status != "Pending" {
+		t.Error("Expected ZoneChange.Status to have a value")
+	}
+	if z.ChangeType != "Sync" {
+		t.Error("Expected ZoneChange.ChangeType to have a value")
+	}
+	if z.Zone.Status != "Syncing" {
+		t.Error("Expected ZoneChange.Zone.Status to have a value")
+	}
+	if z.Zone.Name != "sync-test." {
+		t.Error("Expected ZoneChange.Zone.Name to have a value")
+	}
+}
+
 func TestZoneChangesListAll(t *testing.T) {
 	zoneChangesListJSON1, err := readFile("test-fixtures/zones/zone-changes-list-1.json")
 	if err != nil {
@@ -564,12 +600,12 @@ func TestZoneChangesListAll(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/changes?maxItems=1",
 			code:     200,
 			body:     zoneChangesListJSON1,
 		},
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/changes?startFrom=2&maxItems=1",
 			code:     200,
 			body:     zoneChangesListJSON2,
@@ -610,7 +646,7 @@ func TestZoneChange(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/changes",
 			code:     200,
 			body:     zoneChangesJSON,

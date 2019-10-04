@@ -87,6 +87,17 @@ func TestZoneEP(t *testing.T) {
 	}
 }
 
+func TestZoneSyncEP(t *testing.T) {
+	zone := zoneSyncEP(c, "123")
+	expected := "http://host.com/zones/123/sync"
+
+	if zone != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", zone)
+		t.Error("zoneEP should return the right endpoint")
+	}
+}
+
 func TestZoneNameEP(t *testing.T) {
 	zone := zoneNameEP(c, "foo")
 	expected := "http://host.com/zones/name/foo"
