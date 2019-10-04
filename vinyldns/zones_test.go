@@ -554,6 +554,42 @@ func TestZoneChanges(t *testing.T) {
 	}
 }
 
+func TestZoneSync(t *testing.T) {
+	zoneSyncJSON, err := readFile("test-fixtures/zones/zone-sync.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/sync",
+			code:     200,
+			body:     zoneSyncJSON,
+		},
+	})
+
+	defer server.Close()
+	z, err := client.ZoneSync("123")
+	if err != nil {
+		t.Log(pretty.PrettyFormat(z))
+		t.Error(err)
+	}
+	if z.Zone.ID != "123" {
+		t.Error("Expected ZoneChange.Zone.ID to have a value")
+	}
+	if z.Status != "Pending" {
+		t.Error("Expected ZoneChange.Status to have a value")
+	}
+	if z.ChangeType != "Sync" {
+		t.Error("Expected ZoneChange.ChangeType to have a value")
+	}
+	if z.Zone.Status != "Syncing" {
+		t.Error("Expected ZoneChange.Zone.Status to have a value")
+	}
+	if z.Zone.Name != "sync-test." {
+		t.Error("Expected ZoneChange.Zone.Name to have a value")
+	}
+}
+
 func TestZoneChangesListAll(t *testing.T) {
 	zoneChangesListJSON1, err := readFile("test-fixtures/zones/zone-changes-list-1.json")
 	if err != nil {

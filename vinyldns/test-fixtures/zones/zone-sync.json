@@ -1,0 +1,21 @@
+{
+  "status": "Pending",
+  "zone": {
+    "status": "Syncing",
+    "updated": "2016-12-28T19:22:02Z",
+    "name": "sync-test.",
+    "adminGroupId": "cf00d1e4-46f1-493a-a3be-0ae79dd306a5",
+    "created": "2016-12-28T19:22:01Z",
+    "account": "cf00d1e4-46f1-493a-a3be-0ae79dd306a5",
+    "email": "test@test.com",
+    "shared": false,
+    "acl": {
+      "rules": []
+    },
+    "id": "123"
+  },
+  "created": "2016-12-28T19:22:02Z",
+  "changeType": "Sync",
+  "userId": "ok",
+  "id": "03f1ee91-9053-4346-8b53-e0f6042600f2"
+}

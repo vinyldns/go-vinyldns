@@ -41,6 +41,10 @@ func zoneChangesEP(c *Client, id string, f ListFilter) string {
 	return concatStrs("", zoneEP(c, id), "/changes", query)
 }
 
+func zoneSyncEP(c *Client, id string) string {
+	return concatStrs("", zoneEP(c, id), "/sync")
+}
+
 func recordSetsEP(c *Client, zoneID string) string {
 	return concatStrs("", zoneEP(c, zoneID), "/recordsets")
 }
