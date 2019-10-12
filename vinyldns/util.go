@@ -37,34 +37,6 @@ func concatStrs(delim string, str ...string) string {
 	return strings.Join(str, delim)
 }
 
-func doClientReq(c *Client, method string, url string) (*http.Response, error) {
-	if logRequests() {
-		fmt.Printf("Request url: \n\t%s\nrequest body: \n\t%s \n\n", url, "")
-	}
-	req, err := http.NewRequest(method, url, nil)
-
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("User-Agent", c.UserAgent)
-
-	awsauth.Sign4(req, awsauth.Credentials{
-		AccessKeyID:     c.AccessKey,
-		SecretAccessKey: c.SecretKey,
-	})
-
-	resp, err := c.HTTPClient.Do(req)
-
-	if logRequests() {
-		bodyContents, _ := ioutil.ReadAll(resp.Body)
-		fmt.Printf("Response status: \n\t%d\nresponse body: \n\t%s \n\n", resp.StatusCode, bodyContents)
-	}
-
-	return resp, err
-}
-
 func resourceRequest(c *Client, url, method string, body []byte, responseStruct interface{}) error {
 	if logRequests() {
 		fmt.Printf("Request url: \n\t%s\nrequest body: \n\t%s \n\n", url, string(body))
