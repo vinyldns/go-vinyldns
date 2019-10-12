@@ -137,6 +137,22 @@ func (c *Client) ZoneExists(zoneID string) (bool, error) {
 	return true, nil
 }
 
+// ZoneNameExists returns true if a zone request does not 404
+// Otherwise, it returns false
+func (c *Client) ZoneNameExists(name string) (bool, error) {
+	resp, err := doClientReq(c, "GET", zoneNameEP(c, name))
+	if err != nil {
+		return false, err
+	}
+
+	code := resp.StatusCode
+	if code == 404 {
+		return false, nil
+	}
+
+	return true, nil
+}
+
 // ZoneChanges retrieves the ZoneChanges for the Zone whose ID it's passed.
 func (c *Client) ZoneChanges(id string) (*ZoneChanges, error) {
 	zh := &ZoneChanges{}
