@@ -152,6 +152,17 @@ func TestZoneCreateIntegration(t *testing.T) {
 	}
 }
 
+func TestZoneNameExistsForExistentZoneIntegration(t *testing.T) {
+	c := client()
+	exists, err := c.ZoneNameExists("ok.")
+	if err != nil {
+		t.Error(err)
+	}
+	if exists != true {
+		t.Error(fmt.Sprintf("expected ZoneNameExists to return true; got %t", exists))
+	}
+}
+
 func TestZoneByNameIntegration(t *testing.T) {
 	c := client()
 	z, err := c.ZoneByName("ok")
