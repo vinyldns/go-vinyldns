@@ -60,6 +60,15 @@ func TestZones(t *testing.T) {
 		if z.AdminGroupID == "" {
 			t.Error("Expected zone.AdminGroupID to have a value")
 		}
+		if z.Account == "" {
+			t.Error("Expected zone.Account to have a value")
+		}
+		if z.BackendID == "" {
+			t.Error("Expected zone.BackendID to have a value")
+		}
+		if z.AccessLevel == "" {
+			t.Error("Expected zone.AccessLevel to have a value")
+		}
 	}
 }
 
@@ -192,6 +201,15 @@ func TestZone(t *testing.T) {
 	if z.AdminGroupID == "" {
 		t.Error("Expected zone.AdminGroupID to have a value")
 	}
+	if z.Account == "" {
+		t.Error("Expected zone.Account to have a value")
+	}
+	if z.BackendID == "" {
+		t.Error("Expected zone.BackendID to have a value")
+	}
+	if z.AccessLevel == "" {
+		t.Error("Expected zone.AccessLevel to have a value")
+	}
 	if z.Connection.Name != "vinyldns." {
 		t.Error("Expected zone.Connection.Name to have a value")
 	}
@@ -281,6 +299,15 @@ func TestZoneByName(t *testing.T) {
 	}
 	if z.AdminGroupID == "" {
 		t.Error("Expected zone.AdminGroupID to have a value")
+	}
+	if z.Account == "" {
+		t.Error("Expected zone.Account to have a value")
+	}
+	if z.BackendID == "" {
+		t.Error("Expected zone.BackendID to have a value")
+	}
+	if z.AccessLevel == "" {
+		t.Error("Expected zone.AccessLevel to have a value")
 	}
 	if z.Connection.Name != "vinyldns." {
 		t.Error("Expected zone.Connection.Name to have a value")
@@ -524,6 +551,42 @@ func TestZoneChanges(t *testing.T) {
 	}
 	if zc.Zone.Name != "vinyldnstest.sys.vinyldns.net." {
 		t.Error("Expected ZoneChanges.ZoneChanges[0].Zone.Name to have a value")
+	}
+}
+
+func TestZoneSync(t *testing.T) {
+	zoneSyncJSON, err := readFile("test-fixtures/zones/zone-sync.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/123/sync",
+			code:     200,
+			body:     zoneSyncJSON,
+		},
+	})
+
+	defer server.Close()
+	z, err := client.ZoneSync("123")
+	if err != nil {
+		t.Log(pretty.PrettyFormat(z))
+		t.Error(err)
+	}
+	if z.Zone.ID != "123" {
+		t.Error("Expected ZoneChange.Zone.ID to have a value")
+	}
+	if z.Status != "Pending" {
+		t.Error("Expected ZoneChange.Status to have a value")
+	}
+	if z.ChangeType != "Sync" {
+		t.Error("Expected ZoneChange.ChangeType to have a value")
+	}
+	if z.Zone.Status != "Syncing" {
+		t.Error("Expected ZoneChange.Zone.Status to have a value")
+	}
+	if z.Zone.Name != "sync-test." {
+		t.Error("Expected ZoneChange.Zone.Name to have a value")
 	}
 }
 

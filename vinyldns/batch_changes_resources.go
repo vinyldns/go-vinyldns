@@ -73,4 +73,11 @@ type BatchRecordChange struct {
 	ReviewTimeStamp    time.Time      `json:"reviewTimeStamp,omitempty"`
 	ScheduleTime       time.Time      `json:"scheduleTime,omitempty"`
 	CancelledTimeStamp time.Time      `json:"cancelledTimeStamp,omitempty"`
+	ApprovalStatus     string         `json:"approvalStatus,omitempty"`
+	ReviewerID         string         `json:"reviewerId,omitempty"`
+	ReviewerUserName   string         `json:"reviewerUserName,omitempty"`
+	ReviewComment      string         `json:"reviewComment,omitempty"`
+	ReviewTimestamp    string         `json:"reviewTimestamp,omitempty"`
+	ScheduledTime      string         `json:"scheduledTime,omitempty"`
+	CancelledTimestamp string         `json:"cancelledTimestamp,omitempty"`
 }
