@@ -513,6 +513,56 @@ func TestZoneExists_no(t *testing.T) {
 	}
 }
 
+func TestZoneNameExists_yes(t *testing.T) {
+	zoneJSON, err := readFile("test-fixtures/zones/zone.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/name/.ok",
+			code:     200,
+			body:     zoneJSON,
+		},
+	})
+
+	defer server.Close()
+
+	z, err := client.ZoneNameExists(".ok")
+	if err != nil {
+		t.Log(pretty.PrettyFormat(z))
+		t.Error(err)
+	}
+	if z != true {
+		t.Error("Expected ZoneNameExists to be true")
+	}
+}
+
+func TestZoneNameExists_no(t *testing.T) {
+	zoneJSON, err := readFile("test-fixtures/zones/zone.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		testToolsConfig{
+			endpoint: "http://host.com/zones/name/.ok",
+			code:     404,
+			body:     zoneJSON,
+		},
+	})
+
+	defer server.Close()
+
+	z, err := client.ZoneNameExists(".ok")
+	if err != nil {
+		t.Log(pretty.PrettyFormat(z))
+		t.Error(err)
+	}
+	if z != false {
+		t.Error("Expected ZoneNameExists to be false")
+	}
+}
+
 func TestZoneChanges(t *testing.T) {
 	zoneChangesJSON, err := readFile("test-fixtures/zones/zone-changes.json")
 	if err != nil {

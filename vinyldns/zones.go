@@ -15,6 +15,7 @@ package vinyldns
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 // Zones retrieves the list of zones a user has access to.
@@ -123,15 +124,35 @@ func (c *Client) ZoneDelete(zoneID string) (*ZoneUpdateResponse, error) {
 
 // ZoneExists returns true if a zone request does not 404
 // Otherwise, it returns false
-func (c *Client) ZoneExists(zoneID string) (bool, error) {
-	resp, err := doClientReq(c, "GET", zoneEP(c, zoneID))
+func (c *Client) ZoneExists(id string) (bool, error) {
+	zone := &ZoneResponse{}
+	err := resourceRequest(c, zoneEP(c, id), "GET", nil, zone)
 	if err != nil {
-		return false, err
+		if vErr, ok := err.(*Error); ok {
+			if vErr.ResponseCode == http.StatusNotFound {
+				return false, nil
+			}
+
+			return false, err
+		}
 	}
 
-	code := resp.StatusCode
-	if code == 404 {
-		return false, nil
+	return true, nil
+}
+
+// ZoneNameExists returns true if a zone request does not 404
+// Otherwise, it returns false
+func (c *Client) ZoneNameExists(name string) (bool, error) {
+	zone := &ZoneResponse{}
+	err := resourceRequest(c, zoneNameEP(c, name), "GET", nil, zone)
+	if err != nil {
+		if vErr, ok := err.(*Error); ok {
+			if vErr.ResponseCode == http.StatusNotFound {
+				return false, nil
+			}
+
+			return false, err
+		}
 	}
 
 	return true, nil

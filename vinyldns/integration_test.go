@@ -95,6 +95,17 @@ func TestGroupAdminsIntegration(t *testing.T) {
 	}
 }
 
+func TestZoneNameExistsForNonexistentZoneIntegration(t *testing.T) {
+	c := client()
+	exists, err := c.ZoneNameExists("foo")
+	if err != nil {
+		t.Error(err)
+	}
+	if exists != false {
+		t.Error(fmt.Sprintf("expected ZoneNameExists to return false; got %t", exists))
+	}
+}
+
 func TestZoneCreateIntegration(t *testing.T) {
 	c := client()
 	groups, err := c.Groups()
@@ -138,6 +149,17 @@ func TestZoneCreateIntegration(t *testing.T) {
 			fmt.Printf("%d retries reached in polling for zone %s", limit, createdZoneID)
 			t.Error(err)
 		}
+	}
+}
+
+func TestZoneNameExistsForExistentZoneIntegration(t *testing.T) {
+	c := client()
+	exists, err := c.ZoneNameExists("ok.")
+	if err != nil {
+		t.Error(err)
+	}
+	if exists != true {
+		t.Error(fmt.Sprintf("expected ZoneNameExists to return true; got %t", exists))
 	}
 }
 
