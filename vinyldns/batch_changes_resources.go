@@ -12,11 +12,15 @@ limitations under the License.
 
 package vinyldns
 
+import "time"
+
 // BatchRecordChanges represents a list of record changes,
 // as returned by the list batch changes VinylDNS API endpoint.
 type BatchRecordChanges struct {
 	BatchChanges []RecordChange `json:"batchChanges,omitempty"`
 }
+
+
 
 // RecordChange represents an individual batch record change.
 type RecordChange struct {
@@ -62,6 +66,13 @@ type BatchRecordChange struct {
 	CreatedTimestamp   string         `json:"createdTimestamp,omitempty"`
 	OwnerGroupID       string         `json:"ownerGroupId,omitempty"`
 	Changes            []RecordChange `json:"changes,omitempty"`
+	ApprovalStatus     string         `json:"approval,omitempty"`
+	ReviewerId         string         `json:"reviewerId,omitempty"`
+	ReviewerUserName   string         `json:"reviewerUserName,omitempty"`
+	ReviewComment      string         `json:"reviewComment,omitempty"`
+	ReviewTimeStamp    time.Time      `json:"reviewTimeStamp,omitempty"`
+	ScheduleTime       time.Time      `json:"scheduleTime,omitempty"`
+	CancelledTimeStamp time.Time      `json:"cancelledTimeStamp,omitempty"`
 	ApprovalStatus     string         `json:"approvalStatus,omitempty"`
 	ReviewerID         string         `json:"reviewerId,omitempty"`
 	ReviewerUserName   string         `json:"reviewerUserName,omitempty"`

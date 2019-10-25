@@ -41,5 +41,6 @@
   "changeType": "Create",
   "status": "Pending",
   "created": "2015-11-02T16:08:50Z",
-  "id": "b3d4e0a9-a081-4adc-9a95-3ec2e7d26635"
+  "id": "b3d4e0a9-a081-4adc-9a95-3ec2e7d26635",
+  "singleBatchChangeIds": []
 }
