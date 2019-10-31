@@ -42,8 +42,7 @@ func TestConcatStrsWithDelimiter(t *testing.T) {
 	}
 }
 
-func TestResourceRequest(t *testing.T) {
-
+func TestResourceRequestWithDefaultUA(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.UserAgent() != defaultUA() {
 			t.Error("default user agent not set")
@@ -54,5 +53,21 @@ func TestResourceRequest(t *testing.T) {
 	c := NewClient(ClientConfiguration{Host: ts.URL})
 
 	resourceRequest(c, ts.URL, http.MethodGet, nil, nil)
+}
 
+func TestResourceRequestWithCustomUA(t *testing.T) {
+	ua := "custom-user-agent"
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.UserAgent() != ua {
+			t.Error("custom user agent not set")
+		}
+	}))
+	defer ts.Close()
+
+	c := NewClient(ClientConfiguration{
+		Host:      ts.URL,
+		UserAgent: ua,
+	})
+
+	resourceRequest(c, ts.URL, http.MethodGet, nil, nil)
 }
