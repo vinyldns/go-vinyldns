@@ -13,6 +13,8 @@ limitations under the License.
 package vinyldns
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
@@ -38,4 +40,19 @@ func TestConcatStrsWithDelimiter(t *testing.T) {
 	if res != "I, am, a, list" {
 		t.Error("concatStrs with delimiter failed")
 	}
+}
+
+func TestResourceRequest(t *testing.T) {
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.UserAgent() != defaultUA() {
+			t.Error("default user agent not set")
+		}
+	}))
+	defer ts.Close()
+
+	c := NewClient(ClientConfiguration{Host: ts.URL})
+
+	resourceRequest(c, ts.URL, http.MethodGet, nil, nil)
+
 }
