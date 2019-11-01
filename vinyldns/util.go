@@ -46,7 +46,8 @@ func resourceRequest(c *Client, url, method string, body []byte, responseStruct 
 		return err
 	}
 
-	req.Header.Add("Content-Type", "application/json")
+	req.Header.Set("User-Agent", c.UserAgent)
+	req.Header.Set("Content-Type", "application/json")
 
 	awsauth.Sign4(req, awsauth.Credentials{
 		AccessKeyID:     c.AccessKey,
