@@ -40,7 +40,7 @@ type RecordChange struct {
 
 // BatchRecordChangeUpdateResponse is represents a batch record change create or update response
 type BatchRecordChangeUpdateResponse struct {
-  ID                 string         `json:"id,omitempty"`
+	ID                 string         `json:"id,omitempty"`
 	UserName           string         `json:"userName,omitempty"`
 	UserID             string         `json:"userId,omitempty"`
 	Status             string         `json:"status,omitempty"`
