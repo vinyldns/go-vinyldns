@@ -78,7 +78,7 @@ type Record struct {
 	Weight      int    `json:"weight,omitempty"`
 	Port        int    `json:"port,omitempty"`
 	Target      string `json:"target,omitempty"`
-	Algorithm   string `json:"algorithm,omitempty"`
+	Algorithm   int    `json:"algorithm,omitempty"`
 	Type        string `json:"type,omitempty"`
 	Fingerprint string `json:"fingerprint,omitempty"`
 }
