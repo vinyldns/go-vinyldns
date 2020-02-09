@@ -3,7 +3,7 @@ SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
 VINYLDNS_VERSION=0.9.3
 
-all: test build start-api integration stop-api validate-version install
+all: test build integration stop-api validate-version install
 
 fmt:
 	gofmt -s -w vinyldns
@@ -12,7 +12,7 @@ test:
 	go vet $(SOURCE)
 	GO111MODULE=on go test $(SOURCE) -cover
 
-integration:
+integration: start-api
 	GO111MODULE=on go test $(SOURCE) -tags=integration
 
 validate-version:
