@@ -24,7 +24,7 @@ func TestGroupCreate(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/groups",
 			code:     200,
 			body:     groupJSON,
@@ -61,7 +61,7 @@ func TestGroupUpdate(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/groups/123",
 			code:     200,
 			body:     groupJSON,
@@ -99,7 +99,7 @@ func TestGroupDelete(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/groups/123",
 			code:     200,
 			body:     groupJSON,
@@ -130,7 +130,7 @@ func TestGroups(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/groups",
 			code:     200,
 			body:     groupsJSON,
@@ -176,12 +176,12 @@ func TestGroupsListAll(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/groups?maxItems=1",
 			code:     200,
 			body:     groupsListJSON1,
 		},
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/groups?startFrom=2&maxItems=1",
 			code:     200,
 			body:     groupsListJSON2,
@@ -222,7 +222,7 @@ func TestGroup(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/groups/123",
 			code:     200,
 			body:     groupJSON,
@@ -253,7 +253,7 @@ func TestGroupAdmins(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/groups/123/admins",
 			code:     200,
 			body:     groupAdminsJSON,
@@ -280,7 +280,7 @@ func TestGroupMembers(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/groups/123/members",
 			code:     200,
 			body:     groupMembersJSON,
@@ -307,7 +307,7 @@ func TestGroupActivity(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/groups/123/activity",
 			code:     200,
 			body:     groupActivityJSON,
