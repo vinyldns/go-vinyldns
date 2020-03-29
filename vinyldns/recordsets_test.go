@@ -25,7 +25,7 @@ func TestRecordSets(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsets",
 			code:     200,
 			body:     recordSetsJSON,
@@ -59,12 +59,12 @@ func TestRecordSetsListAll(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsets?maxItems=1",
 			code:     200,
 			body:     recordSetsListJSON1,
 		},
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsets?startFrom=2&maxItems=1",
 			code:     200,
 			body:     recordSetsListJSON2,
@@ -105,7 +105,7 @@ func TestRecordSetsListAllWhenNoneExist(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsets",
 			code:     200,
 			body:     recordSetsListNoneJSON,
@@ -139,12 +139,12 @@ func TestRecordSetCollector(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsets?maxItems=3",
 			code:     200,
 			body:     recordSetsJSON,
 		},
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsets?maxItems=1",
 			code:     200,
 			body:     recordSetsJSON,
@@ -193,7 +193,7 @@ func TestRecordSet(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsets/456",
 			code:     200,
 			body:     recordSetJSON,
@@ -248,7 +248,7 @@ func TestRecordSetCreate(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsets",
 			code:     200,
 			body:     recordSetUpdateResponseJSON,
@@ -292,7 +292,7 @@ func TestRecordSetUpdate(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsets/456",
 			code:     202,
 			body:     recordSetUpdateResponseJSON,
@@ -337,7 +337,7 @@ func TestRecordSetDelete(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsets/456",
 			code:     202,
 			body:     recordSetUpdateResponseJSON,
@@ -371,7 +371,7 @@ func TestRecordSetChangessListAllWhenNoneExist(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsetchanges",
 			code:     200,
 			body:     recordSetChangesListNoneJSON,
@@ -409,12 +409,12 @@ func TestRecordSetChangesListAll(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsetchanges?maxItems=1",
 			code:     200,
 			body:     recordSetChangesJSON1,
 		},
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsetchanges?startFrom=2&maxItems=1",
 			code:     200,
 			body:     recordSetChangesJSON2,
@@ -455,7 +455,7 @@ func TestRecordSetChange(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/123/recordsets/456/changes/789",
 			code:     200,
 			body:     recordSetChangeJSON,

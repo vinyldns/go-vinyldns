@@ -3,10 +3,13 @@ SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
 VINYLDNS_VERSION=0.9.3
 
-all: test build integration stop-api validate-version install
+all: check-fmt test build integration stop-api validate-version install
 
 fmt:
 	gofmt -s -w vinyldns
+
+check-fmt:
+	test -z "$(shell gofmt -s -l vinyldns | tee /dev/stderr)"
 
 test:
 	go vet $(SOURCE)

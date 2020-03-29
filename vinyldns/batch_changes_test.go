@@ -26,7 +26,7 @@ func TestBatchRecordChanges(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/batchrecordchanges",
 			code:     200,
 			body:     batchChangesJSON,
@@ -98,7 +98,7 @@ func TestBatchRecordChange(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/batchrecordchanges/123",
 			code:     200,
 			body:     batchChangeJSON,
@@ -128,7 +128,7 @@ func TestBatchRecordChangeCreate(t *testing.T) {
 		t.Error(err)
 	}
 	server, client := testTools([]testToolsConfig{
-		testToolsConfig{
+		{
 			endpoint: "http://host.com/zones/batchrecordchanges",
 			code:     200,
 			body:     batchChangeCreateJSON,
