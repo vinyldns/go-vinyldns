@@ -397,6 +397,34 @@ func TestRecordSetsListAllIntegrationFilterForNonexistentName(t *testing.T) {
 	}
 }
 
+func TestRecordSetsGlobalListAllIntegrationFilterForExistentName(t *testing.T) {
+	c := client()
+	records, err := c.RecordSetsGlobalListAll(GlobalListFilter{
+		RecordNameFilter: "foo",
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) < 1 {
+		t.Error("Expected RecordSetsGlobalListAll for records named 'foo' to yield results")
+	}
+}
+
+func TestRecordSetsGlobalListAllIntegrationFilterForNonexistentName(t *testing.T) {
+	c := client()
+	records, err := c.RecordSetsGlobalListAll(GlobalListFilter{
+		RecordNameFilter: "thisdoesnotexist",
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) > 0 {
+		t.Error("Expected RecordSetsListAll for records named 'thisdoesnotexist' to yield no results")
+	}
+}
+
 func TestRecordSetDeleteIntegration(t *testing.T) {
 	c := client()
 	zs, err := c.ZonesListAll(ListFilter{})
