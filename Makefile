@@ -1,7 +1,7 @@
 VERSION=0.9.12
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
-VINYLDNS_VERSION=0.9.4
+VINYLDNS_VERSION=0.9.5
 
 all: check-fmt test build integration stop-api validate-version install
 
