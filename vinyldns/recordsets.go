@@ -91,8 +91,9 @@ func (c *Client) RecordSets(id string) ([]RecordSet, error) {
 	return recordSets, nil
 }
 
-// RecordSetsListAll retrieves the complete list of record sets with the ListFilter criteria passed.
-// Handles paging through results on the user's behalf.
+// RecordSetsListAll retrieves the complete list of record sets from
+// the specified zone with the ListFilter criteria passed.
+// It handles paging through results on the user's behalf.
 func (c *Client) RecordSetsListAll(zoneID string, filter ListFilter) ([]RecordSet, error) {
 	if filter.MaxItems > 100 {
 		return nil, fmt.Errorf("MaxItems must be between 1 and 100")
@@ -117,7 +118,7 @@ func (c *Client) RecordSetsListAll(zoneID string, filter ListFilter) ([]RecordSe
 
 // RecordSetsGlobalListAll retrieves the complete list of record sets with the
 // GlobalListFilter criteria passed, across all zones.
-// Handles paging through results on the user's behalf.
+// It handles paging through results on the user's behalf.
 func (c *Client) RecordSetsGlobalListAll(filter GlobalListFilter) ([]RecordSet, error) {
 	if filter.MaxItems > 100 {
 		return nil, fmt.Errorf("MaxItems must be between 1 and 100")
