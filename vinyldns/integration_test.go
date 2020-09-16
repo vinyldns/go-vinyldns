@@ -399,15 +399,36 @@ func TestRecordSetsListAllIntegrationFilterForNonexistentName(t *testing.T) {
 
 func TestRecordSetsGlobalListAllIntegrationFilterForExistentName(t *testing.T) {
 	c := client()
+	rName := "global-list-int-test"
+	zs, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	_, err = c.RecordSetCreate(&RecordSet{
+		Name:   rName,
+		ZoneID: zs[0].ID,
+		Type:   "A",
+		TTL:    60,
+		Records: []Record{
+			{
+				Address: "127.0.0.1",
+			},
+		},
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
 	records, err := c.RecordSetsGlobalListAll(GlobalListFilter{
-		RecordNameFilter: "foo",
+		RecordNameFilter: rName,
 	})
 	if err != nil {
 		t.Error(err)
 	}
 
 	if len(records) < 1 {
-		t.Error("Expected RecordSetsGlobalListAll for records named 'foo' to yield results")
+		t.Error(fmt.Sprintf("Expected RecordSetsGlobalListAll for records named '%s' to yield results", rName))
 	}
 }
 
