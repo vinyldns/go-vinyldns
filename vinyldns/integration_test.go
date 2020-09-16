@@ -421,7 +421,7 @@ func TestRecordSetsGlobalListAllIntegrationFilterForExistentName(t *testing.T) {
 	}
 
 	records, err := c.RecordSetsGlobalListAll(GlobalListFilter{
-		RecordNameFilter: rName,
+		RecordNameFilter: rName + "*",
 	})
 	if err != nil {
 		t.Error(err)
