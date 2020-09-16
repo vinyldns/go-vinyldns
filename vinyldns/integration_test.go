@@ -430,6 +430,10 @@ func TestRecordSetsGlobalListAllIntegrationFilterForExistentName(t *testing.T) {
 	if len(records) < 1 {
 		t.Error(fmt.Sprintf("Expected RecordSetsGlobalListAll for records named '%s' to yield results", rName))
 	}
+
+	if records[0].Name != rName {
+		t.Error(fmt.Sprintf("Expected RecordSetsGlobalListAll for records named '%s' to return the matching record", rName))
+	}
 }
 
 func TestRecordSetsGlobalListAllIntegrationFilterForNonexistentName(t *testing.T) {
