@@ -133,6 +133,90 @@ func TestRecordSetsListAllWhenNoneExist(t *testing.T) {
 	}
 }
 
+func TestRecordSetsGlobalListAll(t *testing.T) {
+	recordSetsListJSON1, err := readFile("test-fixtures/recordsets/recordsets-list-json-1.json")
+	if err != nil {
+		t.Error(err)
+	}
+	recordSetsListJSON2, err := readFile("test-fixtures/recordsets/recordsets-list-json-2.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/recordsets?maxItems=1",
+			code:     200,
+			body:     recordSetsListJSON1,
+		},
+		{
+			endpoint: "http://host.com/recordsets?startFrom=2&maxItems=1",
+			code:     200,
+			body:     recordSetsListJSON2,
+		},
+	})
+
+	defer server.Close()
+
+	if _, err := client.RecordSetsGlobalListAll(GlobalListFilter{
+		MaxItems: 200,
+	}); err == nil {
+		t.Error("Expected error -- MaxItems must be between 1 and 100")
+	}
+
+	records, err := client.RecordSetsGlobalListAll(GlobalListFilter{
+		MaxItems: 1,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) != 2 {
+		t.Error("Expected 2 records; got ", len(records))
+	}
+
+	if records[0].ID != "1" {
+		t.Error("Expected RecordSet.ID to be 1")
+	}
+
+	if records[1].ID != "2" {
+		t.Error("Expected RecordSet.ID to be 2")
+	}
+}
+
+func TestRecordSetsGlobalListAllWhenNoneExist(t *testing.T) {
+	recordSetsListNoneJSON, err := readFile("test-fixtures/recordsets/recordsets-list-none.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/recordsets",
+			code:     200,
+			body:     recordSetsListNoneJSON,
+		},
+	})
+
+	defer server.Close()
+
+	records, err := client.RecordSetsGlobalListAll(GlobalListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) != 0 {
+		t.Error("Expected 0 records; got ", len(records))
+	}
+
+	j, err := json.Marshal(records)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if string(j) != "[]" {
+		t.Error("Expected string-converted marshaled JSON to be '[]'; got ", string(j))
+	}
+}
+
 func TestRecordSetCollector(t *testing.T) {
 	recordSetsJSON, err := readFile("test-fixtures/recordsets/recordsets.json")
 	if err != nil {

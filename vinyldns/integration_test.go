@@ -397,6 +397,40 @@ func TestRecordSetsListAllIntegrationFilterForNonexistentName(t *testing.T) {
 	}
 }
 
+func TestRecordSetsGlobalListAllIntegrationFilterForExistentName(t *testing.T) {
+	c := client()
+	rName := "foo"
+
+	records, err := c.RecordSetsGlobalListAll(GlobalListFilter{
+		RecordNameFilter: "*" + rName + "*",
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) < 1 {
+		t.Error(fmt.Sprintf("Expected RecordSetsGlobalListAll for records named '%s' to yield results", rName))
+	}
+
+	if records[0].Name != rName {
+		t.Error(fmt.Sprintf("Expected RecordSetsGlobalListAll for records named '%s' to return the matching record", rName))
+	}
+}
+
+func TestRecordSetsGlobalListAllIntegrationFilterForNonexistentName(t *testing.T) {
+	c := client()
+	records, err := c.RecordSetsGlobalListAll(GlobalListFilter{
+		RecordNameFilter: "thisdoesnotexist",
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) > 0 {
+		t.Error("Expected RecordSetsListAll for records named 'thisdoesnotexist' to yield no results")
+	}
+}
+
 func TestRecordSetDeleteIntegration(t *testing.T) {
 	c := client()
 	zs, err := c.ZonesListAll(ListFilter{})

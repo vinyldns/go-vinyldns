@@ -167,6 +167,54 @@ func TestRecordSetsListEP(t *testing.T) {
 	}
 }
 
+func TestRecordSetsGlobalListEP(t *testing.T) {
+	rs := recordSetsGlobalListEP(c, GlobalListFilter{})
+	expected := "http://host.com/recordsets"
+	msg := "recordSetsGlobalListEP should return the right endpoint"
+
+	if rs != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", rs)
+		t.Error(msg)
+	}
+
+	rs = recordSetsGlobalListEP(c, GlobalListFilter{
+		StartFrom: "nextplease",
+	})
+	expected = "http://host.com/recordsets?startFrom=nextplease"
+
+	if rs != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", rs)
+		t.Error(msg)
+	}
+
+	rs = recordSetsGlobalListEP(c, GlobalListFilter{
+		StartFrom: "nextplease",
+		MaxItems:  99,
+	})
+	expected = "http://host.com/recordsets?startFrom=nextplease&maxItems=99"
+
+	if rs != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", rs)
+		t.Error(msg)
+	}
+
+	rs = recordSetsGlobalListEP(c, GlobalListFilter{
+		RecordNameFilter: "foo",
+		StartFrom:        "nextplease",
+		MaxItems:         99,
+	})
+	expected = "http://host.com/recordsets?recordNameFilter=foo&startFrom=nextplease&maxItems=99"
+
+	if rs != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", rs)
+		t.Error(msg)
+	}
+}
+
 func TestRecordSetEP(t *testing.T) {
 	rs := recordSetEP(c, "123", "456")
 	expected := "http://host.com/zones/123/recordsets/456"
@@ -352,5 +400,30 @@ func TestBuildQueryWithNoQuery(t *testing.T) {
 		fmt.Printf("Expected: %s", expected)
 		fmt.Printf("Actual: %s", query)
 		t.Error("buildQuery should return the right string")
+	}
+}
+
+func TestBuildGlobalListQuery(t *testing.T) {
+	query := buildGlobalListQuery(GlobalListFilter{
+		MaxItems:         1,
+		RecordNameFilter: "foo",
+	})
+	expected := "?recordNameFilter=foo&maxItems=1"
+
+	if query != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", query)
+		t.Error("buildGlobalListQuery should return the right string")
+	}
+}
+
+func TestBuildGlobalListQueryWithNoQuery(t *testing.T) {
+	query := buildGlobalListQuery(GlobalListFilter{})
+	expected := ""
+
+	if query != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", query)
+		t.Error("buildGlobalListQuery should return the right string")
 	}
 }
