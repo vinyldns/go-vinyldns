@@ -271,6 +271,51 @@ func TestRecordSetCollector(t *testing.T) {
 	}
 }
 
+func TestRecordSetExists404(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/zones/123/recordsets/456",
+			code:     404,
+			body:     "not found",
+		},
+	})
+
+	defer server.Close()
+
+	exists, err := client.RecordSetExists("123", "456")
+	if err != nil {
+		t.Error(err)
+	}
+	if exists {
+		t.Error("Expected RecordSetExists to return false")
+	}
+}
+
+func TestRecordSetExists200(t *testing.T) {
+	recordSetJSON, err := readFile("test-fixtures/recordsets/recordset.json")
+	if err != nil {
+		t.Error(err)
+	}
+
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/zones/123/recordsets/456",
+			code:     200,
+			body:     recordSetJSON,
+		},
+	})
+
+	defer server.Close()
+
+	exists, err := client.RecordSetExists("123", "456")
+	if err != nil {
+		t.Error(err)
+	}
+	if !exists {
+		t.Error("Expected RecordSetExists to return true")
+	}
+}
+
 func TestRecordSet(t *testing.T) {
 	recordSetJSON, err := readFile("test-fixtures/recordsets/recordset.json")
 	if err != nil {

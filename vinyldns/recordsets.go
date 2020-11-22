@@ -16,6 +16,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/http"
 )
 
 // RecordSetLimit is the highest number of records the vinyldns server will allow at once
@@ -150,6 +151,23 @@ func (c *Client) RecordSet(zoneID, recordSetID string) (RecordSet, error) {
 	}
 
 	return rs.RecordSet, nil
+}
+
+// RecordSetExists returns true if a record set request does not 404.
+// Otherwise, it returns false.
+func (c *Client) RecordSetExists(zoneID, recordSetID string) (bool, error) {
+	_, err := c.RecordSet(zoneID, recordSetID)
+	if err != nil {
+		if vErr, ok := err.(*Error); ok {
+			if vErr.ResponseCode == http.StatusNotFound {
+				return false, nil
+			}
+
+			return false, err
+		}
+	}
+
+	return true, nil
 }
 
 // RecordSetCreate creates the RecordSet it's passed in the Zone whose ID it's passed.
