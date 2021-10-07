@@ -183,6 +183,55 @@ func TestRecordSetsGlobalListAll(t *testing.T) {
 	}
 }
 
+func TestRecordSetsGlobal(t *testing.T) {
+	recordSetsListJSON1, err := readFile("test-fixtures/recordsets/recordsets-list-json-1.json")
+	if err != nil {
+		t.Error(err)
+	}
+	recordSetsListJSON2, err := readFile("test-fixtures/recordsets/recordsets-list-json-2.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/recordsets?maxItems=1",
+			code:     200,
+			body:     recordSetsListJSON1,
+		},
+		{
+			endpoint: "http://host.com/recordsets?startFrom=2&maxItems=1",
+			code:     200,
+			body:     recordSetsListJSON2,
+		},
+	})
+
+	defer server.Close()
+
+	if _, _, err := client.RecordSetsGlobal(GlobalListFilter{
+		MaxItems: 200,
+	}); err == nil {
+		t.Error("Expected error -- MaxItems must be between 1 and 100")
+	}
+
+	records, nextID, err := client.RecordSetsGlobal(GlobalListFilter{
+		MaxItems: 1,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(records) != 1 {
+		t.Error("Expected 1 records; got ", len(records))
+	}
+
+	if records[0].ID != "1" {
+		t.Error("Expected RecordSet.ID to be 1")
+	}
+	if nextID != "2" {
+		t.Error("Expected nextId to be 2")
+	}
+}
+
 func TestRecordSetsGlobalListAllWhenNoneExist(t *testing.T) {
 	recordSetsListNoneJSON, err := readFile("test-fixtures/recordsets/recordsets-list-none.json")
 	if err != nil {
