@@ -1,7 +1,12 @@
-VERSION=0.9.13
+VERSION=0.9.14
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
-VINYLDNS_VERSION=0.9.5
+VINYLDNS_VERSION=0.9.10
+
+ifndef $(GOPATH)
+    GOPATH=$(shell go env GOPATH)
+    export GOPATH
+endif
 
 all: check-fmt test build integration stop-api validate-version install
 
@@ -42,7 +47,7 @@ build:
 install:
 	GO111MODULE=on go install $(SOURCE)
 
-release: test
+release: test validate-version
 	go get github.com/aktau/github-release
 	github-release release \
 		--user vinyldns \
