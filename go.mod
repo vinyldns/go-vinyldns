@@ -1,6 +1,6 @@
 module github.com/vinyldns/go-vinyldns
 
-go 1.13
+go 1.17
 
 require (
 	github.com/gobs/pretty v0.0.0-20180724170744-09732c25a95b
