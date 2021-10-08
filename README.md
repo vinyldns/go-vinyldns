@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/vinyldns/go-vinyldns.svg?branch=master)](https://travis-ci.org/vinyldns/go-vinyldns) [![Go Report Card](https://goreportcard.com/badge/github.com/vinyldns/go-vinyldns)](https://goreportcard.com/report/github.com/vinyldns/go-vinyldns) [![Godoc](https://godoc.org/github.com/vinyldns/go-vinyldns/vinyldns?status.svg)](https://godoc.org/github.com/vinyldns/go-vinyldns/vinyldns)
+[![Build and Release](https://github.com/vinyldns/go-vinyldns/actions/workflows/go.yml/badge.svg)](https://github.com/vinyldns/go-vinyldns/actions/workflows/go.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/vinyldns/go-vinyldns)](https://goreportcard.com/report/github.com/vinyldns/go-vinyldns) [![Godoc](https://godoc.org/github.com/vinyldns/go-vinyldns/vinyldns?status.svg)](https://godoc.org/github.com/vinyldns/go-vinyldns/vinyldns)
 ![GitHub](https://img.shields.io/github/license/vinyldns/go-vinyldns)
 
 # vinyldns
