@@ -1,0 +1,31 @@
+  {
+    "userId": "vinyl",
+    "userName": "vinyl201",
+    "comments": "this is optional",
+    "createdTimestamp": "2019-07-25T20:08:17Z",
+    "changes": [
+        {
+            "changeType": "Add",
+            "inputName": "reject.parent.com.",
+            "type": "A",
+            "ttl": 7200,
+            "record": {
+                "address": "1.1.1.1"
+            },
+            "status": "Pending",
+            "recordName": "reject",
+            "zoneName": "parent.com.",
+            "zoneId": "876879e5-293d-4092-99ab-9cbdf50c1636",
+            "recordChangeId": "a07299ce-5f81-11e8-9c2d-fa7ae01bbebc",
+            "recordSetId": "a0729f00-5f81-11e8-9c2d-fa7ae01bbebc",
+            "id": "a69cad97-994d-41e3-aed2-ec8c86a30ac5"
+        }
+    ],
+    "status": "Rejected",
+    "id": "2343fa88-d4da-4377-986a-34ba4e8ca628",
+    "ownerGroupId": "159a41c5-e67e-4951-b539-05f5ac788139",
+    "reviewerId": "90c11ffc-5a71-4794-97c6-74d19c81af7d ",
+    "reviewComment": "We cannot make this change!",
+    "reviewTimestamp": "2019-07-25T20:10:28Z",
+    "approvalStatus": "Rejected"
+}
