@@ -110,6 +110,18 @@ func batchRecordChangeEP(c *Client, changeID string) string {
 	return concatStrs("", batchRecordChangesEP(c), "/", changeID)
 }
 
+func batchRecordChangeApproveEP(c *Client, ID string) string {
+	return concatStrs("", batchRecordChangeEP(c, ID), "/approve")
+}
+
+func batchRecordChangeRejectEP(c *Client, ID string) string {
+	return concatStrs("", batchRecordChangeEP(c, ID), "/reject")
+}
+
+func batchRecordChangeCancelEP(c *Client, ID string) string {
+	return concatStrs("", batchRecordChangeEP(c, ID), "/cancel")
+}
+
 func buildQuery(f ListFilter, nameFilterName string) string {
 	params := []string{}
 	query := "?"

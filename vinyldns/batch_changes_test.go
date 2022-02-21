@@ -152,3 +152,90 @@ func TestBatchRecordChangeCreate(t *testing.T) {
 		t.Error("Expected BatchRecordChangeCreate.Comments to be 'this is optional'")
 	}
 }
+
+func TestBatchRecordChangeApprove(t *testing.T) {
+	batchChangeStatusJSON, err := readFile("test-fixtures/batch-changes/batch-change-approve-response.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/zones/batchrecordchanges/123/approve",
+			code:     200,
+			body:     batchChangeStatusJSON,
+		},
+	})
+
+	defer server.Close()
+	changeApproveResult, err := client.BatchRecordChangeApprove("123")
+	if err != nil {
+		t.Log(pretty.PrettyFormat(changeApproveResult))
+		t.Error(err)
+	}
+
+	c := changeApproveResult.Changes[0]
+	if c.ChangeType != "Add" && changeApproveResult.ApprovalStatus != "ManuallyApproved" {
+		t.Error("Expected BatchRecordChangeApprove.ApprovalStatus to be 'ManuallyApproved'")
+	}
+	if changeApproveResult.Comments != "this is optional" {
+		t.Error("Expected BatchRecordChangeCreate.Comments to be 'this is optional'")
+	}
+}
+
+func TestBatchRecordChangeReject(t *testing.T) {
+	batchChangeStatusJSON, err := readFile("test-fixtures/batch-changes/batch-change-reject-response.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/zones/batchrecordchanges/123/reject",
+			code:     200,
+			body:     batchChangeStatusJSON,
+		},
+	})
+
+	defer server.Close()
+	changeRejectResult, err := client.BatchRecordChangeReject("123")
+	if err != nil {
+		t.Log(pretty.PrettyFormat(changeRejectResult))
+		t.Error(err)
+	}
+
+	c := changeRejectResult.Changes[0]
+	if c.ChangeType != "Add" && changeRejectResult.ApprovalStatus != "Rejected" {
+		t.Error("Expected BatchRecordChangeApprove.ApprovalStatus to be 'Rejected'")
+	}
+	if changeRejectResult.Comments != "this is optional" {
+		t.Error("Expected BatchRecordChangeCreate.Comments to be 'this is optional'")
+	}
+}
+
+func TestBatchRecordChangeCancel(t *testing.T) {
+	batchChangeStatusJSON, err := readFile("test-fixtures/batch-changes/batch-change-cancel-response.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/zones/batchrecordchanges/123/cancel",
+			code:     200,
+			body:     batchChangeStatusJSON,
+		},
+	})
+
+	defer server.Close()
+	changeCancelResult, err := client.BatchRecordChangeCancel("123")
+	if err != nil {
+		t.Log(pretty.PrettyFormat(changeCancelResult))
+		t.Error(err)
+	}
+
+	c := changeCancelResult.Changes[0]
+	if c.ChangeType != "Add" && changeCancelResult.ApprovalStatus != "Cancelled" {
+		t.Error("Expected BatchRecordChangeApprove.ApprovalStatus to be 'Cancelled'")
+	}
+	if changeCancelResult.Comments != "this is optional" {
+		t.Error("Expected BatchRecordChangeCreate.Comments to be 'this is optional'")
+	}
+}
