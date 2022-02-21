@@ -203,8 +203,8 @@ func TestBatchRecordChangeReject(t *testing.T) {
 	}
 
 	c := changeRejectResult.Changes[0]
-	if c.ChangeType != "Add" && changeRejectResult.ApprovalStatus != "ManuallyApproved" {
-		t.Error("Expected BatchRecordChangeApprove.ApprovalStatus to be 'ManuallyApproved'")
+	if c.ChangeType != "Add" && changeRejectResult.ApprovalStatus != "Rejected" {
+		t.Error("Expected BatchRecordChangeApprove.ApprovalStatus to be 'Rejected'")
 	}
 	if changeRejectResult.Comments != "this is optional" {
 		t.Error("Expected BatchRecordChangeCreate.Comments to be 'this is optional'")
@@ -225,17 +225,17 @@ func TestBatchRecordChangeCancel(t *testing.T) {
 	})
 
 	defer server.Close()
-	changeApproveResult, err := client.BatchRecordChangeCancel("123")
+	changeCancelResult, err := client.BatchRecordChangeCancel("123")
 	if err != nil {
-		t.Log(pretty.PrettyFormat(changeApproveResult))
+		t.Log(pretty.PrettyFormat(changeCancelResult))
 		t.Error(err)
 	}
 
-	c := changeApproveResult.Changes[0]
-	if c.ChangeType != "Add" && changeApproveResult.ApprovalStatus != "ManuallyApproved" {
-		t.Error("Expected BatchRecordChangeApprove.ApprovalStatus to be 'ManuallyApproved'")
+	c := changeCancelResult.Changes[0]
+	if c.ChangeType != "Add" && changeCancelResult.ApprovalStatus != "Cancelled" {
+		t.Error("Expected BatchRecordChangeApprove.ApprovalStatus to be 'Cancelled'")
 	}
-	if changeApproveResult.Comments != "this is optional" {
+	if changeCancelResult.Comments != "this is optional" {
 		t.Error("Expected BatchRecordChangeCreate.Comments to be 'this is optional'")
 	}
 }
