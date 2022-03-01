@@ -2,7 +2,7 @@ name: Notify on Workflow Complete
 
 on:
   workflow_run:
-    workflows: [verify, release]
+    workflows: [Build and Release]
     types:
       - completed
 
@@ -23,7 +23,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":check_mark: [Go-vinyldnsss] `${{ github.event.workflow.name }}` workflow completed successfully!\nAction: ${{ github.event.workflow_run.html_url }}"
+                    "text": ":check_mark: [Go-vinyldns] `${{ github.event.workflow.name }}` workflow completed successfully!\nAction: ${{ github.event.workflow_run.html_url }}"
                   }
                 }
               ]
