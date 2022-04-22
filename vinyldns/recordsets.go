@@ -102,7 +102,7 @@ func (c *Client) RecordSetsListAll(zoneID string, filter ListFilter) ([]RecordSe
 	rss := []RecordSet{}
 
 	for {
-		resp, err := c.recordSetsList(zoneID, filter)
+		resp, err := c.RecordSetsList(zoneID, filter)
 		if err != nil {
 			return nil, err
 		}
