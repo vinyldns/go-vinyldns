@@ -102,6 +102,10 @@ func groupActivityEP(c *Client, groupID string) string {
 	return concatStrs("", groupEP(c, groupID), "/activity")
 }
 
+func groupChangeEP(c *Client, groupChangeID string) string {
+	return concatStrs("", groupsEP(c), "/change/", groupChangeID)
+}
+
 func batchRecordChangesEP(c *Client) string {
 	return concatStrs("", zonesEP(c), "/batchrecordchanges")
 }
