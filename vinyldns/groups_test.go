@@ -350,7 +350,7 @@ func TestGroupChange(t *testing.T) {
 	}
 	server, client := testTools([]testToolsConfig{
 		{
-			endpoint: "http://host.com/groups/changes/123",
+			endpoint: "http://host.com/groups/change/123",
 			code:     200,
 			body:     groupChangeJSON,
 		},
