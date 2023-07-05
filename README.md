@@ -67,12 +67,12 @@ package main
 import "github.com/vinyldns/go-vinyldns/vinyldns"
 
 func main() {
-  client := vinyldns.NewClient(vinyldns.ClientConfiguration{
+client := vinyldns.NewClient(vinyldns.ClientConfiguration{
   "accessKey",
   "secretKey",
   "my-vinyldns-host.com",
   "my custom user agent", //optional
-  })
+})
 
   // For example, fetch zones...
   zs, err := client.Zones()
