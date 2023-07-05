@@ -8,6 +8,7 @@ A Golang client for the [vinyldns](https://github.com/vinyldns/vinyldns) DNS as 
 ## Usage
 
 Install the client using the command: `go get github.com/vinyldns/go-vinyldns/vinyldns`.
+
 Basic usage requires instantiating a client and using the `vinyldns/api.go` methods to interact with `vinyldns`:
 
 For example:
