@@ -55,14 +55,20 @@ type GroupMembers struct {
 
 // GroupChange represents a group change event object.
 type GroupChange struct {
-	UserID     string `json:"userId,omitempty"`
-	Created    string `json:"created,omitempty"`
-	ChangeType string `json:"changeType,omitempty"`
-	NewGroup   Group  `json:"newGroup,omitempty"`
-	OldGroup   Group  `json:"oldGroup,omitempty"`
+	ID                 string `json:"id,omitempty"`
+	UserID             string `json:"userId,omitempty"`
+	Created            string `json:"created,omitempty"`
+	ChangeType         string `json:"changeType,omitempty"`
+	NewGroup           Group  `json:"newGroup,omitempty"`
+	OldGroup           Group  `json:"oldGroup,omitempty"`
+	UserName           string `json:"userName,omitempty"`
+	GroupChangeMessage string `json:"groupChangeMessage,omitempty"`
 }
 
 // GroupChanges is represents the group changes.
 type GroupChanges struct {
-	Changes []GroupChange `json:"changes"`
+	Changes   []GroupChange `json:"changes"`
+	MaxItems  int           `json:"maxItems,omitempty"`
+	NextID    string        `json:"nextId,omitempty"`
+	StartFrom string        `json:"startFrom,omitempty"`
 }
