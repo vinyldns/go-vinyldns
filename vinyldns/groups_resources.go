@@ -67,5 +67,8 @@ type GroupChange struct {
 
 // GroupChanges is represents the group changes.
 type GroupChanges struct {
-	Changes []GroupChange `json:"changes"`
+	Changes   []GroupChange `json:"changes"`
+	MaxItems  int           `json:"maxItems,omitempty"`
+	NextID    string        `json:"nextId,omitempty"`
+	StartFrom string        `json:"startFrom,omitempty"`
 }
