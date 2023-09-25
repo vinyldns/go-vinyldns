@@ -28,8 +28,8 @@ type RecordSetChange struct {
 type RecordSetChanges struct {
 	RecordSetChanges []RecordSetChange `json:"recordSetChanges"`
 	ZoneID           string            `json:"zoneId,omitempty"`
-	StartFrom        int               `json:"startFrom,omitempty"`
-	NextID           int               `json:"nextId,omitempty"`
+	StartFrom        string            `json:"startFrom,omitempty"`
+	NextID           string            `json:"nextId,omitempty"`
 	MaxItems         int               `json:"maxItems,omitempty"`
 	Status           string            `json:"status,omitempty"`
 }
