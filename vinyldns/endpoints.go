@@ -45,6 +45,11 @@ func zoneSyncEP(c *Client, id string) string {
 	return concatStrs("", zoneEP(c, id), "/sync")
 }
 
+func abandonedZonesEP(c *Client, f ListFilter) string {
+	query := buildQuery(f, "nameFilter")
+	return concatStrs("", zonesEP(c), "/deleted", "/changes", query)
+}
+
 func recordSetsEP(c *Client, zoneID string) string {
 	return concatStrs("", zoneEP(c, zoneID), "/recordsets")
 }
