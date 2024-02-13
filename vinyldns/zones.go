@@ -222,3 +222,28 @@ func (c *Client) ZoneSync(zoneId string) (ZoneChange, error) {
 
 	return zc, nil
 }
+
+// AbandandedZones retrieves the DeletedZoneChange matching the filters it's passed.
+func (c *Client) AbandandedZones(filter ListFilter) ([]DeletedZonesChange, error) {
+
+	if filter.MaxItems > 100 {
+		return nil, fmt.Errorf("MaxItems must be between 1 and 100")
+	}
+
+	dzc := []DeletedZonesChange{}
+
+	for {
+		resp, err := c.abandonedZonesList(filter)
+		if err != nil {
+			return nil, err
+		}
+
+		dzc = append(dzc, resp.ZonesDeletedInfo...)
+
+		filter.StartFrom = resp.NextID
+
+		if len(filter.StartFrom) == 0 {
+			return dzc, nil
+		}
+	}
+}
