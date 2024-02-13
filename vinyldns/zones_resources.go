@@ -112,6 +112,6 @@ type ZonesDeletedInfo struct {
 type DeletedZonesChange struct {
 	DeletedZonesChange ZoneChange `json:"zoneChange"`
 	AdminGroupName     string     `json:"adminGroupName"`
-	UerName            string     `json:"userName"`
+	UserName           string     `json:"userName"`
 	AccessLevel        string     `json:"accessLevel"`
 }
