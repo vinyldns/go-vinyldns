@@ -66,8 +66,8 @@ func recordSetEP(c *Client, zoneID, recordSetID string) string {
 	return concatStrs("", recordSetsEP(c, zoneID), "/", recordSetID)
 }
 
-func recordSetChangesEP(c *Client, zoneID string, f ListFilter) string {
-	query := buildQuery(f, "nameFilter")
+func recordSetChangesEP(c *Client, zoneID string, f ListFilterInt) string {
+	query := buildQueryInt(f, "nameFilter")
 
 	return concatStrs("", zoneEP(c, zoneID), "/recordsetchanges", query)
 }
@@ -120,6 +120,29 @@ func buildQuery(f ListFilter, nameFilterName string) string {
 
 	if f.StartFrom != "" {
 		params = append(params, fmt.Sprintf("startFrom=%s", f.StartFrom))
+	}
+
+	if f.MaxItems != 0 {
+		params = append(params, fmt.Sprintf("maxItems=%d", f.MaxItems))
+	}
+
+	if len(params) == 0 {
+		query = ""
+	}
+
+	return query + strings.Join(params, "&")
+}
+
+func buildQueryInt(f ListFilterInt, nameFilterName string) string {
+	params := []string{}
+	query := "?"
+
+	if f.NameFilter != "" {
+		params = append(params, fmt.Sprintf("%s=%s", nameFilterName, f.NameFilter))
+	}
+
+	if f.StartFrom != 0 {
+		params = append(params, fmt.Sprintf("startFrom=%d", f.StartFrom))
 	}
 
 	if f.MaxItems != 0 {

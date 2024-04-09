@@ -1,7 +1,7 @@
 VERSION=0.9.16
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
-VINYLDNS_VERSION=0.9.10
+VINYLDNS_VERSION=0.20.0
 
 ifndef $(GOPATH)
     GOPATH=$(shell go env GOPATH)
@@ -20,7 +20,7 @@ test:
 	go vet $(SOURCE)
 	GO111MODULE=on go test $(SOURCE) -cover
 
-integration: start-api
+integration: stop-api start-api
 	GO111MODULE=on go test $(SOURCE) -tags=integration
 
 validate-version:
@@ -34,12 +34,13 @@ start-api:
 			https://$(VINYLDNS_REPO) \
 			$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION); \
 	fi
-	$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION)/bin/docker-up-vinyldns.sh \
-		--api-only \
-		--version $(VINYLDNS_VERSION)
+	$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION)/quickstart/quickstart-vinyldns.sh \
+		--api \
+		--version-tag $(VINYLDNS_VERSION)
 
 stop-api:
-	$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION)/bin/remove-vinyl-containers.sh
+	$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION)/quickstart/quickstart-vinyldns.sh \
+		--clean
 
 build:
 	GO111MODULE=on go build -ldflags "-X main.version=$(VERSION)" $(SOURCE)

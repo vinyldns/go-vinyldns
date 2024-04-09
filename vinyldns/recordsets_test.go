@@ -65,7 +65,7 @@ func TestRecordSetsListAll(t *testing.T) {
 			body:     recordSetsListJSON1,
 		},
 		{
-			endpoint: "http://host.com/zones/123/recordsets?startFrom=2&maxItems=1",
+			endpoint: "http://host.com/zones/123/recordsets?maxItems=1&startFrom=2",
 			code:     200,
 			body:     recordSetsListJSON2,
 		},
@@ -149,7 +149,7 @@ func TestRecordSetsGlobalListAll(t *testing.T) {
 			body:     recordSetsListJSON1,
 		},
 		{
-			endpoint: "http://host.com/recordsets?startFrom=2&maxItems=1",
+			endpoint: "http://host.com/recordsets?maxItems=1&startFrom=2",
 			code:     200,
 			body:     recordSetsListJSON2,
 		},
@@ -513,7 +513,7 @@ func TestRecordSetChangessListAllWhenNoneExist(t *testing.T) {
 
 	defer server.Close()
 
-	changes, err := client.RecordSetChangesListAll("123", ListFilter{})
+	changes, err := client.RecordSetChangesListAll("123", ListFilterInt{})
 	if err != nil {
 		t.Error(err)
 	}
@@ -548,7 +548,7 @@ func TestRecordSetChangesListAll(t *testing.T) {
 			body:     recordSetChangesJSON1,
 		},
 		{
-			endpoint: "http://host.com/zones/123/recordsetchanges?startFrom=2&maxItems=1",
+			endpoint: "http://host.com/zones/123/recordsetchanges?maxItems=1&startFrom=2",
 			code:     200,
 			body:     recordSetChangesJSON2,
 		},
@@ -556,13 +556,13 @@ func TestRecordSetChangesListAll(t *testing.T) {
 
 	defer server.Close()
 
-	if _, err := client.RecordSetChangesListAll("123", ListFilter{
+	if _, err := client.RecordSetChangesListAll("123", ListFilterInt{
 		MaxItems: 200,
 	}); err == nil {
 		t.Error("Expected error -- MaxItems must be between 1 and 100")
 	}
 
-	changes, err := client.RecordSetChangesListAll("123", ListFilter{
+	changes, err := client.RecordSetChangesListAll("123", ListFilterInt{
 		MaxItems: 1,
 	})
 	if err != nil {
