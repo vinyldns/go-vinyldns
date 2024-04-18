@@ -513,7 +513,7 @@ func TestRecordSetChangessListAllWhenNoneExist(t *testing.T) {
 
 	defer server.Close()
 
-	changes, err := client.RecordSetChangesListAll("123", ListFilterInt{})
+	changes, err := client.RecordSetChangesListAll("123", ListFilterRecordSetChanges{})
 	if err != nil {
 		t.Error(err)
 	}
@@ -556,13 +556,13 @@ func TestRecordSetChangesListAll(t *testing.T) {
 
 	defer server.Close()
 
-	if _, err := client.RecordSetChangesListAll("123", ListFilterInt{
+	if _, err := client.RecordSetChangesListAll("123", ListFilterRecordSetChanges{
 		MaxItems: 200,
 	}); err == nil {
 		t.Error("Expected error -- MaxItems must be between 1 and 100")
 	}
 
-	changes, err := client.RecordSetChangesListAll("123", ListFilterInt{
+	changes, err := client.RecordSetChangesListAll("123", ListFilterRecordSetChanges{
 		MaxItems: 1,
 	})
 	if err != nil {

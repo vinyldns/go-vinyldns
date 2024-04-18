@@ -466,7 +466,7 @@ func TestRecordSetChangesIntegration(t *testing.T) {
 		t.Error(err)
 	}
 
-	changes, err := c.RecordSetChanges(zones[0].ID, ListFilterInt{})
+	changes, err := c.RecordSetChanges(zones[0].ID, ListFilterRecordSetChanges{})
 	if err != nil {
 		t.Error(err)
 	}
@@ -483,7 +483,7 @@ func TestRecordSetChangesIntegrationWithMaxItems(t *testing.T) {
 		t.Error(err)
 	}
 
-	changes, err := c.RecordSetChanges(zones[0].ID, ListFilterInt{
+	changes, err := c.RecordSetChanges(zones[0].ID, ListFilterRecordSetChanges{
 		MaxItems: 1,
 	})
 	if err != nil {
@@ -502,7 +502,7 @@ func TestRecordSetChangesListAllIntegration(t *testing.T) {
 		t.Error(err)
 	}
 
-	changes, err := c.RecordSetChangesListAll(zones[0].ID, ListFilterInt{})
+	changes, err := c.RecordSetChangesListAll(zones[0].ID, ListFilterRecordSetChanges{})
 	if err != nil {
 		t.Error(err)
 	}

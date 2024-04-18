@@ -227,7 +227,7 @@ func TestRecordSetEP(t *testing.T) {
 }
 
 func TestRecordSetChangesEP(t *testing.T) {
-	rsc := recordSetChangesEP(c, "123", ListFilterInt{})
+	rsc := recordSetChangesEP(c, "123", ListFilterRecordSetChanges{})
 	expected := "http://host.com/zones/123/recordsetchanges"
 
 	if rsc != expected {
@@ -238,7 +238,7 @@ func TestRecordSetChangesEP(t *testing.T) {
 }
 
 func TestRecordSetChangesEPWithQuery(t *testing.T) {
-	rsc := recordSetChangesEP(c, "123", ListFilterInt{
+	rsc := recordSetChangesEP(c, "123", ListFilterRecordSetChanges{
 		MaxItems:  3,
 		StartFrom: 1,
 	})
