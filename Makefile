@@ -2,6 +2,7 @@ VERSION=0.9.16
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
 VINYLDNS_DIR="$(GOPATH)/src/$(VINYLDNS_REPO)/" 
+VINYLDNS_VERSION=latest
 
 ifndef $(GOPATH)
     GOPATH=$(shell go env GOPATH)
@@ -38,7 +39,7 @@ clonevinyl:
 
 start-api: clonevinyl stop-api
 	$(GOPATH)/src/$(VINYLDNS_REPO)/quickstart/quickstart-vinyldns.sh \
-		--api
+		--api --version-tag $(VINYLDNS_VERSION)
 
 stop-api:
 	$(GOPATH)/src/$(VINYLDNS_REPO)/quickstart/quickstart-vinyldns.sh \
