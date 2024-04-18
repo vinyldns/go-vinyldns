@@ -27,7 +27,7 @@ integration: start-api
 validate-version:
 	cat vinyldns/version.go | grep 'var Version = "$(VERSION)"'
 
-clonevinyl:
+clone-vinyl:
 	if [ ! -d  $(VINYLDNS_DIR) ]; then \
 		echo "$(VINYLDNS_REPO) not found in your GOPATH (necessary for acceptance tests), getting..."; \
 		git clone \
@@ -37,7 +37,7 @@ clonevinyl:
 		git -C $(VINYLDNS_DIR) pull ; \
 	fi
 
-start-api: clonevinyl stop-api
+start-api: clone-vinyl stop-api
 	$(GOPATH)/src/$(VINYLDNS_REPO)/quickstart/quickstart-vinyldns.sh \
 		--api --version-tag $(VINYLDNS_VERSION)
 
