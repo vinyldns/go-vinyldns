@@ -50,6 +50,16 @@ type ListFilter struct {
 	MaxItems   int
 }
 
+// ListRecordHistoryFilter represents the list query parameters that may be passed to
+// VinylDNS API endpoint: recordsetchange/history
+type ListRecordHistoryFilter struct {
+	ZoneId     string
+	StartFrom  int
+	MaxItems   int
+	Fqdn       string
+	RecordType string
+}
+
 // NameSort specifies the name sort order for record sets returned by the global list record set response.
 // Valid values are ASC (ascending; default) and DESC (descending).
 type NameSort string
