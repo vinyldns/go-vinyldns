@@ -219,6 +219,17 @@ func (c *Client) RecordSetChanges(zoneID string, f ListFilter) (*RecordSetChange
 	return rsc, nil
 }
 
+// RecordSetChangeHistory retrieves the RecordSetChangeHistory response for that particular record using the ListRecordHistoryFilter passed.
+func (c *Client) RecordSetChangeHistory(f ListRecordHistoryFilter) (*RecordSetChangeHistory, error) {
+	rsc := &RecordSetChangeHistory{}
+	err := resourceRequest(c, recordSetChangeHistoryListEP(c, f), "GET", nil, rsc)
+	if err != nil {
+		return &RecordSetChangeHistory{}, err
+	}
+
+	return rsc, nil
+}
+
 // RecordSetChangesListAll retrieves the complete list of record set changes for the Zone ListFilter criteria passed.
 // Handles paging through results on the user's behalf.
 func (c *Client) RecordSetChangesListAll(zoneID string, filter ListFilter) ([]RecordSetChange, error) {

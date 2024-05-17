@@ -72,6 +72,13 @@ func recordSetChangesEP(c *Client, zoneID string, f ListFilter) string {
 	return concatStrs("", zoneEP(c, zoneID), "/recordsetchanges", query)
 }
 
+func recordSetChangeHistoryListEP(c *Client, f ListRecordHistoryFilter) string {
+	query := buildRecordHistoryQuery(f)
+	base := concatStrs("", c.Host, "/recordsetchange/history")
+
+	return concatStrs("", base, query)
+}
+
 func recordSetChangeEP(c *Client, zoneID, recordSetID, changeID string) string {
 	return concatStrs("", recordSetEP(c, zoneID, recordSetID), "/changes/", changeID)
 }
@@ -120,6 +127,37 @@ func buildQuery(f ListFilter, nameFilterName string) string {
 
 	if f.StartFrom != "" {
 		params = append(params, fmt.Sprintf("startFrom=%s", f.StartFrom))
+	}
+
+	if f.MaxItems != 0 {
+		params = append(params, fmt.Sprintf("maxItems=%d", f.MaxItems))
+	}
+
+	if len(params) == 0 {
+		query = ""
+	}
+
+	return query + strings.Join(params, "&")
+}
+
+func buildRecordHistoryQuery(f ListRecordHistoryFilter) string {
+	params := []string{}
+	query := "?"
+
+	if f.ZoneId != "" {
+		params = append(params, fmt.Sprintf("%s=%s", "zoneId", f.ZoneId))
+	}
+
+	if f.Fqdn != "" {
+		params = append(params, fmt.Sprintf("%s=%s", "fqdn", f.Fqdn))
+	}
+
+	if f.RecordType != "" {
+		params = append(params, fmt.Sprintf("%s=%s", "recordType", f.RecordType))
+	}
+
+	if f.StartFrom != 0 {
+		params = append(params, fmt.Sprintf("startFrom=%d", f.StartFrom))
 	}
 
 	if f.MaxItems != 0 {

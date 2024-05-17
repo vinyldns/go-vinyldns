@@ -34,6 +34,15 @@ type RecordSetChanges struct {
 	Status           string            `json:"status,omitempty"`
 }
 
+// RecordSetChanges represents a recordset changes response
+type RecordSetChangeHistory struct {
+	RecordSetChanges []RecordSetChange `json:"recordSetChanges"`
+	ZoneID           string            `json:"zoneId,omitempty"`
+	StartFrom        int               `json:"startFrom,omitempty"`
+	NextID           int               `json:"nextId,omitempty"`
+	MaxItems         int               `json:"maxItems,omitempty"`
+}
+
 // RecordSet represents a DNS record set.
 type RecordSet struct {
 	ID           string   `json:"id,omitempty"`
