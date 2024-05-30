@@ -1,7 +1,8 @@
 SHELL=bash
 VERSION=0.9.16
 SOURCE?=./...
-VINYLDNS_VERSION=0.10.4
+VINYLDNS_REPO=github.com/vinyldns/vinyldns
+VINYLDNS_VERSION=0.9.10
 
 # Check that the required version of make is being used
 REQ_MAKE_VER:=3.82
@@ -42,20 +43,21 @@ validate-version:
 	cat vinyldns/version.go | grep 'var Version = "$(VERSION)"'
 
 .PHONY: start-api
-start-api: stop-api
-	@set -euo pipefail
-	echo "Starting VinylDNS API.."
-	docker run -d --name vinyldns-go-api -p "9000:9000" -p "19001:19001" -e RUN_SERVICES="all tail-logs" vinyldns/build:base-test-integration-v$(VINYLDNS_VERSION)
-	echo "Waiting for VinylDNS API to start.."
-	{ timeout "20s" grep -q 'STARTED SUCCESSFULLY' <(timeout 20s docker logs -f vinyldns-go-api) ;	echo "VinylDNS API STARTED SUCCESSFULLY";  } || { echo "VinylDNS API failed to start"; exit 1; }
+start-api: 
+	if [ ! -d "$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION)" ]; then \
+		echo "$(VINYLDNS_REPO)-$(VINYLDNS_VERSION) not found in your GOPATH (necessary for acceptance tests), getting..."; \
+		git clone \
+			--branch v$(VINYLDNS_VERSION) \
+			https://$(VINYLDNS_REPO) \
+			$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION); \
+	fi
+	$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION)/bin/docker-up-vinyldns.sh \
+		--api-only \
+		--version $(VINYLDNS_VERSION)
 
 .PHONY: stop-api
 stop-api:
-	@set -euo pipefail
-	if docker ps | grep -q "vinyldns-go-api"; then
-		docker kill vinyldns-go-api &> /dev/null || true
-		docker rm vinyldns-go-api &> /dev/null || true   
-	fi
+	$(GOPATH)/src/$(VINYLDNS_REPO)-$(VINYLDNS_VERSION)/bin/remove-vinyl-containers.sh
 
 .PHONY: build
 build:
