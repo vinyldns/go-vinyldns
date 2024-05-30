@@ -117,7 +117,7 @@ func TestZoneCreateIntegration(t *testing.T) {
 		Name:          "ok.",
 		KeyName:       "vinyldns.",
 		Key:           "nzisn+4G2ldMn0q1CV3vsg==",
-		PrimaryServer: "127.0.0.1:19001",
+		PrimaryServer: "vinyldns-bind9",
 	}
 
 	zone := &Zone{
