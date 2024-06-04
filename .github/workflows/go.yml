@@ -13,8 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - id: get-version
-      run: echo "::set-output name=CURRENT_VERSION::$(cat Makefile | head -n1|awk -F= '{print $2}')"
+    run: | 
+        VERSION=$(grep '^VERSION=' Makefile | awk -F= '{print $2}') 
+        echo "::set-output name=CURRENT_VERSION::$VERSION"
+        
     - name: Set up Go
       uses: actions/setup-go@v2
       with:

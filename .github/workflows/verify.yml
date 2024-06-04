@@ -14,11 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.4.0
 
-      - id: get-version
-        run: | 
-        VERSION=$(grep '^VERSION=' Makefile | awk -F= '{print $2}') 
-        echo "::set-output name=CURRENT_VERSION::$VERSION"
-        
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
