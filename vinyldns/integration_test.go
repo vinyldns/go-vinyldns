@@ -46,7 +46,7 @@ func TestGroupCreateIntegration(t *testing.T) {
 	gc, err := c.GroupCreate(&Group{
 		Name:        "test-group",
 		Description: "a test group",
-		Email:       "test@vinyldns.com",
+		Email:       "test@test.com",
 		Admins:      users,
 		Members:     users,
 	})
@@ -91,7 +91,7 @@ func TestGroupAdminsIntegration(t *testing.T) {
 		t.Error(err)
 	}
 
-	if admins[0].UserName != "ok" {
+	if admins[0].UserName != "ok" && admins[0].UserName != "dummy" {
 		t.Error(fmt.Sprintf("unable to get group admins for group %s", gID))
 	}
 }
@@ -117,12 +117,12 @@ func TestZoneCreateIntegration(t *testing.T) {
 		Name:          "ok.",
 		KeyName:       "vinyldns.",
 		Key:           "nzisn+4G2ldMn0q1CV3vsg==",
-		PrimaryServer: "vinyldns-bind9",
+		PrimaryServer: "vinyldns-integration:19001",
 	}
 
 	zone := &Zone{
 		Name:               "ok.",
-		Email:              "email@email.com",
+		Email:              "email@test.com",
 		AdminGroupID:       groups[0].ID,
 		Connection:         connection,
 		TransferConnection: connection,
@@ -403,7 +403,7 @@ func TestRecordSetsGlobalListAllIntegrationFilterForExistentName(t *testing.T) {
 	rName := "foo"
 
 	records, err := c.RecordSetsGlobalListAll(GlobalListFilter{
-		RecordNameFilter: "*" + rName + "*",
+		RecordNameFilter: rName + "*",
 	})
 	if err != nil {
 		t.Error(err)
@@ -466,7 +466,7 @@ func TestRecordSetChangesIntegration(t *testing.T) {
 		t.Error(err)
 	}
 
-	changes, err := c.RecordSetChanges(zones[0].ID, ListFilter{})
+	changes, err := c.RecordSetChanges(zones[0].ID, ListFilterRecordSetChanges{})
 	if err != nil {
 		t.Error(err)
 	}
@@ -483,7 +483,7 @@ func TestRecordSetChangesIntegrationWithMaxItems(t *testing.T) {
 		t.Error(err)
 	}
 
-	changes, err := c.RecordSetChanges(zones[0].ID, ListFilter{
+	changes, err := c.RecordSetChanges(zones[0].ID, ListFilterRecordSetChanges{
 		MaxItems: 1,
 	})
 	if err != nil {
@@ -502,7 +502,7 @@ func TestRecordSetChangesListAllIntegration(t *testing.T) {
 		t.Error(err)
 	}
 
-	changes, err := c.RecordSetChangesListAll(zones[0].ID, ListFilter{})
+	changes, err := c.RecordSetChangesListAll(zones[0].ID, ListFilterRecordSetChanges{})
 	if err != nil {
 		t.Error(err)
 	}

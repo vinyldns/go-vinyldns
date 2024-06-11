@@ -14,13 +14,17 @@ package vinyldns
 
 import (
 	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
+	"time"
 
-	awsauth "github.com/smartystreets/go-aws-auth"
+	awsauth "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
+	awscred "github.com/aws/aws-sdk-go-v2/credentials"
 )
 
 func concat(arr []string) string {
@@ -49,17 +53,23 @@ func resourceRequest(c *Client, url, method string, body []byte, responseStruct 
 	req.Header.Set("User-Agent", c.UserAgent)
 	req.Header.Set("Content-Type", "application/json")
 
-	awsauth.Sign4(req, awsauth.Credentials{
-		AccessKeyID:     c.AccessKey,
-		SecretAccessKey: c.SecretKey,
-	})
+	signer := awsauth.NewSigner()
+	creds := awscred.NewStaticCredentialsProvider(c.AccessKey, c.SecretKey, "")
+
+	h := sha256.New()
+	_, _ = io.Copy(h, bytes.NewReader(body))
+	payloadHash := hex.EncodeToString(h.Sum(nil))
+	err = signer.SignHTTP(nil, creds.Value, req, payloadHash, "VinylDNS", "us-east-1", time.Now())
+	if err != nil {
+		return err
+	}
 
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return err
 	}
 
-	bodyContents, err := ioutil.ReadAll(resp.Body)
+	bodyContents, err := io.ReadAll(resp.Body)
 	if logRequests() {
 		fmt.Printf("Response status: \n\t%d\nresponse body: \n\t%s \n\n", resp.StatusCode, bodyContents)
 	}

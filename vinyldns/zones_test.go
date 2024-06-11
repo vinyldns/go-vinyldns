@@ -88,7 +88,7 @@ func TestZonesListAll(t *testing.T) {
 			body:     zonesListJSON1,
 		},
 		{
-			endpoint: "http://host.com/zones?startFrom=2&maxItems=1",
+			endpoint: "http://host.com/zones?maxItems=1&startFrom=2",
 			code:     200,
 			body:     zonesListJSON2,
 		},
@@ -656,7 +656,7 @@ func TestZoneChangesListAll(t *testing.T) {
 			body:     zoneChangesListJSON1,
 		},
 		{
-			endpoint: "http://host.com/zones/123/changes?startFrom=2&maxItems=1",
+			endpoint: "http://host.com/zones/123/changes?maxItems=1&startFrom=2",
 			code:     200,
 			body:     zoneChangesListJSON2,
 		},

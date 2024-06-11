@@ -182,7 +182,7 @@ func TestGroupsListAll(t *testing.T) {
 			body:     groupsListJSON1,
 		},
 		{
-			endpoint: "http://host.com/groups?startFrom=2&maxItems=1",
+			endpoint: "http://host.com/groups?maxItems=1&startFrom=2",
 			code:     200,
 			body:     groupsListJSON2,
 		},

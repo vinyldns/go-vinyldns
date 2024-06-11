@@ -1,6 +1,6 @@
 {
   "zoneId": "123",
-  "startFrom": "2",
+  "startFrom": 2,
   "maxItems": 1,
   "recordSetChanges": [{
     "status": "Complete",
