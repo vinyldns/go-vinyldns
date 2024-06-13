@@ -50,6 +50,13 @@ type ListFilter struct {
 	MaxItems   int
 }
 
+// ListFilterRecordSetChanges represents the list query parameters that may be passed to
+// VinylDNS API endpoint /zones/${zone_id}/recordsetchanges
+type ListFilterRecordSetChanges struct {
+	StartFrom int
+	MaxItems  int
+}
+
 // NameSort specifies the name sort order for record sets returned by the global list record set response.
 // Valid values are ASC (ascending; default) and DESC (descending).
 type NameSort string
