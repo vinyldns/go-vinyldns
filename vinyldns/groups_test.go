@@ -335,4 +335,52 @@ func TestGroupActivity(t *testing.T) {
 	if c.Created != "1488480605378" {
 		t.Error("Expected GroupActivity.Changes[0].Created to be '1488480605378'")
 	}
+	if c.GroupChangeMessage != "User/s with username/s 'dummy198' removed. User/s with username/s 'dummy199' added." {
+		t.Error("Expected GroupActivity.Changes[0].GroupChangeMessage to be 'User/s with username/s \\'dummy198\\' removed. User/s with username/s \\'dummy199\\' added.'")
+	}
+	if c.UserName != "some-user" {
+		t.Error("Expected GroupActivity.Changes[0].UserName to be 'some-user'")
+	}
+}
+
+func TestGroupChange(t *testing.T) {
+	groupChangeJSON, err := readFile("test-fixtures/groups/group-change.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/groups/change/123",
+			code:     200,
+			body:     groupChangeJSON,
+		},
+	})
+
+	defer server.Close()
+
+	change, err := client.GroupChange("123")
+	if err != nil {
+		t.Log(pretty.PrettyFormat(change))
+		t.Error(err)
+	}
+
+	c := change
+	if c.NewGroup.Name != "test-list-group-activity-max-item-success" {
+		t.Error("Expected GroupActivity.Changes[0].NewGroup.Name to be 'test-list-group-activity-max-item-success'")
+	}
+	if c.UserID != "some-user" {
+		t.Error("Expected GroupActivity.Changes[0].UserID to be 'some-user'")
+	}
+	if c.ChangeType != "Update" {
+		t.Error("Expected GroupActivity.Changes[0].UserID to be 'some-user'")
+	}
+	if c.Created != "1488480605378" {
+		t.Error("Expected GroupActivity.Changes[0].Created to be '1488480605378'")
+	}
+	if c.GroupChangeMessage != "User/s with username/s 'dummy198' removed. User/s with username/s 'dummy199' added." {
+		t.Error("Expected GroupActivity.Changes[0].GroupChangeMessage to be 'User/s with username/s \\'dummy198\\' removed. User/s with username/s \\'dummy199\\' added.'")
+	}
+	if c.UserName != "some-user" {
+		t.Error("Expected GroupActivity.Changes[0].UserName to be 'some-user'")
+	}
 }

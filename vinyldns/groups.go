@@ -78,6 +78,17 @@ func (c *Client) Group(groupID string) (*Group, error) {
 	return group, nil
 }
 
+// GroupChange returns a particular group change.
+func (c *Client) GroupChange(groupChangeID string) (*GroupChange, error) {
+	change := &GroupChange{}
+	err := resourceRequest(c, groupChangeEP(c, groupChangeID), "GET", nil, change)
+	if err != nil {
+		return nil, err
+	}
+
+	return change, nil
+}
+
 // GroupDelete deletes the Group whose ID it's passed.
 func (c *Client) GroupDelete(groupID string) (*Group, error) {
 	group := &Group{}
