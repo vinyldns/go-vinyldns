@@ -20,6 +20,15 @@ jobs:
       with:
         go-version: 1.17
 
+      # Add this step to create docker-compose wrapper
+    - name: Setup docker-compose compatibility
+      run: |
+        mkdir -p $HOME/bin
+        echo '#!/bin/sh' > $HOME/bin/docker-compose
+        echo 'exec docker compose "$@"' >> $HOME/bin/docker-compose
+        chmod +x $HOME/bin/docker-compose
+        echo "$HOME/bin" >> $GITHUB_PATH
+
     - name: Build
       run: make
       
