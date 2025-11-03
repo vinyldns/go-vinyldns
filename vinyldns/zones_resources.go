@@ -57,11 +57,11 @@ type Zone struct {
 
 // ZoneDetails represents the type of data displayed by the zone details endpoint
 type ZoneDetails struct {
-	Name               string          `json:"name,omitempty"`
-	Email              string          `json:"email,omitempty"`
-	Status             string          `json:"status,omitempty"`
-	AdminGroupID       string          `json:"adminGroupId,omitempty"`
-	AdminGroupName     string          `json:"adminGroupName,omitempty"`
+	Name           string `json:"name,omitempty"`
+	Email          string `json:"email,omitempty"`
+	Status         string `json:"status,omitempty"`
+	AdminGroupID   string `json:"adminGroupId,omitempty"`
+	AdminGroupName string `json:"adminGroupName,omitempty"`
 }
 
 // ZoneResponse represents the JSON response
