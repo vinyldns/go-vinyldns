@@ -1,0 +1,9 @@
+{
+  "zone":{
+    "name":"vinyldns.",
+    "email":"some_user@foo.com",
+    "status":"Active",
+    "adminGroupId": "c314836d-17db-4a57-b849-eb1feffe0ae7",
+    "adminGroupName": "vinyldns-group"
+  }
+}
