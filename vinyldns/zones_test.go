@@ -291,7 +291,6 @@ func TestZoneDetails(t *testing.T) {
 		t.Error("Expected zone.AdminGroupID to have a value")
 	}
 
-
 }
 func TestZoneByName(t *testing.T) {
 	zoneJSON, err := readFile("test-fixtures/zones/zone.json")
