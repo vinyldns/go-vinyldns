@@ -254,7 +254,44 @@ func TestZone(t *testing.T) {
 		}
 	}
 }
+func TestZoneDetails(t *testing.T) {
+	zoneDetailsJSON, err := readFile("test-fixtures/zones/zone-details.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/zones/123/details",
+			code:     200,
+			body:     zoneDetailsJSON,
+		},
+	})
 
+	defer server.Close()
+
+	z, err := client.ZoneDetails("123")
+	if err != nil {
+		t.Log(pretty.PrettyFormat(z))
+		t.Error(err)
+	}
+
+	if z.Name != "vinyldns." {
+		t.Error("Expected zone.Name to have a value")
+	}
+	if z.Email != "some_user@foo.com" {
+		t.Error("Expected zone.Email to have a value")
+	}
+	if z.Status != "Active" {
+		t.Error("Expected zone.Status to have a value")
+	}
+	if z.AdminGroupID == "" {
+		t.Error("Expected zone.AdminGroupID to have a value")
+	}
+	if z.AdminGroupName == "" {
+		t.Error("Expected zone.AdminGroupID to have a value")
+	}
+
+}
 func TestZoneByName(t *testing.T) {
 	zoneJSON, err := readFile("test-fixtures/zones/zone.json")
 	if err != nil {
