@@ -45,9 +45,10 @@ func (d Error) Error() string {
 // ListFilter represents the list query parameters that may be passed to
 // VinylDNS API endpoints such as /zones and /zones/${zone_id}/recordsets
 type ListFilter struct {
-	NameFilter string
-	StartFrom  string
-	MaxItems   int
+	NameFilter   string
+	StartFrom    string
+	MaxItems     int
+	IgnoreAccess bool
 }
 
 // NameSort specifies the name sort order for record sets returned by the global list record set response.

@@ -719,6 +719,7 @@ func TestZoneChange(t *testing.T) {
 func TestAbandonedZoneChanges(t *testing.T) {
 	deletedZoneChangesJSON1, err := readFile("test-fixtures/zones/zone-changes-deleted-list-1.json")
 	deletedZoneChangesJSON2, err := readFile("test-fixtures/zones/zone-changes-deleted-list-2.json")
+	deletedZoneChangesJSON3, err := readFile("test-fixtures/zones/zone-changes-deleted-list-3.json")
 
 	if err != nil {
 		t.Error(err)
@@ -735,6 +736,11 @@ func TestAbandonedZoneChanges(t *testing.T) {
 			code:     200,
 			body:     deletedZoneChangesJSON2,
 		},
+		{
+            endpoint: "http://host.com/zones/deleted/changes?startFrom=2&maxItems=1&ignoreAccess=true",
+            code:     200,
+            body:     deletedZoneChangesJSON3,
+        },
 	})
 
 	defer server.Close()
