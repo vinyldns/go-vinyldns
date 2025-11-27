@@ -31,6 +31,15 @@ jobs:
 
     - name: Build
       run: make
+
+    - name: Create and Push Tag
+      # Only create and push tag on push to the main branch
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git tag ${{ steps.get-version.outputs.CURRENT_VERSION }}
+        git push origin ${{ steps.get-version.outputs.CURRENT_VERSION }}
       
     - name: Create Release
       # Only create a release on push to the main branch
@@ -42,4 +51,3 @@ jobs:
         draft: true
         prerelease: true
         fail_on_unmatched_files: false
-
