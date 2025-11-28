@@ -165,11 +165,12 @@ func TestAbandonedZoneEP(t *testing.T) {
 		fmt.Printf("Actual: %s", az)
 		t.Error("deletedZoneChangesEP should return the right endpoint")
 	}
+
 	az = abandonedZonesEP(c, ListFilter{
         NameFilter: "foo",
         StartFrom:  "nextplease",
         MaxItems:   99,
-        IgnoreAccess: false,
+        IgnoreAccess: true,
     })
     expected = "http://host.com/zones/deleted/changes?nameFilter=foo&startFrom=nextplease&maxItems=99&ignoreAccess=true"
  

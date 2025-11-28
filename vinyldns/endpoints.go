@@ -130,8 +130,8 @@ func buildQuery(f ListFilter, nameFilterName string) string {
 	if f.MaxItems != 0 {
 		params = append(params, fmt.Sprintf("maxItems=%d", f.MaxItems))
 	}
-	
-	if f.IgnoreAccess || !(f.IgnoreAccess) {
+
+	if f.IgnoreAccess {
         params = append(params, fmt.Sprintf("ignoreAccess=%t", f.IgnoreAccess))
     }
 
