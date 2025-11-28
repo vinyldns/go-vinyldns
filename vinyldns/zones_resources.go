@@ -113,3 +113,20 @@ type ZoneChange struct {
 	Created    string `json:"created"`
 	ID         string `json:"id"`
 }
+
+// ZonesDeletedInfo represents a deleted zone's
+type ZonesDeletedInfo struct {
+	ZonesDeletedInfo []DeletedZonesChange `json:"zonesDeletedInfo"`
+	StartFrom        string               `json:"startFrom"`
+	MaxItems         int                  `json:"maxItems"`
+	NextID           string               `json:"nextId"`
+	IgnoreAccess     bool                 `json:"ignoreAccess"`
+}
+
+// DeletedZonesChange represents a deleted zone change
+type DeletedZonesChange struct {
+	DeletedZonesChange ZoneChange `json:"zoneChange"`
+	AdminGroupName     string     `json:"adminGroupName"`
+	UserName           string     `json:"userName"`
+	AccessLevel        string     `json:"accessLevel"`
+}
