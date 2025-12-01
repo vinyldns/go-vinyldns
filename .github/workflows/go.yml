@@ -40,6 +40,10 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git tag v${{ steps.get-version.outputs.CURRENT_VERSION }}
         git push origin v${{ steps.get-version.outputs.CURRENT_VERSION }}
+
+    - name: Wait for tag to register
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      run: sleep 20
       
     - name: Create Release
       # Only create a release on push to the main branch
