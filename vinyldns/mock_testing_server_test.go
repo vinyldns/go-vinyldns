@@ -15,11 +15,11 @@ package vinyldns
 import (
 	"crypto/tls"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"reflect"
+	"os"
 )
 
 type testToolsConfig struct {
@@ -29,7 +29,7 @@ type testToolsConfig struct {
 }
 
 func readFile(file string) (string, error) {
-	b, err := ioutil.ReadFile(file)
+	b, err := os.ReadFile(file)
 	if err != nil {
 		return "", err
 	}

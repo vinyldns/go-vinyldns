@@ -64,6 +64,17 @@ func (c *Client) Zone(id string) (Zone, error) {
 	return zone.Zone, nil
 }
 
+// Zone retrieves the Zone whose ID it's passed.
+func (c *Client) ZoneDetails(id string) (ZoneDetails, error) {
+	zoneDetails := &ZoneDetailsResponse{}
+	err := resourceRequest(c, zoneDetailsEP(c, id), "GET", nil, zoneDetails)
+	if err != nil {
+		return ZoneDetails{}, err
+	}
+
+	return zoneDetails.ZoneDetails, nil
+}
+
 // ZoneByID retrieves the Zone whose ID it's passed.
 // It is a version of Zone whose func name is a bit more explicit.
 func (c *Client) ZoneByID(id string) (Zone, error) {

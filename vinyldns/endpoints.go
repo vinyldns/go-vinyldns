@@ -31,6 +31,10 @@ func zoneEP(c *Client, id string) string {
 	return concatStrs("", zonesEP(c), "/", id)
 }
 
+func zoneDetailsEP(c *Client, id string) string {
+	return concatStrs("", zonesEP(c), "/", id, "/details")
+}
+
 func zoneNameEP(c *Client, name string) string {
 	return concatStrs("", zonesEP(c), "/name/", name)
 }
@@ -71,8 +75,8 @@ func recordSetEP(c *Client, zoneID, recordSetID string) string {
 	return concatStrs("", recordSetsEP(c, zoneID), "/", recordSetID)
 }
 
-func recordSetChangesEP(c *Client, zoneID string, f ListFilter) string {
-	query := buildQuery(f, "nameFilter")
+func recordSetChangesEP(c *Client, zoneID string, f ListFilterRecordSetChanges) string {
+	query := buildRecordSetChangesQuery(f)
 
 	return concatStrs("", zoneEP(c, zoneID), "/recordsetchanges", query)
 }
@@ -133,6 +137,25 @@ func buildQuery(f ListFilter, nameFilterName string) string {
 
 	if f.IgnoreAccess {
 		params = append(params, fmt.Sprintf("ignoreAccess=%t", f.IgnoreAccess))
+	}
+
+	if len(params) == 0 {
+		query = ""
+	}
+
+	return query + strings.Join(params, "&")
+}
+
+func buildRecordSetChangesQuery(f ListFilterRecordSetChanges) string {
+	params := []string{}
+	query := "?"
+
+	if f.StartFrom != 0 {
+		params = append(params, fmt.Sprintf("startFrom=%d", f.StartFrom))
+	}
+
+	if f.MaxItems != 0 {
+		params = append(params, fmt.Sprintf("maxItems=%d", f.MaxItems))
 	}
 
 	if len(params) == 0 {

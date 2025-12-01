@@ -55,10 +55,25 @@ type Zone struct {
 	IsTest             bool            `json:"isTest,omitempty"`
 }
 
+// ZoneDetails represents the type of data displayed by the zone details endpoint
+type ZoneDetails struct {
+	Name           string `json:"name,omitempty"`
+	Email          string `json:"email,omitempty"`
+	Status         string `json:"status,omitempty"`
+	AdminGroupID   string `json:"adminGroupId,omitempty"`
+	AdminGroupName string `json:"adminGroupName,omitempty"`
+}
+
 // ZoneResponse represents the JSON response
 // from the zone endpoint
 type ZoneResponse struct {
 	Zone Zone `json:"zone"`
+}
+
+// ZoneDetailsResponse represents the JSON response
+// from the zoneDetails endpoint
+type ZoneDetailsResponse struct {
+	ZoneDetails ZoneDetails `json:"zone"`
 }
 
 // ZoneUpdateResponse represents the JSON

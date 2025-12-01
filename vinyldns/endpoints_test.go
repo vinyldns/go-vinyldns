@@ -86,6 +86,16 @@ func TestZoneEP(t *testing.T) {
 		t.Error("zoneEP should return the right endpoint")
 	}
 }
+func TestZoneDetailsEP(t *testing.T) {
+	zone := zoneDetailsEP(c, "123")
+	expected := "http://host.com/zones/123/details"
+
+	if zone != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", zone)
+		t.Error("zoneDetailsEP should return the right endpoint")
+	}
+}
 
 func TestZoneSyncEP(t *testing.T) {
 	zone := zoneSyncEP(c, "123")
@@ -288,7 +298,7 @@ func TestRecordSetEP(t *testing.T) {
 }
 
 func TestRecordSetChangesEP(t *testing.T) {
-	rsc := recordSetChangesEP(c, "123", ListFilter{})
+	rsc := recordSetChangesEP(c, "123", ListFilterRecordSetChanges{})
 	expected := "http://host.com/zones/123/recordsetchanges"
 
 	if rsc != expected {
@@ -299,9 +309,9 @@ func TestRecordSetChangesEP(t *testing.T) {
 }
 
 func TestRecordSetChangesEPWithQuery(t *testing.T) {
-	rsc := recordSetChangesEP(c, "123", ListFilter{
+	rsc := recordSetChangesEP(c, "123", ListFilterRecordSetChanges{
 		MaxItems:  3,
-		StartFrom: "1",
+		StartFrom: 1,
 	})
 	expected := "http://host.com/zones/123/recordsetchanges?startFrom=1&maxItems=3"
 
