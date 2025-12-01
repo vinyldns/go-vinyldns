@@ -38,8 +38,8 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git tag ${{ steps.get-version.outputs.CURRENT_VERSION }}
-        git push origin ${{ steps.get-version.outputs.CURRENT_VERSION }}
+        git tag v${{ steps.get-version.outputs.CURRENT_VERSION }}
+        git push origin v${{ steps.get-version.outputs.CURRENT_VERSION }}
       
     - name: Create Release
       # Only create a release on push to the main branch
