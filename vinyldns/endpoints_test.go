@@ -167,21 +167,19 @@ func TestAbandonedZoneEP(t *testing.T) {
 	}
 
 	az = abandonedZonesEP(c, ListFilter{
-        NameFilter: "foo",
-        StartFrom:  "nextplease",
-        MaxItems:   99,
-        IgnoreAccess: true,
-    })
-    expected = "http://host.com/zones/deleted/changes?nameFilter=foo&startFrom=nextplease&maxItems=99&ignoreAccess=true"
- 
-    if az != expected {
-        fmt.Printf("Expected: %s", expected)
-        fmt.Printf("Actual: %s", az)
-        t.Error("deletedZoneChangesEP should return the right endpoint")
-    }
+		NameFilter:   "foo",
+		StartFrom:    "nextplease",
+		MaxItems:     99,
+		IgnoreAccess: true,
+	})
+	expected = "http://host.com/zones/deleted/changes?nameFilter=foo&startFrom=nextplease&maxItems=99&ignoreAccess=true"
+
+	if az != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", az)
+		t.Error("deletedZoneChangesEP should return the right endpoint")
+	}
 }
-
-
 
 func TestRecordSetsListEP(t *testing.T) {
 	rs := recordSetsListEP(c, "123", ListFilter{})

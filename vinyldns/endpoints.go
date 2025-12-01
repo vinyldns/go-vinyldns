@@ -132,8 +132,8 @@ func buildQuery(f ListFilter, nameFilterName string) string {
 	}
 
 	if f.IgnoreAccess {
-        params = append(params, fmt.Sprintf("ignoreAccess=%t", f.IgnoreAccess))
-    }
+		params = append(params, fmt.Sprintf("ignoreAccess=%t", f.IgnoreAccess))
+	}
 
 	if len(params) == 0 {
 		query = ""

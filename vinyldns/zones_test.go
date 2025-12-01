@@ -737,10 +737,10 @@ func TestAbandonedZoneChanges(t *testing.T) {
 			body:     deletedZoneChangesJSON2,
 		},
 		{
-            endpoint: "http://host.com/zones/deleted/changes?startFrom=2&maxItems=1&ignoreAccess=true",
-            code:     200,
-            body:     deletedZoneChangesJSON3,
-        },
+			endpoint: "http://host.com/zones/deleted/changes?startFrom=2&maxItems=1&ignoreAccess=true",
+			code:     200,
+			body:     deletedZoneChangesJSON3,
+		},
 	})
 
 	defer server.Close()
