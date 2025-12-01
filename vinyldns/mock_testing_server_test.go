@@ -18,8 +18,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"reflect"
 	"os"
+	"reflect"
 )
 
 type testToolsConfig struct {
