@@ -19,6 +19,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"reflect"
 )
 
 type testToolsConfig struct {
@@ -37,37 +38,51 @@ func readFile(file string) (string, error) {
 }
 
 func testTools(configs []testToolsConfig) (*httptest.Server, *Client) {
-	host := "http://host.com"
-
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		for _, c := range configs {
-			if c.endpoint == r.RequestURI {
-				w.WriteHeader(c.code)
-				w.Header().Set("Content-Type", "application/json")
-				fmt.Fprintf(w, c.body)
-				return
-			}
-		}
-
-		fmt.Printf("Requested: %s\n", r.RequestURI)
-		http.Error(w, "not found", http.StatusNotFound)
-		return
-	}))
-
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		Proxy: func(req *http.Request) (*url.URL, error) {
-			return url.Parse(server.URL)
-		},
-	}
-
-	client := &Client{
-		"accessToken",
-		"secretToken",
-		host,
-		&http.Client{Transport: tr},
-		"go-vinyldns testing",
-	}
-
-	return server, client
+    host := "http://host.com"
+ 
+    server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+ 
+        reqURL, _ := url.Parse(r.RequestURI)
+        reqPath := reqURL.Path
+        reqQuery := reqURL.Query()
+ 
+        for _, c := range configs {
+ 
+            expURL, _ := url.Parse(c.endpoint)
+            expPath := expURL.Path
+            expQuery := expURL.Query()
+ 
+            if reqPath != expPath {
+                continue
+            }
+ 
+            if reflect.DeepEqual(reqQuery, expQuery) {
+                w.WriteHeader(c.code)
+                w.Header().Set("Content-Type", "application/json")
+                fmt.Fprintf(w, c.body)
+                return
+            }
+        }
+ 
+        fmt.Printf("Requested: %s\n", r.RequestURI)
+        http.Error(w, "not found", http.StatusNotFound)
+        return
+    }))
+ 
+    tr := &http.Transport{
+        TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+        Proxy: func(req *http.Request) (*url.URL, error) {
+            return url.Parse(server.URL)
+        },
+    }
+ 
+    client := &Client{
+        "accessToken",
+        "secretToken",
+        host,
+        &http.Client{Transport: tr},
+        "go-vinyldns testing",
+    }
+ 
+    return server, client
 }
