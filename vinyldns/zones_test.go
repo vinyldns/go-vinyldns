@@ -751,3 +751,68 @@ func TestZoneChange(t *testing.T) {
 		t.Error("Expected ZoneChange.UserID to have a value")
 	}
 }
+
+// Test AbandonedZoneChanges api using json test data.
+func TestAbandonedZoneChanges(t *testing.T) {
+	deletedZoneChangesJSON1, err := readFile("test-fixtures/zones/zone-changes-deleted-list-1.json")
+	deletedZoneChangesJSON2, err := readFile("test-fixtures/zones/zone-changes-deleted-list-2.json")
+	deletedZoneChangesJSON3, err := readFile("test-fixtures/zones/zone-changes-deleted-list-3.json")
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/zones/deleted/changes?maxItems=1",
+			code:     200,
+			body:     deletedZoneChangesJSON1,
+		},
+		{
+			endpoint: "http://host.com/zones/deleted/changes?startFrom=2&maxItems=1",
+			code:     200,
+			body:     deletedZoneChangesJSON2,
+		},
+		{
+			endpoint: "http://host.com/zones/deleted/changes?startFrom=2&maxItems=1&ignoreAccess=true",
+			code:     200,
+			body:     deletedZoneChangesJSON3,
+		},
+	})
+
+	defer server.Close()
+
+	if _, err := client.AbandandedZones(ListFilter{
+		MaxItems: 200,
+	}); err == nil {
+		t.Error("Expected error -- MaxItems must be between 1 and 100")
+	}
+
+	changes, err := client.AbandandedZones(ListFilter{
+		MaxItems: 1,
+	})
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(changes) != 2 {
+		t.Error("Expected 1 DeletedZoneChanges; got ", (len(changes)))
+	}
+
+	if changes[0].DeletedZonesChange.ID != "1" {
+		t.Error("Expected DeletedZoneChange.ID to be 1")
+	}
+
+	if changes[1].DeletedZonesChange.ID != "2" {
+		t.Error("Expected DeletedZoneChange.ID to be 2")
+	}
+
+	if changes[0].DeletedZonesChange.Zone.Status != "Deleted" {
+		t.Error("Expected DeletedZoneChange.Zone.Status to be Deleted")
+	}
+
+	if changes[1].DeletedZonesChange.Zone.Status != "Deleted" {
+		t.Error("Expected DeletedZoneChange.Zone.Status to be Deleted")
+	}
+}

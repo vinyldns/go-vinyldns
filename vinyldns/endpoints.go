@@ -49,6 +49,11 @@ func zoneSyncEP(c *Client, id string) string {
 	return concatStrs("", zoneEP(c, id), "/sync")
 }
 
+func abandonedZonesEP(c *Client, f ListFilter) string {
+	query := buildQuery(f, "nameFilter")
+	return concatStrs("", zonesEP(c), "/deleted", "/changes", query)
+}
+
 func recordSetsEP(c *Client, zoneID string) string {
 	return concatStrs("", zoneEP(c, zoneID), "/recordsets")
 }
@@ -128,6 +133,10 @@ func buildQuery(f ListFilter, nameFilterName string) string {
 
 	if f.MaxItems != 0 {
 		params = append(params, fmt.Sprintf("maxItems=%d", f.MaxItems))
+	}
+
+	if f.IgnoreAccess {
+		params = append(params, fmt.Sprintf("ignoreAccess=%t", f.IgnoreAccess))
 	}
 
 	if len(params) == 0 {
