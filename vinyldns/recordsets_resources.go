@@ -38,22 +38,47 @@ type RecordSetChanges struct {
 	Status           string            `json:"status,omitempty"`
 }
 
+// OwnershipTransferStatus represents the record set ownership transfer status.
+type OwnershipTransferStatus string
+
+const (
+	// OwnershipTransferStatusAutoApproved indicates the transfer was auto-approved.
+	OwnershipTransferStatusAutoApproved OwnershipTransferStatus = "AutoApproved"
+	// OwnershipTransferStatusCancelled indicates the transfer was cancelled.
+	OwnershipTransferStatusCancelled OwnershipTransferStatus = "Cancelled"
+	// OwnershipTransferStatusManuallyApproved indicates the transfer was manually approved.
+	OwnershipTransferStatusManuallyApproved OwnershipTransferStatus = "ManuallyApproved"
+	// OwnershipTransferStatusManuallyRejected indicates the transfer was manually rejected.
+	OwnershipTransferStatusManuallyRejected OwnershipTransferStatus = "ManuallyRejected"
+	// OwnershipTransferStatusRequested indicates the transfer was requested.
+	OwnershipTransferStatusRequested OwnershipTransferStatus = "Requested"
+	// OwnershipTransferStatusPendingReview indicates the transfer is pending review.
+	OwnershipTransferStatusPendingReview OwnershipTransferStatus = "PendingReview"
+)
+
+// OwnershipTransfer represents the ownership transfer data for a record set.
+type OwnershipTransfer struct {
+	OwnershipTransferStatus OwnershipTransferStatus `json:"ownershipTransferStatus,omitempty"`
+	RequestedOwnerGroupID   string                  `json:"requestedOwnerGroupId,omitempty"`
+}
+
 // RecordSet represents a DNS record set.
 type RecordSet struct {
-	ID           string   `json:"id,omitempty"`
-	ZoneID       string   `json:"zoneId"`
-	OwnerGroupID string   `json:"ownerGroupId,omitempty"`
-	Name         string   `json:"name,omitempty"`
-	Type         string   `json:"type"`
-	Status       string   `json:"status,omitempty"`
-	Created      string   `json:"created,omitempty"`
-	Updated      string   `json:"updated,omitempty"`
-	TTL          int      `json:"ttl"`
-	Account      string   `json:"account"`
-	Records      []Record `json:"records"`
-	FQDN         string   `json:"fqdn,omitempty"`
-	ZoneName     string   `json:"zoneName,omitempty"`
-	IsShared     *bool    `json:"zoneShared,omitempty"`
+	ID                   string             `json:"id,omitempty"`
+	ZoneID               string             `json:"zoneId"`
+	OwnerGroupID         string             `json:"ownerGroupId,omitempty"`
+	Name                 string             `json:"name,omitempty"`
+	Type                 string             `json:"type"`
+	Status               string             `json:"status,omitempty"`
+	Created              string             `json:"created,omitempty"`
+	Updated              string             `json:"updated,omitempty"`
+	TTL                  int                `json:"ttl"`
+	Account              string             `json:"account"`
+	Records              []Record           `json:"records"`
+	FQDN                 string             `json:"fqdn,omitempty"`
+	ZoneName             string             `json:"zoneName,omitempty"`
+	IsShared             *bool              `json:"zoneShared,omitempty"`
+	RecordSetGroupChange *OwnershipTransfer `json:"recordSetGroupChange,omitempty"`
 }
 
 // RecordSetUpdateResponse represents

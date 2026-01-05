@@ -208,6 +208,43 @@ func (c *Client) RecordSetUpdate(rs *RecordSet) (*RecordSetUpdateResponse, error
 	return resource, nil
 }
 
+// RecordSetOwnershipTransferRequest requests ownership transfer for a record set.
+func (c *Client) RecordSetOwnershipTransferRequest(rs *RecordSet, requestedOwnerGroupID string) (*RecordSetUpdateResponse, error) {
+	return c.recordSetOwnershipTransfer(rs, OwnershipTransferStatusRequested, requestedOwnerGroupID, false)
+}
+
+// RecordSetOwnershipTransferApprove approves a pending ownership transfer request.
+func (c *Client) RecordSetOwnershipTransferApprove(rs *RecordSet, requestedOwnerGroupID string) (*RecordSetUpdateResponse, error) {
+	return c.recordSetOwnershipTransfer(rs, OwnershipTransferStatusManuallyApproved, requestedOwnerGroupID, true)
+}
+
+// RecordSetOwnershipTransferReject rejects a pending ownership transfer request.
+func (c *Client) RecordSetOwnershipTransferReject(rs *RecordSet, requestedOwnerGroupID string) (*RecordSetUpdateResponse, error) {
+	return c.recordSetOwnershipTransfer(rs, OwnershipTransferStatusManuallyRejected, requestedOwnerGroupID, false)
+}
+
+// RecordSetOwnershipTransferCancel cancels a pending ownership transfer request.
+func (c *Client) RecordSetOwnershipTransferCancel(rs *RecordSet, requestedOwnerGroupID string) (*RecordSetUpdateResponse, error) {
+	return c.recordSetOwnershipTransfer(rs, OwnershipTransferStatusCancelled, requestedOwnerGroupID, false)
+}
+
+func (c *Client) recordSetOwnershipTransfer(rs *RecordSet, status OwnershipTransferStatus, requestedOwnerGroupID string, updateOwnerGroup bool) (*RecordSetUpdateResponse, error) {
+	if rs == nil {
+		return nil, fmt.Errorf("record set is required")
+	}
+
+	if updateOwnerGroup && requestedOwnerGroupID != "" {
+		rs.OwnerGroupID = requestedOwnerGroupID
+	}
+
+	rs.RecordSetGroupChange = &OwnershipTransfer{
+		OwnershipTransferStatus: status,
+		RequestedOwnerGroupID:   requestedOwnerGroupID,
+	}
+
+	return c.RecordSetUpdate(rs)
+}
+
 // RecordSetDelete deletes the RecordSet matching the Zone ID and RecordSet ID it's passed.
 func (c *Client) RecordSetDelete(zoneID, recordSetID string) (*RecordSetUpdateResponse, error) {
 	resource := &RecordSetUpdateResponse{}
