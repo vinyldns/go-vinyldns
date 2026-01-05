@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -388,6 +388,206 @@ func TestBatchRecordChangeEP(t *testing.T) {
 	}
 }
 
+func TestHealthEndpoints(t *testing.T) {
+	ping := pingEP(c)
+	expected := "http://host.com/ping"
+	if ping != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", ping)
+		t.Error("pingEP should return the right endpoint")
+	}
+
+	health := healthEP(c)
+	expected = "http://host.com/health"
+	if health != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", health)
+		t.Error("healthEP should return the right endpoint")
+	}
+
+	color := colorEP(c)
+	expected = "http://host.com/color"
+	if color != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", color)
+		t.Error("colorEP should return the right endpoint")
+	}
+
+	metrics := prometheusMetricsEP(c, []string{"foo", "bar"})
+	expected = "http://host.com/metrics/prometheus?name=foo&name=bar"
+	if metrics != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", metrics)
+		t.Error("prometheusMetricsEP should return the right endpoint")
+	}
+
+	status := statusEP(c)
+	expected = "http://host.com/status"
+	if status != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", status)
+		t.Error("statusEP should return the right endpoint")
+	}
+
+	update := statusUpdateEP(c, true)
+	expected = "http://host.com/status?processingDisabled=true"
+	if update != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", update)
+		t.Error("statusUpdateEP should return the right endpoint")
+	}
+}
+
+func TestZoneExtrasEP(t *testing.T) {
+	backendIDs := zoneBackendIDsEP(c)
+	expected := "http://host.com/zones/backendids"
+	if backendIDs != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", backendIDs)
+		t.Error("zoneBackendIDsEP should return the right endpoint")
+	}
+
+	ignoreAccess := true
+	deleted := zoneDeletedChangesEP(c, DeletedZonesFilter{
+		NameFilter:   "foo*",
+		StartFrom:    "next",
+		MaxItems:     5,
+		IgnoreAccess: &ignoreAccess,
+	})
+	expected = "http://host.com/zones/deleted/changes?nameFilter=foo*&startFrom=next&maxItems=5&ignoreAccess=true"
+	if deleted != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", deleted)
+		t.Error("zoneDeletedChangesEP should return the right endpoint")
+	}
+
+	aclRules := zoneACLRulesEP(c, "123")
+	expected = "http://host.com/zones/123/acl/rules"
+	if aclRules != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", aclRules)
+		t.Error("zoneACLRulesEP should return the right endpoint")
+	}
+}
+
+func TestRecordSetExtrasEP(t *testing.T) {
+	count := recordSetCountEP(c, "123")
+	expected := "http://host.com/zones/123/recordsetcount"
+	if count != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", count)
+		t.Error("recordSetCountEP should return the right endpoint")
+	}
+
+	history := recordSetChangeHistoryEP(c, RecordSetChangeHistoryFilter{
+		ZoneID:     "z1",
+		FQDN:       "ok.",
+		RecordType: "A",
+		StartFrom:  "1",
+		MaxItems:   2,
+	})
+	expected = "http://host.com/recordsetchange/history?zoneId=z1&fqdn=ok.&recordType=A&startFrom=1&maxItems=2"
+	if history != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", history)
+		t.Error("recordSetChangeHistoryEP should return the right endpoint")
+	}
+
+	failures := recordSetChangesFailureEP(c, "z2", ListFilter{
+		StartFrom: "2",
+		MaxItems:  3,
+	})
+	expected = "http://host.com/metrics/health/zones/z2/recordsetchangesfailure?startFrom=2&maxItems=3"
+	if failures != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", failures)
+		t.Error("recordSetChangesFailureEP should return the right endpoint")
+	}
+}
+
+func TestGroupExtrasEP(t *testing.T) {
+	change := groupChangeEP(c, "123")
+	expected := "http://host.com/groups/change/123"
+	if change != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", change)
+		t.Error("groupChangeEP should return the right endpoint")
+	}
+
+	domains := groupValidDomainsEP(c)
+	expected = "http://host.com/groups/valid/domains"
+	if domains != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", domains)
+		t.Error("groupValidDomainsEP should return the right endpoint")
+	}
+}
+
+func TestUserExtrasEP(t *testing.T) {
+	user := userEP(c, "ok")
+	expected := "http://host.com/users/ok"
+	if user != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", user)
+		t.Error("userEP should return the right endpoint")
+	}
+
+	lock := userLockEP(c, "ok")
+	expected = "http://host.com/users/ok/lock"
+	if lock != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", lock)
+		t.Error("userLockEP should return the right endpoint")
+	}
+
+	unlock := userUnlockEP(c, "ok")
+	expected = "http://host.com/users/ok/unlock"
+	if unlock != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", unlock)
+		t.Error("userUnlockEP should return the right endpoint")
+	}
+}
+
+func TestBatchReviewEP(t *testing.T) {
+	approve := batchRecordChangeApproveEP(c, "123")
+	expected := "http://host.com/zones/batchrecordchanges/123/approve"
+	if approve != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", approve)
+		t.Error("batchRecordChangeApproveEP should return the right endpoint")
+	}
+
+	reject := batchRecordChangeRejectEP(c, "123")
+	expected = "http://host.com/zones/batchrecordchanges/123/reject"
+	if reject != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", reject)
+		t.Error("batchRecordChangeRejectEP should return the right endpoint")
+	}
+
+	cancel := batchRecordChangeCancelEP(c, "123")
+	expected = "http://host.com/zones/batchrecordchanges/123/cancel"
+	if cancel != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", cancel)
+		t.Error("batchRecordChangeCancelEP should return the right endpoint")
+	}
+}
+
+func TestZoneChangesFailureEP(t *testing.T) {
+	failures := zoneChangesFailureEP(c, ListFilter{
+		StartFrom: "2",
+		MaxItems:  3,
+	})
+	expected := "http://host.com/metrics/health/zonechangesfailure?startFrom=2&maxItems=3"
+	if failures != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", failures)
+		t.Error("zoneChangesFailureEP should return the right endpoint")
+	}
+}
+
 func TestBuildQuery(t *testing.T) {
 	query := buildQuery(ListFilter{
 		MaxItems:   1,
@@ -410,6 +610,65 @@ func TestBuildQueryWithNoQuery(t *testing.T) {
 		fmt.Printf("Expected: %s", expected)
 		fmt.Printf("Actual: %s", query)
 		t.Error("buildQuery should return the right string")
+	}
+}
+
+func TestBuildStartMaxQuery(t *testing.T) {
+	query := buildStartMaxQuery(ListFilter{
+		StartFrom: "2",
+		MaxItems:  3,
+	})
+	expected := "?startFrom=2&maxItems=3"
+
+	if query != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", query)
+		t.Error("buildStartMaxQuery should return the right string")
+	}
+}
+
+func TestBuildDeletedZonesQuery(t *testing.T) {
+	ignoreAccess := true
+	query := buildDeletedZonesQuery(DeletedZonesFilter{
+		NameFilter:   "foo*",
+		StartFrom:    "next",
+		MaxItems:     5,
+		IgnoreAccess: &ignoreAccess,
+	})
+	expected := "?nameFilter=foo*&startFrom=next&maxItems=5&ignoreAccess=true"
+
+	if query != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", query)
+		t.Error("buildDeletedZonesQuery should return the right string")
+	}
+}
+
+func TestBuildRecordSetChangeHistoryQuery(t *testing.T) {
+	query := buildRecordSetChangeHistoryQuery(RecordSetChangeHistoryFilter{
+		ZoneID:     "zone-1",
+		FQDN:       "ok.",
+		RecordType: "A",
+		StartFrom:  "1",
+		MaxItems:   2,
+	})
+	expected := "?zoneId=zone-1&fqdn=ok.&recordType=A&startFrom=1&maxItems=2"
+
+	if query != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", query)
+		t.Error("buildRecordSetChangeHistoryQuery should return the right string")
+	}
+}
+
+func TestBuildPrometheusQuery(t *testing.T) {
+	query := buildPrometheusQuery([]string{"one", "two"})
+	expected := "?name=one&name=two"
+
+	if query != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", query)
+		t.Error("buildPrometheusQuery should return the right string")
 	}
 }
 

@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -167,6 +167,17 @@ func (c *Client) RecordSet(zoneID, recordSetID string) (RecordSet, error) {
 	return rs.RecordSet, nil
 }
 
+// RecordSetCount retrieves the count of record sets in a zone.
+func (c *Client) RecordSetCount(zoneID string) (RecordSetCount, error) {
+	count := &RecordSetCount{}
+	err := resourceRequest(c, recordSetCountEP(c, zoneID), "GET", nil, count)
+	if err != nil {
+		return RecordSetCount{}, err
+	}
+
+	return *count, nil
+}
+
 // RecordSetCreate creates the RecordSet it's passed in the Zone whose ID it's passed.
 func (c *Client) RecordSetCreate(rs *RecordSet) (*RecordSetUpdateResponse, error) {
 	rsJSON, err := json.Marshal(rs)
@@ -219,6 +230,17 @@ func (c *Client) RecordSetChanges(zoneID string, f ListFilterRecordSetChanges) (
 	return rsc, nil
 }
 
+// RecordSetChangeHistory retrieves history for a record set.
+func (c *Client) RecordSetChangeHistory(f RecordSetChangeHistoryFilter) (*RecordSetChanges, error) {
+	rsc := &RecordSetChanges{}
+	err := resourceRequest(c, recordSetChangeHistoryEP(c, f), "GET", nil, rsc)
+	if err != nil {
+		return &RecordSetChanges{}, err
+	}
+
+	return rsc, nil
+}
+
 // RecordSetChangesListAll retrieves the complete list of record set changes for the Zone ListFilter criteria passed.
 // Handles paging through results on the user's behalf.
 func (c *Client) RecordSetChangesListAll(zoneID string, filter ListFilterRecordSetChanges) ([]RecordSetChange, error) {
@@ -253,4 +275,15 @@ func (c *Client) RecordSetChange(zoneID, recordSetID, changeID string) (*RecordS
 	}
 
 	return rsc, nil
+}
+
+// RecordSetChangesFailure retrieves failed record set changes for a zone.
+func (c *Client) RecordSetChangesFailure(zoneID string, filter ListFilter) (*RecordSetChangeFailuresResponse, error) {
+	failures := &RecordSetChangeFailuresResponse{}
+	err := resourceRequest(c, recordSetChangesFailureEP(c, zoneID, filter), "GET", nil, failures)
+	if err != nil {
+		return &RecordSetChangeFailuresResponse{}, err
+	}
+
+	return failures, nil
 }

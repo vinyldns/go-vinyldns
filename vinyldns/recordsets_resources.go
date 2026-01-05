@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -15,13 +15,17 @@ package vinyldns
 // RecordSetChange represents a record
 // set change.
 type RecordSetChange struct {
-	Zone       Zone      `json:"zone"`
-	RecordSet  RecordSet `json:"recordSet"`
-	UserID     string    `json:"userId"`
-	ChangeType string    `json:"changeType"`
-	Status     string    `json:"status"`
-	Created    string    `json:"created"`
-	ID         string    `json:"id"`
+	Zone                 Zone      `json:"zone"`
+	RecordSet            RecordSet `json:"recordSet"`
+	Updates              RecordSet `json:"updates,omitempty"`
+	UserID               string    `json:"userId"`
+	UserName             string    `json:"userName,omitempty"`
+	ChangeType           string    `json:"changeType"`
+	Status               string    `json:"status"`
+	SystemMessage        string    `json:"systemMessage,omitempty"`
+	Created              string    `json:"created"`
+	ID                   string    `json:"id"`
+	SingleBatchChangeIDs []string  `json:"singleBatchChangeIds,omitempty"`
 }
 
 // RecordSetChanges represents a recordset changes response
