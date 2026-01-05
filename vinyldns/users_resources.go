@@ -12,15 +12,10 @@ limitations under the License.
 
 package vinyldns
 
-// UserGroup represents a group ID entry for user responses.
-type UserGroup struct {
-	ID string `json:"id,omitempty"`
-}
-
 // UserInfo represents user details from user endpoints.
 type UserInfo struct {
-	ID         string      `json:"id,omitempty"`
-	UserName   string      `json:"userName,omitempty"`
-	GroupID    []UserGroup `json:"groupId,omitempty"`
-	LockStatus string      `json:"lockStatus,omitempty"`
+	ID         string   `json:"id,omitempty"`
+	UserName   string   `json:"userName,omitempty"`
+	GroupID    []string `json:"groupId,omitempty"`
+	LockStatus string   `json:"lockStatus,omitempty"`
 }
