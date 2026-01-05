@@ -15,7 +15,7 @@ package vinyldns
 import "testing"
 
 func TestUser(t *testing.T) {
-	userJSON := `{"id":"ok","userName":"ok","groupId":[{"id":"ok-group"}]}`
+	userJSON := `{"id":"ok","userName":"ok","groupId":["ok-group"]}`
 	server, client := testTools([]testToolsConfig{
 		{
 			endpoint: "http://host.com/users/ok",
