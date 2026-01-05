@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -55,11 +55,14 @@ type GroupMembers struct {
 
 // GroupChange represents a group change event object.
 type GroupChange struct {
-	UserID     string `json:"userId,omitempty"`
-	Created    string `json:"created,omitempty"`
-	ChangeType string `json:"changeType,omitempty"`
-	NewGroup   Group  `json:"newGroup,omitempty"`
-	OldGroup   Group  `json:"oldGroup,omitempty"`
+	ID                 string `json:"id,omitempty"`
+	UserID             string `json:"userId,omitempty"`
+	UserName           string `json:"userName,omitempty"`
+	Created            string `json:"created,omitempty"`
+	ChangeType         string `json:"changeType,omitempty"`
+	GroupChangeMessage string `json:"groupChangeMessage,omitempty"`
+	NewGroup           Group  `json:"newGroup,omitempty"`
+	OldGroup           Group  `json:"oldGroup,omitempty"`
 }
 
 // GroupChanges is represents the group changes.

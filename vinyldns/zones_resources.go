@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -106,10 +106,11 @@ type ZoneChanges struct {
 
 // ZoneChange represents a zone change
 type ZoneChange struct {
-	Zone       Zone   `json:"zone"`
-	UserID     string `json:"userId"`
-	ChangeType string `json:"changeType"`
-	Status     string `json:"status"`
-	Created    string `json:"created"`
-	ID         string `json:"id"`
+	Zone          Zone   `json:"zone"`
+	UserID        string `json:"userId"`
+	ChangeType    string `json:"changeType"`
+	Status        string `json:"status"`
+	SystemMessage string `json:"systemMessage,omitempty"`
+	Created       string `json:"created"`
+	ID            string `json:"id"`
 }

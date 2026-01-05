@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -19,6 +19,8 @@ import (
 )
 
 func TestNewConfigFromEnv(t *testing.T) {
+	t.Setenv("VINYLDNS_USER_AGENT", "")
+
 	accessKey := envOrDefault("VINYLDNS_ACCESS_KEY", "accesskey123")
 	secretKey := envOrDefault("VINYLDNS_SECRET_KEY", "secretkey123")
 	host := envOrDefault("VINYLDNS_HOST", "host.name.com")
@@ -32,7 +34,7 @@ func TestNewConfigFromEnv(t *testing.T) {
 }
 
 func TestNewConfigFromEnvWithExplicitUserAgent(t *testing.T) {
-	os.Setenv("VINYLDNS_USER_AGENT", "some customer UA")
+	t.Setenv("VINYLDNS_USER_AGENT", "some customer UA")
 
 	defaultConfig := NewConfigFromEnv()
 

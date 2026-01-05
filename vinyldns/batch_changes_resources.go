@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -81,4 +81,9 @@ type BatchRecordChange struct {
 	ReviewTimestamp    string         `json:"reviewTimestamp,omitempty"`
 	ScheduledTime      string         `json:"scheduledTime,omitempty"`
 	CancelledTimestamp string         `json:"cancelledTimestamp,omitempty"`
+}
+
+// BatchChangeReview represents approve/reject/cancel review payloads.
+type BatchChangeReview struct {
+	ReviewComment string `json:"reviewComment,omitempty"`
 }

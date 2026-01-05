@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -138,4 +138,26 @@ func (c *Client) GroupActivity(groupID string) (*GroupChanges, error) {
 	}
 
 	return activity, nil
+}
+
+// GroupChange retrieves a group change by ID.
+func (c *Client) GroupChange(groupChangeID string) (*GroupChange, error) {
+	change := &GroupChange{}
+	err := resourceRequest(c, groupChangeEP(c, groupChangeID), "GET", nil, change)
+	if err != nil {
+		return nil, err
+	}
+
+	return change, nil
+}
+
+// GroupValidDomains retrieves valid email domains for groups.
+func (c *Client) GroupValidDomains() ([]string, error) {
+	var domains []string
+	err := resourceRequest(c, groupValidDomainsEP(c), "GET", nil, &domains)
+	if err != nil {
+		return nil, err
+	}
+
+	return domains, nil
 }
