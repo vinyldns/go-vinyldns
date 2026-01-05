@@ -19,6 +19,8 @@ import (
 )
 
 func TestNewConfigFromEnv(t *testing.T) {
+	t.Setenv("VINYLDNS_USER_AGENT", "")
+
 	accessKey := envOrDefault("VINYLDNS_ACCESS_KEY", "accesskey123")
 	secretKey := envOrDefault("VINYLDNS_SECRET_KEY", "secretkey123")
 	host := envOrDefault("VINYLDNS_HOST", "host.name.com")
@@ -32,7 +34,7 @@ func TestNewConfigFromEnv(t *testing.T) {
 }
 
 func TestNewConfigFromEnvWithExplicitUserAgent(t *testing.T) {
-	os.Setenv("VINYLDNS_USER_AGENT", "some customer UA")
+	t.Setenv("VINYLDNS_USER_AGENT", "some customer UA")
 
 	defaultConfig := NewConfigFromEnv()
 

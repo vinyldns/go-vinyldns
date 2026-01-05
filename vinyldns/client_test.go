@@ -14,14 +14,14 @@ package vinyldns
 
 import (
 	"fmt"
-	"os"
 	"testing"
 )
 
 func TestNewClientFromEnv(t *testing.T) {
-	os.Setenv("VINYLDNS_ACCESS_KEY", "accessKey")
-	os.Setenv("VINYLDNS_SECRET_KEY", "secretKey")
-	os.Setenv("VINYLDNS_HOST", "https://vinyldns-api.com")
+	t.Setenv("VINYLDNS_ACCESS_KEY", "accessKey")
+	t.Setenv("VINYLDNS_SECRET_KEY", "secretKey")
+	t.Setenv("VINYLDNS_HOST", "https://vinyldns-api.com")
+	t.Setenv("VINYLDNS_USER_AGENT", "")
 
 	client := NewClientFromEnv()
 
@@ -38,13 +38,10 @@ func TestNewClientFromEnv(t *testing.T) {
 		t.Error("NewClientFromEnv should set a default UserAgent if one is not present in the environment")
 	}
 
-	os.Setenv("VINYLDNS_ACCESS_KEY", "")
-	os.Setenv("VINYLDNS_SECRET_KEY", "")
-	os.Setenv("VINYLDNS_HOST", "")
 }
 
 func TestNewClientFromEnvWithUserAgent(t *testing.T) {
-	os.Setenv("VINYLDNS_USER_AGENT", "foo")
+	t.Setenv("VINYLDNS_USER_AGENT", "foo")
 
 	client := NewClientFromEnv()
 
@@ -52,5 +49,4 @@ func TestNewClientFromEnvWithUserAgent(t *testing.T) {
 		t.Error("NewClientFromEnv should set a UserAgent from the environment if one is present")
 	}
 
-	os.Setenv("VINYLDNS_USER_AGENT", "")
 }

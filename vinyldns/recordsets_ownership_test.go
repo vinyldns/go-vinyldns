@@ -83,8 +83,8 @@ func runOwnershipTransferTest(t *testing.T, status OwnershipTransferStatus, upda
 
 	var body []byte
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.RequestURI != "/zones/123/recordsets/456" {
-			t.Fatalf("unexpected endpoint %s", r.RequestURI)
+		if r.URL.Path != "/zones/123/recordsets/456" {
+			t.Fatalf("unexpected endpoint %s", r.URL.Path)
 		}
 
 		body, _ = io.ReadAll(r.Body)
