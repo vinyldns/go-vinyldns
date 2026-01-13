@@ -42,7 +42,6 @@ func superUser() *Client {
 	})
 }
 
-
 func TestGroupCreateIntegration(t *testing.T) {
 	c := client()
 	users := []User{
@@ -744,7 +743,7 @@ func TestZoneACLRuleCreateDeleteIntegration(t *testing.T) {
 		AccessLevel: "Read",
 		Description: "Integration test ACL rule",
 		RecordTypes: []string{"A", "AAAA"},
-		GroupID: groups[0].ID,
+		GroupID:     groups[0].ID,
 	}
 
 	createResp, err := c.ZoneACLRuleCreate(zoneID, rule)
@@ -1169,7 +1168,7 @@ func TestBatchRecordChangeRejectIntegration(t *testing.T) {
 			return
 		}
 
-		if fetchedBatch.Status == "PendingReview"{
+		if fetchedBatch.Status == "PendingReview" {
 			break
 		}
 		if i == (limit - 1) {
@@ -1191,7 +1190,6 @@ func TestBatchRecordChangeRejectIntegration(t *testing.T) {
 		t.Errorf("Expected batch change status to be 'Rejected', got: %s", fetchedBatch.Status)
 	}
 }
-
 
 func TestZoneDeleteIntegration(t *testing.T) {
 	c := client()
@@ -1238,7 +1236,6 @@ func TestZonesDeletedIntegration(t *testing.T) {
 		t.Error("Expected ZonesDeleted to return a non-nil response")
 	}
 }
-
 
 func TestGroupDeleteIntegration(t *testing.T) {
 	c := client()
