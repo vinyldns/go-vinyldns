@@ -12,13 +12,10 @@ limitations under the License.
 
 package vinyldns
 
-// groupsList retrieves the list of zones with the List criteria passed.
-func (c *Client) groupsList(filter ListFilter) (*Groups, error) {
-	groups := &Groups{}
-	err := resourceRequest(c, groupsListEP(c, filter), "GET", nil, groups)
-	if err != nil {
-		return groups, err
-	}
-
-	return groups, nil
+// UserInfo represents user details from user endpoints.
+type UserInfo struct {
+	ID         string   `json:"id,omitempty"`
+	UserName   string   `json:"userName,omitempty"`
+	GroupID    []string `json:"groupId,omitempty"`
+	LockStatus string   `json:"lockStatus,omitempty"`
 }

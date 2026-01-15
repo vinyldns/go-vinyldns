@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -15,13 +15,17 @@ package vinyldns
 // RecordSetChange represents a record
 // set change.
 type RecordSetChange struct {
-	Zone       Zone      `json:"zone"`
-	RecordSet  RecordSet `json:"recordSet"`
-	UserID     string    `json:"userId"`
-	ChangeType string    `json:"changeType"`
-	Status     string    `json:"status"`
-	Created    string    `json:"created"`
-	ID         string    `json:"id"`
+	Zone                 Zone      `json:"zone"`
+	RecordSet            RecordSet `json:"recordSet"`
+	Updates              RecordSet `json:"updates,omitempty"`
+	UserID               string    `json:"userId"`
+	UserName             string    `json:"userName,omitempty"`
+	ChangeType           string    `json:"changeType"`
+	Status               string    `json:"status"`
+	SystemMessage        string    `json:"systemMessage,omitempty"`
+	Created              string    `json:"created"`
+	ID                   string    `json:"id"`
+	SingleBatchChangeIDs []string  `json:"singleBatchChangeIds,omitempty"`
 }
 
 // RecordSetChanges represents a recordset changes response
@@ -34,22 +38,47 @@ type RecordSetChanges struct {
 	Status           string            `json:"status,omitempty"`
 }
 
+// OwnershipTransferStatus represents the record set ownership transfer status.
+type OwnershipTransferStatus string
+
+const (
+	// OwnershipTransferStatusAutoApproved indicates the transfer was auto-approved.
+	OwnershipTransferStatusAutoApproved OwnershipTransferStatus = "AutoApproved"
+	// OwnershipTransferStatusCancelled indicates the transfer was cancelled.
+	OwnershipTransferStatusCancelled OwnershipTransferStatus = "Cancelled"
+	// OwnershipTransferStatusManuallyApproved indicates the transfer was manually approved.
+	OwnershipTransferStatusManuallyApproved OwnershipTransferStatus = "ManuallyApproved"
+	// OwnershipTransferStatusManuallyRejected indicates the transfer was manually rejected.
+	OwnershipTransferStatusManuallyRejected OwnershipTransferStatus = "ManuallyRejected"
+	// OwnershipTransferStatusRequested indicates the transfer was requested.
+	OwnershipTransferStatusRequested OwnershipTransferStatus = "Requested"
+	// OwnershipTransferStatusPendingReview indicates the transfer is pending review.
+	OwnershipTransferStatusPendingReview OwnershipTransferStatus = "PendingReview"
+)
+
+// OwnershipTransfer represents the ownership transfer data for a record set.
+type OwnershipTransfer struct {
+	OwnershipTransferStatus OwnershipTransferStatus `json:"ownershipTransferStatus,omitempty"`
+	RequestedOwnerGroupID   string                  `json:"requestedOwnerGroupId,omitempty"`
+}
+
 // RecordSet represents a DNS record set.
 type RecordSet struct {
-	ID           string   `json:"id,omitempty"`
-	ZoneID       string   `json:"zoneId"`
-	OwnerGroupID string   `json:"ownerGroupId,omitempty"`
-	Name         string   `json:"name,omitempty"`
-	Type         string   `json:"type"`
-	Status       string   `json:"status,omitempty"`
-	Created      string   `json:"created,omitempty"`
-	Updated      string   `json:"updated,omitempty"`
-	TTL          int      `json:"ttl"`
-	Account      string   `json:"account"`
-	Records      []Record `json:"records"`
-	FQDN         string   `json:"fqdn,omitempty"`
-	ZoneName     string   `json:"zoneName,omitempty"`
-	IsShared     *bool    `json:"zoneShared,omitempty"`
+	ID                   string             `json:"id,omitempty"`
+	ZoneID               string             `json:"zoneId"`
+	OwnerGroupID         string             `json:"ownerGroupId,omitempty"`
+	Name                 string             `json:"name,omitempty"`
+	Type                 string             `json:"type"`
+	Status               string             `json:"status,omitempty"`
+	Created              string             `json:"created,omitempty"`
+	Updated              string             `json:"updated,omitempty"`
+	TTL                  int                `json:"ttl"`
+	Account              string             `json:"account"`
+	Records              []Record           `json:"records"`
+	FQDN                 string             `json:"fqdn,omitempty"`
+	ZoneName             string             `json:"zoneName,omitempty"`
+	IsShared             *bool              `json:"zoneShared,omitempty"`
+	RecordSetGroupChange *OwnershipTransfer `json:"recordSetGroupChange,omitempty"`
 }
 
 // RecordSetUpdateResponse represents

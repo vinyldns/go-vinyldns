@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -75,6 +75,17 @@ func (c *Client) ZoneDetails(id string) (ZoneDetails, error) {
 	return zoneDetails.ZoneDetails, nil
 }
 
+// ZoneBackendIDs retrieves all configured DNS backend IDs.
+func (c *Client) ZoneBackendIDs() ([]string, error) {
+	var ids []string
+	err := resourceRequest(c, zoneBackendIDsEP(c), "GET", nil, &ids)
+	if err != nil {
+		return nil, err
+	}
+
+	return ids, nil
+}
+
 // ZoneByID retrieves the Zone whose ID it's passed.
 // It is a version of Zone whose func name is a bit more explicit.
 func (c *Client) ZoneByID(id string) (Zone, error) {
@@ -90,6 +101,47 @@ func (c *Client) ZoneByName(name string) (Zone, error) {
 	}
 
 	return zone.Zone, nil
+}
+
+// ZonesDeleted retrieves deleted zone information with the filter passed.
+func (c *Client) ZonesDeleted(filter DeletedZonesFilter) (*DeletedZonesResponse, error) {
+	zones := &DeletedZonesResponse{}
+	err := resourceRequest(c, zoneDeletedChangesEP(c, filter), "GET", nil, zones)
+	if err != nil {
+		return &DeletedZonesResponse{}, err
+	}
+
+	return zones, nil
+}
+
+// ZoneACLRuleCreate adds an ACL rule to the zone.
+func (c *Client) ZoneACLRuleCreate(zoneID string, rule *ACLRule) (*ZoneUpdateResponse, error) {
+	ruleJSON, err := json.Marshal(rule)
+	if err != nil {
+		return nil, err
+	}
+	resource := &ZoneUpdateResponse{}
+	err = resourceRequest(c, zoneACLRulesEP(c, zoneID), "PUT", ruleJSON, resource)
+	if err != nil {
+		return &ZoneUpdateResponse{}, err
+	}
+
+	return resource, nil
+}
+
+// ZoneACLRuleDelete deletes an ACL rule from the zone.
+func (c *Client) ZoneACLRuleDelete(zoneID string, rule *ACLRule) (*ZoneUpdateResponse, error) {
+	ruleJSON, err := json.Marshal(rule)
+	if err != nil {
+		return nil, err
+	}
+	resource := &ZoneUpdateResponse{}
+	err = resourceRequest(c, zoneACLRulesEP(c, zoneID), "DELETE", ruleJSON, resource)
+	if err != nil {
+		return &ZoneUpdateResponse{}, err
+	}
+
+	return resource, nil
 }
 
 // ZoneCreate creates the Zone it's passed.
@@ -178,6 +230,17 @@ func (c *Client) ZoneChanges(id string) (*ZoneChanges, error) {
 	}
 
 	return zh, nil
+}
+
+// ZoneChangesFailure retrieves failed zone changes with the filter passed.
+func (c *Client) ZoneChangesFailure(filter ListFilter) (*ZoneChangeFailuresResponse, error) {
+	failures := &ZoneChangeFailuresResponse{}
+	err := resourceRequest(c, zoneChangesFailureEP(c, filter), "GET", nil, failures)
+	if err != nil {
+		return &ZoneChangeFailuresResponse{}, err
+	}
+
+	return failures, nil
 }
 
 // ZoneChangesListAll retrieves the complete list of zone changes with the ListFilter criteria passed.

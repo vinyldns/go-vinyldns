@@ -2,7 +2,7 @@
 // +build integration
 
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -17,6 +17,7 @@ package vinyldns
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 	"time"
 )
@@ -29,6 +30,15 @@ func client() *Client {
 		"okSecretKey",
 		"http://localhost:9000",
 		"go-vinyldns integration testing",
+	})
+}
+
+func superUser() *Client {
+	return NewClient(ClientConfiguration{
+		"superUserAccessKey",
+		"superUserSecretKey",
+		"http://localhost:9000",
+		"go-vinyldns integration testing (super user)",
 	})
 }
 
@@ -174,6 +184,10 @@ func TestZoneByNameIntegration(t *testing.T) {
 	if z.Name != "ok." {
 		t.Error(fmt.Sprintf("unable to get ZoneByName %s", "ok."))
 	}
+	if z.AdminGroupID == "" {
+		t.Error("expected ZoneByName to return a zone with a valid AdminGroupID")
+	}
+
 }
 
 func TestZonesListAllIntegrationFilterForNonexistentName(t *testing.T) {
@@ -512,6 +526,670 @@ func TestRecordSetChangesListAllIntegration(t *testing.T) {
 	}
 }
 
+func TestRecordSetChangesFailureIntegration(t *testing.T) {
+	c := client()
+
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) == 0 {
+		t.Error("Expected at least one zone for RecordSetChangesFailure testing")
+		return
+	}
+
+	failures, err := c.RecordSetChangesFailure(zones[0].ID, ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	// TODO: How to create a failure for testing?
+	if failures == nil {
+		t.Error("Expected RecordSetChangesFailure to return a non-nil response")
+	}
+}
+
+// ==============================================================================
+// Health & Monitoring Tests
+// ==============================================================================
+
+func TestPingIntegration(t *testing.T) {
+	c := client()
+	response, err := c.Ping()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !strings.Contains(response, "PONG") {
+		t.Errorf("Expected Ping to return 'PONG', got: %s", response)
+	}
+}
+
+func TestHealthIntegration(t *testing.T) {
+	c := client()
+	err := c.Health()
+	if err != nil {
+		t.Errorf("Health check failed: %v", err)
+	}
+}
+
+func TestColorIntegration(t *testing.T) {
+	c := client()
+	color, err := c.Color()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if color == "" {
+		t.Error("Expected Color to return a non-empty value")
+	} else if color != "green" && color != "blue" {
+		t.Errorf("Expected Color to return 'green' or 'blue', got: %s", color)
+	}
+}
+
+func TestMetricsPrometheusIntegration(t *testing.T) {
+	c := client()
+	metrics, err := c.MetricsPrometheus(nil)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if metrics == "" {
+		t.Error("Expected MetricsPrometheus to return non-empty metrics")
+	}
+}
+
+// ==============================================================================
+// System Management Tests
+// ==============================================================================
+
+func TestStatusIntegration(t *testing.T) {
+	c := client()
+	status, err := c.Status()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if status.Version == "" {
+		t.Error("Expected Status to return a version")
+	}
+	if status.Color == "" {
+		t.Error("Expected Status to return a color")
+	}
+	if status.KeyName == "" {
+		t.Error("Expected Status to return a valid KeyName")
+	}
+}
+
+func TestStatusUpdateIntegration(t *testing.T) {
+	c := superUser()
+
+	currentStatus, err := c.Status()
+	if err != nil {
+		t.Error(err)
+	}
+
+	newDisabledState := !currentStatus.ProcessingDisabled
+	updatedStatus, err := c.StatusUpdate(newDisabledState)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if updatedStatus.ProcessingDisabled != newDisabledState {
+		t.Errorf("Expected ProcessingDisabled to be %v, got %v", newDisabledState, updatedStatus.ProcessingDisabled)
+	}
+
+	// Restore original state
+	_, err = c.StatusUpdate(currentStatus.ProcessingDisabled)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+// ==============================================================================
+// User Management Tests
+// ==============================================================================
+
+func TestUserIntegration(t *testing.T) {
+	c := client()
+	user, err := c.User("ok")
+	if err != nil {
+		t.Error(err)
+	}
+
+	if user.UserName != "ok" {
+		t.Errorf("Expected user name to be 'ok', got: %s", user.UserName)
+	}
+
+	if user.ID == "" {
+		t.Error("Expected User to return a valid ID")
+	}
+
+	if len(user.GroupID) == 0 {
+		t.Error("Expected User to return at least one GroupID")
+	}
+}
+
+func TestUserLockUnlockIntegration(t *testing.T) {
+	c := superUser()
+
+	user, err := c.User("ok")
+	if err != nil {
+		t.Error(err)
+	}
+
+	lockedUser, err := c.UserLock(user.ID)
+	if err != nil {
+		t.Errorf("UserLock failed: %v", err)
+	}
+
+	if lockedUser.LockStatus != "Locked" {
+		t.Errorf("User lock status: %s", lockedUser.LockStatus)
+	}
+
+	// Unlock the user to restore state
+	unlockedUser, err := c.UserUnlock(user.ID)
+	if err != nil {
+		t.Errorf("UserUnlock failed: %v", err)
+	}
+
+	if unlockedUser.LockStatus != "Unlocked" {
+		t.Error("Expected user to be unlocked")
+	}
+}
+
+// ==============================================================================
+// Zone Enhancement Tests
+// ==============================================================================
+
+func TestZoneBackendIDsIntegration(t *testing.T) {
+	c := client()
+	backendIDs, err := c.ZoneBackendIDs()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(backendIDs) == 0 {
+		t.Error("Expected ZoneBackendIDs to return at least one backend")
+	}
+}
+
+func TestZoneACLRuleCreateDeleteIntegration(t *testing.T) {
+	c := superUser()
+	groups, err := c.Groups()
+	if err != nil {
+		t.Error(err)
+	}
+	if len(groups) == 0 {
+		t.Error("Expected Groups to return at least one group")
+		return
+	}
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) == 0 {
+		t.Error("No zones available for ACL rule testing")
+		return
+	}
+
+	zoneID := zones[0].ID
+
+	rule := &ACLRule{
+		AccessLevel: "Read",
+		Description: "Integration test ACL rule",
+		RecordTypes: []string{"A", "AAAA"},
+		GroupID:     groups[0].ID,
+	}
+
+	createResp, err := c.ZoneACLRuleCreate(zoneID, rule)
+	if err != nil {
+		t.Errorf("ZoneACLRuleCreate failed: %v", err)
+	}
+
+	if createResp.Zone.ID != zoneID {
+		t.Error("Expected ZoneACLRuleCreate to return the correct zone ID")
+	}
+
+	if createResp.Status != "Accepted" && createResp.Status != "Pending" {
+		t.Errorf("Expected ZoneACLRuleCreate to return status 'Accepted' or 'Pending', got: %s", createResp.Status)
+	}
+
+	deleteResp, err := c.ZoneACLRuleDelete(zoneID, rule)
+	if err != nil {
+		t.Errorf("ZoneACLRuleDelete failed: %v", err)
+	}
+
+	if deleteResp.Zone.ID != zoneID {
+		t.Error("Expected ZoneACLRuleDelete to return the correct zone ID")
+	}
+
+	if deleteResp.Status != "Accepted" && deleteResp.Status != "Pending" {
+		t.Errorf("Expected ZoneACLRuleDelete to return status 'Accepted' or 'Pending', got: %s", deleteResp.Status)
+	}
+}
+
+func TestZoneChangesFailureIntegration(t *testing.T) {
+	c := client()
+	failures, err := c.ZoneChangesFailure(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	// It's okay if there are no failures
+	if failures == nil {
+		t.Error("Expected ZoneChangesFailure to return a non-nil response")
+	}
+}
+
+// ==============================================================================
+// Record Set Enhancement Tests
+// ==============================================================================
+
+func TestRecordSetCountIntegration(t *testing.T) {
+	c := client()
+
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) == 0 {
+		t.Error("No zones available for record set count testing")
+		return
+	}
+
+	count, err := c.RecordSetCount(zones[0].ID)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if count.Count < 0 {
+		t.Error("Expected RecordSetCount to return a non-negative count")
+	}
+}
+
+func TestRecordSetChangeHistoryIntegration(t *testing.T) {
+	c := client()
+
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) == 0 {
+		t.Error("No zones available for change history testing")
+		return
+	}
+
+	recordSets, err := c.RecordSetsListAll(zones[0].ID, ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(recordSets) == 0 {
+		t.Error("No record sets available for change history testing")
+		return
+	}
+
+	// Use FQDN format for the filter
+	fqdn := recordSets[0].Name
+	if !strings.HasSuffix(fqdn, ".") && zones[0].Name != "" {
+		fqdn = recordSets[0].Name + "." + zones[0].Name
+	}
+
+	filter := RecordSetChangeHistoryFilter{
+		ZoneID: zones[0].ID,
+		FQDN:   fqdn,
+	}
+
+	history, err := c.RecordSetChangeHistory(filter)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if history == nil {
+		t.Error("Expected RecordSetChangeHistory to return a non-nil response")
+	}
+}
+
+func TestRecordSetOwnershipTransferIntegration(t *testing.T) {
+	c := client()
+
+	groups, err := c.Groups()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(groups) < 2 {
+		t.Error("Expected at least 2 groups for ownership transfer testing")
+		return
+	}
+
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) == 0 {
+		t.Error("Expected at least one zone for ownership transfer testing")
+		return
+	}
+
+	recordSet := &RecordSet{
+		Name:   "ownership-transfer-test",
+		ZoneID: zones[0].ID,
+		Type:   "A",
+		TTL:    60,
+		Records: []Record{
+			{Address: "127.0.0.1"},
+		},
+		OwnerGroupID: groups[0].ID,
+	}
+
+	createResp, err := c.RecordSetCreate(recordSet)
+	if err != nil {
+		t.Errorf("Failed to create test record set: %v", err)
+	}
+
+	createdRecordSetID := createResp.RecordSet.ID
+
+	limit := 10
+	var fetchedRecordSet RecordSet
+	for i := 0; i < limit; i++ {
+		time.Sleep(5 * time.Second)
+
+		fetchedRecordSet, err = c.RecordSet(zones[0].ID, createdRecordSetID)
+		if err == nil && fetchedRecordSet.ID == createdRecordSetID {
+			break
+		}
+
+		if i == (limit - 1) {
+			t.Errorf("Failed to fetch created record set after %d retries", limit)
+		}
+	}
+
+	transferResp, err := c.RecordSetOwnershipTransferRequest(&fetchedRecordSet, groups[1].ID)
+	if err != nil {
+		t.Errorf("Ownership transfer request failed: %v", err)
+
+		// Clean up
+		_, cleanupErr := c.RecordSetDelete(zones[0].ID, createdRecordSetID)
+		if cleanupErr != nil {
+			t.Logf("Failed to clean up test record set: %v", cleanupErr)
+		}
+	}
+
+	if transferResp.RecordSet.ID != createdRecordSetID {
+		t.Error("Expected ownership transfer to return the correct record set ID")
+	}
+
+	// Wait for transfer to be processed
+	time.Sleep(5 * time.Second)
+
+	updatedRecordSet, err := c.RecordSet(zones[0].ID, createdRecordSetID)
+	if err != nil {
+		t.Errorf("Failed to fetch record set after transfer request: %v", err)
+	}
+
+	_, err = c.RecordSetOwnershipTransferCancel(&updatedRecordSet, groups[1].ID)
+	if err != nil {
+		t.Logf("Ownership transfer cancel failed: %v", err)
+	}
+
+	// Clean up - delete the test record set
+	time.Sleep(5 * time.Second)
+	_, err = c.RecordSetDelete(zones[0].ID, createdRecordSetID)
+	if err != nil {
+		t.Errorf("Failed to clean up test record set: %v", err)
+	}
+}
+
+// ==============================================================================
+// Group Enhancement Tests
+// ==============================================================================
+
+func TestGroupChangeIntegration(t *testing.T) {
+	c := client()
+
+	user, err := c.User("ok")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	gID := user.GroupID[0]
+	group, err := c.Group(gID)
+	if err != nil {
+		t.Error(err)
+	}
+
+	group.Description = "Updated description for group change test"
+	_, err = c.GroupUpdate(gID, group)
+	if err != nil {
+		t.Error(err)
+	}
+
+	// Get group activity to find a change ID
+	activity, err := c.GroupActivity(gID)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(activity.Changes) == 0 {
+		t.Error("No group changes available for testing")
+		return
+	}
+
+	changeID := activity.Changes[0].ID
+	groupChange, err := c.GroupChange(changeID)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if groupChange.ID != changeID {
+		t.Errorf("Expected group change ID to be %s, got %s", changeID, groupChange.ID)
+		return
+	}
+	if groupChange.ChangeType != "Update" {
+		t.Errorf("Expected group change type to be 'Update', got %s", groupChange.ChangeType)
+	}
+	if groupChange.OldGroup.Description == group.Description {
+		t.Error("Expected group change 'Before' description to differ from updated description")
+	}
+	if groupChange.NewGroup.Description != group.Description {
+		t.Error("Expected group change 'After' description to match updated description")
+	}
+}
+
+func TestGroupValidDomainsIntegration(t *testing.T) {
+	c := client()
+
+	domains, err := c.GroupValidDomains()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if domains == nil {
+		t.Error("Expected GroupValidDomains to return a non-nil response")
+	}
+
+	for _, domain := range domains {
+		if domain == "" {
+			t.Error("Expected valid domains to be non-empty strings")
+		}
+	}
+}
+
+// ==============================================================================
+// Batch Changes Enhancement Tests
+// ==============================================================================
+
+func TestBatchRecordChangeWorkflowIntegration(t *testing.T) {
+	c := client()
+
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) == 0 {
+		t.Error("No zones available for batch change testing")
+		return
+	}
+
+	batchChange := &BatchRecordChange{
+		Comments: "Integration test batch change",
+		Changes: []RecordChange{
+			{
+				ChangeType: "Add",
+				InputName:  "batch-test." + zones[0].Name,
+				Type:       "A",
+				TTL:        300,
+				Record: RecordData{
+					Address: "127.0.0.1",
+				},
+			},
+		},
+		OwnerGroupID: zones[0].AdminGroupID,
+	}
+
+	createResp, err := c.BatchRecordChangeCreate(batchChange)
+	if err != nil {
+		t.Errorf("Failed to create batch change: %v", err)
+	}
+
+	batchChangeID := createResp.ID
+
+	limit := 10
+	for i := 0; i < limit; i++ {
+		time.Sleep(5 * time.Second)
+
+		fetchedBatch, err := c.BatchRecordChange(batchChangeID)
+		if err != nil {
+			t.Errorf("Failed to fetch batch change: %v", err)
+			break
+		}
+
+		if fetchedBatch.Status == "Complete" {
+			return
+		}
+
+		if fetchedBatch.Status == "Failed" {
+			t.Errorf("Batch change failed, status: %s", fetchedBatch.Status)
+			return
+		}
+
+		// If in manual review, try to approve/cancel
+		if fetchedBatch.Status == "PendingReview" {
+			// Try to approve
+			review := &BatchChangeReview{
+				ReviewComment: "Integration test approval",
+			}
+
+			_, approveErr := c.BatchRecordChangeApprove(batchChangeID, review)
+			if approveErr != nil {
+				t.Logf("Batch change approve failed: %v", approveErr)
+
+				// Try to cancel instead
+				_, cancelErr := c.BatchRecordChangeCancel(batchChangeID, review)
+				if cancelErr != nil {
+					t.Errorf("Batch change approve/cancel failed: %v", cancelErr)
+					return
+				}
+				fetchedBatch, err = c.BatchRecordChange(batchChangeID)
+				if err != nil {
+					t.Errorf("Failed to fetch batch change after cancel: %v", err)
+					return
+				}
+				if fetchedBatch.Status != "Cancelled" {
+					t.Error("Expected batch change to be cancelled")
+					return
+				}
+			}
+		}
+
+		if i == (limit - 1) {
+			t.Errorf("Batch change did not complete after %d retries, status: %s", limit, fetchedBatch.Status)
+		}
+	}
+}
+
+// Note: This test is skipped if manual review is not enabled in the environment
+func TestBatchRecordChangeRejectIntegration(t *testing.T) {
+	c := client()
+
+	zones, err := c.ZonesListAll(ListFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) == 0 {
+		t.Error("No zones available for batch change testing")
+		return
+	}
+
+	batchChange := &BatchRecordChange{
+		Comments: "Integration test batch change",
+		Changes: []RecordChange{
+			{
+				ChangeType: "Add",
+				InputName:  "batch-test-reject." + zones[0].Name,
+				Type:       "A",
+				TTL:        300,
+				Record: RecordData{
+					Address: "127.0.0.2",
+				},
+			},
+		},
+		OwnerGroupID: zones[0].AdminGroupID,
+	}
+
+	createResp, err := c.BatchRecordChangeCreate(batchChange)
+	if err != nil {
+		t.Errorf("Failed to create batch change: %v", err)
+	}
+
+	batchChangeID := createResp.ID
+	limit := 10
+	for i := 0; i < limit; i++ {
+		time.Sleep(5 * time.Second)
+		fetchedBatch, err := c.BatchRecordChange(batchChangeID)
+		if err != nil {
+			t.Errorf("Failed to fetch batch change: %v", err)
+			break
+		}
+
+		if fetchedBatch.Status == "Complete" || fetchedBatch.Status == "Failed" {
+			t.Skip("Batch change completed without review. Manual review is not enabled")
+			return
+		}
+
+		if fetchedBatch.Status == "PendingReview" {
+			break
+		}
+		if i == (limit - 1) {
+			t.Errorf("Batch change did not complete/reach manual review after %d retries, status: %s", limit, fetchedBatch.Status)
+		}
+	}
+	review := &BatchChangeReview{
+		ReviewComment: "Integration test rejection",
+	}
+	_, err = c.BatchRecordChangeReject(batchChangeID, review)
+	if err != nil {
+		t.Errorf("Failed to reject batch change: %v", err)
+	}
+	fetchedBatch, err := c.BatchRecordChange(batchChangeID)
+	if err != nil {
+		t.Errorf("Failed to fetch batch change after rejection: %v", err)
+	}
+	if fetchedBatch.Status != "Rejected" {
+		t.Errorf("Expected batch change status to be 'Rejected', got: %s", fetchedBatch.Status)
+	}
+}
+
 func TestZoneDeleteIntegration(t *testing.T) {
 	c := client()
 	zs, err := c.ZonesListAll(ListFilter{})
@@ -543,6 +1221,18 @@ func TestZoneDeleteIntegration(t *testing.T) {
 			fmt.Printf("%d retries reached in waiting for zone deletion of %s", limit, z)
 			t.Error(err)
 		}
+	}
+}
+
+func TestZonesDeletedIntegration(t *testing.T) {
+	c := client()
+	deletedZones, err := c.ZonesDeleted(DeletedZonesFilter{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if deletedZones == nil {
+		t.Error("Expected ZonesDeleted to return a non-nil response")
 	}
 }
 

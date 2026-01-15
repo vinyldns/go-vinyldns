@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -55,6 +55,23 @@ type ListFilter struct {
 type ListFilterRecordSetChanges struct {
 	StartFrom int
 	MaxItems  int
+}
+
+// DeletedZonesFilter represents the list query parameters for the deleted zones endpoint.
+type DeletedZonesFilter struct {
+	NameFilter   string
+	StartFrom    string
+	MaxItems     int
+	IgnoreAccess *bool
+}
+
+// RecordSetChangeHistoryFilter represents the list query parameters for record set change history.
+type RecordSetChangeHistoryFilter struct {
+	ZoneID     string
+	FQDN       string
+	RecordType string
+	StartFrom  string
+	MaxItems   int
 }
 
 // NameSort specifies the name sort order for record sets returned by the global list record set response.

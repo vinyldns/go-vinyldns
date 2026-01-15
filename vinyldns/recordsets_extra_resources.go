@@ -12,13 +12,15 @@ limitations under the License.
 
 package vinyldns
 
-// groupsList retrieves the list of zones with the List criteria passed.
-func (c *Client) groupsList(filter ListFilter) (*Groups, error) {
-	groups := &Groups{}
-	err := resourceRequest(c, groupsListEP(c, filter), "GET", nil, groups)
-	if err != nil {
-		return groups, err
-	}
+// RecordSetCount represents the record set count response.
+type RecordSetCount struct {
+	Count int `json:"count"`
+}
 
-	return groups, nil
+// RecordSetChangeFailuresResponse represents failed record set changes.
+type RecordSetChangeFailuresResponse struct {
+	FailedRecordSetChanges []RecordSetChange `json:"failedRecordSetChanges"`
+	StartFrom              int               `json:"startFrom,omitempty"`
+	NextID                 int               `json:"nextId,omitempty"`
+	MaxItems               int               `json:"maxItems,omitempty"`
 }
