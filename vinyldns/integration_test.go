@@ -542,7 +542,6 @@ func TestRecordSetChangesFailureIntegration(t *testing.T) {
 	failures, err := c.RecordSetChangesFailure(zones[0].ID, ListFilter{})
 	if err != nil {
 		t.Error(err)
-		return
 	}
 
 	// TODO: How to create a failure for testing?
@@ -596,10 +595,8 @@ func TestMetricsPrometheusIntegration(t *testing.T) {
 		t.Error(err)
 	}
 
-	// TODO: Actually validate some metrics content?
 	if metrics == "" {
-		t.Log("Expected MetricsPrometheus to return non-empty metrics")
-		// t.Error("MetricsPrometheus returned empty metrics")
+		t.Error("Expected MetricsPrometheus to return non-empty metrics")
 	}
 }
 
@@ -619,9 +616,6 @@ func TestStatusIntegration(t *testing.T) {
 	}
 	if status.Color == "" {
 		t.Error("Expected Status to return a color")
-	}
-	if status.ProcessingDisabled != true && status.ProcessingDisabled != false {
-		t.Error("Expected Status to return a valid ProcessingDisabled value")
 	}
 	if status.KeyName == "" {
 		t.Error("Expected Status to return a valid KeyName")
@@ -672,7 +666,7 @@ func TestUserIntegration(t *testing.T) {
 		t.Error("Expected User to return a valid ID")
 	}
 
-	if user.GroupID == nil || len(user.GroupID) == 0 {
+	if len(user.GroupID) == 0 {
 		t.Error("Expected User to return at least one GroupID")
 	}
 }
@@ -688,10 +682,9 @@ func TestUserLockUnlockIntegration(t *testing.T) {
 	lockedUser, err := c.UserLock(user.ID)
 	if err != nil {
 		t.Errorf("UserLock failed: %v", err)
-		return
 	}
 
-	if lockedUser.LockStatus != "Locked" && lockedUser.LockStatus != "" {
+	if lockedUser.LockStatus != "Locked" {
 		t.Errorf("User lock status: %s", lockedUser.LockStatus)
 	}
 
@@ -701,7 +694,7 @@ func TestUserLockUnlockIntegration(t *testing.T) {
 		t.Errorf("UserUnlock failed: %v", err)
 	}
 
-	if unlockedUser.LockStatus == "Locked" {
+	if unlockedUser.LockStatus != "Unlocked" {
 		t.Error("Expected user to be unlocked")
 	}
 }
@@ -728,6 +721,10 @@ func TestZoneACLRuleCreateDeleteIntegration(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	if len(groups) == 0 {
+		t.Error("Expected Groups to return at least one group")
+		return
+	}
 	zones, err := c.ZonesListAll(ListFilter{})
 	if err != nil {
 		t.Error(err)
@@ -735,6 +732,7 @@ func TestZoneACLRuleCreateDeleteIntegration(t *testing.T) {
 
 	if len(zones) == 0 {
 		t.Error("No zones available for ACL rule testing")
+		return
 	}
 
 	zoneID := zones[0].ID
@@ -749,7 +747,6 @@ func TestZoneACLRuleCreateDeleteIntegration(t *testing.T) {
 	createResp, err := c.ZoneACLRuleCreate(zoneID, rule)
 	if err != nil {
 		t.Errorf("ZoneACLRuleCreate failed: %v", err)
-		return
 	}
 
 	if createResp.Zone.ID != zoneID {
@@ -763,7 +760,6 @@ func TestZoneACLRuleCreateDeleteIntegration(t *testing.T) {
 	deleteResp, err := c.ZoneACLRuleDelete(zoneID, rule)
 	if err != nil {
 		t.Errorf("ZoneACLRuleDelete failed: %v", err)
-		return
 	}
 
 	if deleteResp.Zone.ID != zoneID {
@@ -802,6 +798,7 @@ func TestRecordSetCountIntegration(t *testing.T) {
 
 	if len(zones) == 0 {
 		t.Error("No zones available for record set count testing")
+		return
 	}
 
 	count, err := c.RecordSetCount(zones[0].ID)
@@ -824,6 +821,7 @@ func TestRecordSetChangeHistoryIntegration(t *testing.T) {
 
 	if len(zones) == 0 {
 		t.Error("No zones available for change history testing")
+		return
 	}
 
 	recordSets, err := c.RecordSetsListAll(zones[0].ID, ListFilter{})
@@ -833,6 +831,7 @@ func TestRecordSetChangeHistoryIntegration(t *testing.T) {
 
 	if len(recordSets) == 0 {
 		t.Error("No record sets available for change history testing")
+		return
 	}
 
 	// Use FQDN format for the filter
@@ -862,7 +861,6 @@ func TestRecordSetOwnershipTransferIntegration(t *testing.T) {
 	groups, err := c.Groups()
 	if err != nil {
 		t.Error(err)
-		return
 	}
 
 	if len(groups) < 2 {
@@ -873,7 +871,6 @@ func TestRecordSetOwnershipTransferIntegration(t *testing.T) {
 	zones, err := c.ZonesListAll(ListFilter{})
 	if err != nil {
 		t.Error(err)
-		return
 	}
 
 	if len(zones) == 0 {
@@ -895,7 +892,6 @@ func TestRecordSetOwnershipTransferIntegration(t *testing.T) {
 	createResp, err := c.RecordSetCreate(recordSet)
 	if err != nil {
 		t.Errorf("Failed to create test record set: %v", err)
-		return
 	}
 
 	createdRecordSetID := createResp.RecordSet.ID
@@ -912,7 +908,6 @@ func TestRecordSetOwnershipTransferIntegration(t *testing.T) {
 
 		if i == (limit - 1) {
 			t.Errorf("Failed to fetch created record set after %d retries", limit)
-			return
 		}
 	}
 
@@ -925,7 +920,6 @@ func TestRecordSetOwnershipTransferIntegration(t *testing.T) {
 		if cleanupErr != nil {
 			t.Logf("Failed to clean up test record set: %v", cleanupErr)
 		}
-		return
 	}
 
 	if transferResp.RecordSet.ID != createdRecordSetID {
@@ -963,6 +957,7 @@ func TestGroupChangeIntegration(t *testing.T) {
 	user, err := c.User("ok")
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	gID := user.GroupID[0]
 	group, err := c.Group(gID)
@@ -984,6 +979,7 @@ func TestGroupChangeIntegration(t *testing.T) {
 
 	if len(activity.Changes) == 0 {
 		t.Error("No group changes available for testing")
+		return
 	}
 
 	changeID := activity.Changes[0].ID
@@ -1041,6 +1037,7 @@ func TestBatchRecordChangeWorkflowIntegration(t *testing.T) {
 
 	if len(zones) == 0 {
 		t.Error("No zones available for batch change testing")
+		return
 	}
 
 	batchChange := &BatchRecordChange{
@@ -1062,7 +1059,6 @@ func TestBatchRecordChangeWorkflowIntegration(t *testing.T) {
 	createResp, err := c.BatchRecordChangeCreate(batchChange)
 	if err != nil {
 		t.Errorf("Failed to create batch change: %v", err)
-		return
 	}
 
 	batchChangeID := createResp.ID
@@ -1103,6 +1099,11 @@ func TestBatchRecordChangeWorkflowIntegration(t *testing.T) {
 					t.Errorf("Batch change approve/cancel failed: %v", cancelErr)
 					return
 				}
+				fetchedBatch, err = c.BatchRecordChange(batchChangeID)
+				if err != nil {
+					t.Errorf("Failed to fetch batch change after cancel: %v", err)
+					return
+				}
 				if fetchedBatch.Status != "Cancelled" {
 					t.Error("Expected batch change to be cancelled")
 					return
@@ -1123,7 +1124,6 @@ func TestBatchRecordChangeRejectIntegration(t *testing.T) {
 	zones, err := c.ZonesListAll(ListFilter{})
 	if err != nil {
 		t.Error(err)
-		return
 	}
 
 	if len(zones) == 0 {
@@ -1150,7 +1150,6 @@ func TestBatchRecordChangeRejectIntegration(t *testing.T) {
 	createResp, err := c.BatchRecordChangeCreate(batchChange)
 	if err != nil {
 		t.Errorf("Failed to create batch change: %v", err)
-		return
 	}
 
 	batchChangeID := createResp.ID
