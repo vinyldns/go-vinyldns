@@ -37,6 +37,36 @@ func (c *Client) BatchRecordChange(changeID string) (*BatchRecordChange, error) 
 	return change, nil
 }
 
+func (c *Client) BatchRecordChangeApprove(ID string) (*BatchRecordChange, error) {
+	change := &BatchRecordChange{}
+	err := resourceRequest(c, batchRecordChangeApproveEP(c, ID), "POST", nil, change)
+	if err != nil {
+		return nil, err
+	}
+
+	return change, nil
+}
+
+func (c *Client) BatchRecordChangeReject(ID string) (*BatchRecordChange, error) {
+	change := &BatchRecordChange{}
+	err := resourceRequest(c, batchRecordChangeRejectEP(c, ID), "POST", nil, change)
+	if err != nil {
+		return nil, err
+	}
+
+	return change, nil
+}
+
+func (c *Client) BatchRecordChangeCancel(ID string) (*BatchRecordChange, error) {
+	change := &BatchRecordChange{}
+	err := resourceRequest(c, batchRecordChangeCancelEP(c, ID), "POST", nil, change)
+	if err != nil {
+		return nil, err
+	}
+
+	return change, nil
+}
+
 // BatchRecordChangeCreate creates the batch record change it's passed.
 func (c *Client) BatchRecordChangeCreate(change *BatchRecordChange) (*BatchRecordChangeUpdateResponse, error) {
 	cJSON, err := json.Marshal(change)
