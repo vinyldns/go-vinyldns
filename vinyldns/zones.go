@@ -39,6 +39,7 @@ func (c *Client) ZonesListAll(filter ListFilter) ([]Zone, error) {
 	zones := []Zone{}
 
 	for {
+		prevStartFrom := filter.StartFrom
 		resp, err := c.zonesList(filter)
 		if err != nil {
 			return nil, err
@@ -48,6 +49,20 @@ func (c *Client) ZonesListAll(filter ListFilter) ([]Zone, error) {
 		filter.StartFrom = resp.NextID
 
 		if len(filter.StartFrom) == 0 {
+			// Workaround for servers that omit nextId despite having more results:
+			// if a full page was returned, use the last zone's name as the cursor.
+			maxItems := resp.MaxItems
+			if maxItems == 0 {
+				maxItems = 100
+			}
+			if len(resp.Zones) >= maxItems {
+				lastZoneName := resp.Zones[len(resp.Zones)-1].Name
+				if lastZoneName == prevStartFrom {
+					return zones, nil
+				}
+				filter.StartFrom = lastZoneName
+				continue
+			}
 			return zones, nil
 		}
 	}
@@ -190,6 +205,7 @@ func (c *Client) ZoneChangesListAll(zoneID string, filter ListFilter) ([]ZoneCha
 	changes := []ZoneChange{}
 
 	for {
+		prevStartFrom := filter.StartFrom
 		resp, err := c.zoneChangesList(zoneID, filter)
 		if err != nil {
 			return nil, err
@@ -199,6 +215,18 @@ func (c *Client) ZoneChangesListAll(zoneID string, filter ListFilter) ([]ZoneCha
 		filter.StartFrom = resp.NextID
 
 		if len(filter.StartFrom) == 0 {
+			maxItems := resp.MaxItems
+			if maxItems == 0 {
+				maxItems = 100
+			}
+			if len(resp.ZoneChanges) >= maxItems {
+				lastID := resp.ZoneChanges[len(resp.ZoneChanges)-1].ID
+				if lastID == prevStartFrom {
+					return changes, nil
+				}
+				filter.StartFrom = lastID
+				continue
+			}
 			return changes, nil
 		}
 	}

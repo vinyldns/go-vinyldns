@@ -102,6 +102,7 @@ func (c *Client) RecordSetsListAll(zoneID string, filter ListFilter) ([]RecordSe
 	rss := []RecordSet{}
 
 	for {
+		prevStartFrom := filter.StartFrom
 		resp, err := c.recordSetsList(zoneID, filter)
 		if err != nil {
 			return nil, err
@@ -111,6 +112,18 @@ func (c *Client) RecordSetsListAll(zoneID string, filter ListFilter) ([]RecordSe
 		filter.StartFrom = resp.NextID
 
 		if len(filter.StartFrom) == 0 {
+			maxItems := resp.MaxItems
+			if maxItems == 0 {
+				maxItems = 100
+			}
+			if len(resp.RecordSets) >= maxItems {
+				lastID := resp.RecordSets[len(resp.RecordSets)-1].ID
+				if lastID == prevStartFrom {
+					return rss, nil
+				}
+				filter.StartFrom = lastID
+				continue
+			}
 			return rss, nil
 		}
 	}
@@ -142,6 +155,7 @@ func (c *Client) RecordSetsGlobalListAll(filter GlobalListFilter) ([]RecordSet, 
 	rss := []RecordSet{}
 
 	for {
+		prevStartFrom := filter.StartFrom
 		resp, err := c.recordSetsGlobalList(filter)
 		if err != nil {
 			return nil, err
@@ -151,6 +165,18 @@ func (c *Client) RecordSetsGlobalListAll(filter GlobalListFilter) ([]RecordSet, 
 		filter.StartFrom = resp.NextID
 
 		if len(filter.StartFrom) == 0 {
+			maxItems := resp.MaxItems
+			if maxItems == 0 {
+				maxItems = 100
+			}
+			if len(resp.RecordSets) >= maxItems {
+				lastID := resp.RecordSets[len(resp.RecordSets)-1].ID
+				if lastID == prevStartFrom {
+					return rss, nil
+				}
+				filter.StartFrom = lastID
+				continue
+			}
 			return rss, nil
 		}
 	}

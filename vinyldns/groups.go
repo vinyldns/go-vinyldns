@@ -38,6 +38,7 @@ func (c *Client) GroupsListAll(filter ListFilter) ([]Group, error) {
 	groups := []Group{}
 
 	for {
+		prevStartFrom := filter.StartFrom
 		resp, err := c.groupsList(filter)
 		if err != nil {
 			return nil, err
@@ -47,6 +48,18 @@ func (c *Client) GroupsListAll(filter ListFilter) ([]Group, error) {
 		filter.StartFrom = resp.NextID
 
 		if len(filter.StartFrom) == 0 {
+			maxItems := resp.MaxItems
+			if maxItems == 0 {
+				maxItems = 100
+			}
+			if len(resp.Groups) >= maxItems {
+				lastID := resp.Groups[len(resp.Groups)-1].ID
+				if lastID == prevStartFrom {
+					return groups, nil
+				}
+				filter.StartFrom = lastID
+				continue
+			}
 			return groups, nil
 		}
 	}

@@ -81,6 +81,10 @@ func TestZonesListAll(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	zonesListEmptyJSON, err := readFile("test-fixtures/zones/zones-list-empty.json")
+	if err != nil {
+		t.Error(err)
+	}
 	server, client := testTools([]testToolsConfig{
 		{
 			endpoint: "http://host.com/zones?maxItems=1",
@@ -92,6 +96,11 @@ func TestZonesListAll(t *testing.T) {
 			code:     200,
 			body:     zonesListJSON2,
 		},
+		{
+			endpoint: "http://host.com/zones?maxItems=1&startFrom=vinyldns-two.",
+			code:     200,
+			body:     zonesListEmptyJSON,
+		},
 	})
 
 	defer server.Close()
@@ -101,6 +110,59 @@ func TestZonesListAll(t *testing.T) {
 	}); err == nil {
 		t.Error("Expected error -- MaxItems must be between 1 and 100")
 	}
+
+	zones, err := client.ZonesListAll(ListFilter{
+		MaxItems: 1,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(zones) != 2 {
+		t.Error("Expected 2 Zones; got ", len(zones))
+	}
+
+	if zones[0].ID != "1" {
+		t.Error("Expected Zone.ID to be 1")
+	}
+
+	if zones[1].ID != "2" {
+		t.Error("Expected Zone.ID to be 2")
+	}
+}
+
+func TestZonesListAllMissingNextID(t *testing.T) {
+	zonesListJSON1, err := readFile("test-fixtures/zones/zones-list-no-nextid-1.json")
+	if err != nil {
+		t.Error(err)
+	}
+	zonesListJSON2, err := readFile("test-fixtures/zones/zones-list-no-nextid-2.json")
+	if err != nil {
+		t.Error(err)
+	}
+	zonesListJSON3, err := readFile("test-fixtures/zones/zones-list-no-nextid-3.json")
+	if err != nil {
+		t.Error(err)
+	}
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/zones?maxItems=1",
+			code:     200,
+			body:     zonesListJSON1,
+		},
+		{
+			endpoint: "http://host.com/zones?maxItems=1&startFrom=vinyldns-one.",
+			code:     200,
+			body:     zonesListJSON2,
+		},
+		{
+			endpoint: "http://host.com/zones?maxItems=1&startFrom=vinyldns-two.",
+			code:     200,
+			body:     zonesListJSON3,
+		},
+	})
+
+	defer server.Close()
 
 	zones, err := client.ZonesListAll(ListFilter{
 		MaxItems: 1,
