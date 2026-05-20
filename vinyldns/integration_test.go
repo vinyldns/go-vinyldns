@@ -841,8 +841,9 @@ func TestRecordSetChangeHistoryIntegration(t *testing.T) {
 	}
 
 	filter := RecordSetChangeHistoryFilter{
-		ZoneID: zones[0].ID,
-		FQDN:   fqdn,
+		ZoneID:     zones[0].ID,
+		FQDN:       fqdn,
+		RecordType: recordSets[0].Type,
 	}
 
 	history, err := c.RecordSetChangeHistory(filter)

@@ -53,3 +53,18 @@ func TestStatusUpdate(t *testing.T) {
 		t.Error("Expected status.ProcessingDisabled to be true")
 	}
 }
+
+func TestStatusUpdateError(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/status?processingDisabled=true",
+			code:     500,
+			body:     `{"error":"failed"}`,
+		},
+	})
+	defer server.Close()
+
+	if _, err := client.StatusUpdate(true); err == nil {
+		t.Error("Expected status update error")
+	}
+}

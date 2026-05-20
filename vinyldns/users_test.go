@@ -73,3 +73,18 @@ func TestUserUnlock(t *testing.T) {
 		t.Error("Expected lock status to be Unlocked")
 	}
 }
+
+func TestUserLockError(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/users/ok/lock",
+			code:     500,
+			body:     `{"error":"failed"}`,
+		},
+	})
+	defer server.Close()
+
+	if _, err := client.UserLock("ok"); err == nil {
+		t.Error("Expected user lock error")
+	}
+}

@@ -83,6 +83,26 @@ func TestRecordSetChangeHistoryRequiresFields(t *testing.T) {
 	}
 }
 
+func TestRecordSetChangeHistoryError(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/recordsetchange/history?zoneId=z1&fqdn=ok.&recordType=A",
+			code:     500,
+			body:     `{"error":"failed"}`,
+		},
+	})
+	defer server.Close()
+
+	_, err := client.RecordSetChangeHistory(RecordSetChangeHistoryFilter{
+		ZoneID:     "z1",
+		FQDN:       "ok.",
+		RecordType: "A",
+	})
+	if err == nil {
+		t.Error("Expected record set change history error")
+	}
+}
+
 func TestRecordSetChangesFailure(t *testing.T) {
 	failuresJSON := `{
 		"failedRecordSetChanges": [

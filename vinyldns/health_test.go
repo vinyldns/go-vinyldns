@@ -85,3 +85,18 @@ func TestMetricsPrometheus(t *testing.T) {
 		t.Error("Expected metrics response to have a value")
 	}
 }
+
+func TestHealthError(t *testing.T) {
+	server, client := testTools([]testToolsConfig{
+		{
+			endpoint: "http://host.com/health",
+			code:     500,
+			body:     `{"error":"unhealthy"}`,
+		},
+	})
+	defer server.Close()
+
+	if err := client.Health(); err == nil {
+		t.Error("Expected health error")
+	}
+}
