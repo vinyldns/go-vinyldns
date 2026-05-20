@@ -54,44 +54,20 @@ func (c *Client) BatchRecordChangeCreate(change *BatchRecordChange) (*BatchRecor
 
 // BatchRecordChangeApprove approves a batch record change in manual review.
 func (c *Client) BatchRecordChangeApprove(changeID string, review *BatchChangeReview) (*BatchRecordChange, error) {
-	var reviewJSON []byte
-	var err error
-	if review != nil {
-		reviewJSON, err = json.Marshal(review)
-		if err != nil {
-			return nil, err
-		}
-	}
-	resource := &BatchRecordChange{}
-	err = resourceRequest(c, batchRecordChangeApproveEP(c, changeID), "POST", reviewJSON, resource)
-	if err != nil {
-		return &BatchRecordChange{}, err
-	}
-
-	return resource, nil
+	return c.batchRecordChangeReviewAction(changeID, review, batchRecordChangeApproveEP)
 }
 
 // BatchRecordChangeReject rejects a batch record change in manual review.
 func (c *Client) BatchRecordChangeReject(changeID string, review *BatchChangeReview) (*BatchRecordChange, error) {
-	var reviewJSON []byte
-	var err error
-	if review != nil {
-		reviewJSON, err = json.Marshal(review)
-		if err != nil {
-			return nil, err
-		}
-	}
-	resource := &BatchRecordChange{}
-	err = resourceRequest(c, batchRecordChangeRejectEP(c, changeID), "POST", reviewJSON, resource)
-	if err != nil {
-		return &BatchRecordChange{}, err
-	}
-
-	return resource, nil
+	return c.batchRecordChangeReviewAction(changeID, review, batchRecordChangeRejectEP)
 }
 
 // BatchRecordChangeCancel cancels a batch record change.
 func (c *Client) BatchRecordChangeCancel(changeID string, review *BatchChangeReview) (*BatchRecordChange, error) {
+	return c.batchRecordChangeReviewAction(changeID, review, batchRecordChangeCancelEP)
+}
+
+func (c *Client) batchRecordChangeReviewAction(changeID string, review *BatchChangeReview, endpoint func(*Client, string) string) (*BatchRecordChange, error) {
 	var reviewJSON []byte
 	var err error
 	if review != nil {
@@ -101,7 +77,7 @@ func (c *Client) BatchRecordChangeCancel(changeID string, review *BatchChangeRev
 		}
 	}
 	resource := &BatchRecordChange{}
-	err = resourceRequest(c, batchRecordChangeCancelEP(c, changeID), "POST", reviewJSON, resource)
+	err = resourceRequest(c, endpoint(c, changeID), "POST", reviewJSON, resource)
 	if err != nil {
 		return &BatchRecordChange{}, err
 	}
