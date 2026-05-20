@@ -73,6 +73,38 @@ func TestRecordSetOwnershipTransferCancel(t *testing.T) {
 	}
 }
 
+func TestRecordSetOwnershipTransferDoesNotMutateInputOnError(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, `{"error":"boom"}`)
+	}))
+	defer server.Close()
+
+	client := newOwnershipTransferClient(server.URL)
+	rs := &RecordSet{
+		ZoneID:       "123",
+		ID:           "456",
+		Name:         "name",
+		Type:         "CNAME",
+		TTL:          200,
+		OwnerGroupID: "owner-group-id",
+		Records: []Record{{
+			CName: "cname",
+		}},
+	}
+
+	_, err := client.RecordSetOwnershipTransferApprove(rs, "requested-group-id")
+	if err == nil {
+		t.Fatal("expected ownership transfer to fail")
+	}
+	if rs.OwnerGroupID != "owner-group-id" {
+		t.Error("expected ownerGroupId to remain unchanged on failure")
+	}
+	if rs.RecordSetGroupChange != nil {
+		t.Error("expected RecordSetGroupChange to remain nil on failure")
+	}
+}
+
 func runOwnershipTransferTest(t *testing.T, status OwnershipTransferStatus, updateOwnerGroup bool) []byte {
 	t.Helper()
 

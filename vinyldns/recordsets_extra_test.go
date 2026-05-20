@@ -73,6 +73,16 @@ func TestRecordSetChangeHistory(t *testing.T) {
 	}
 }
 
+func TestRecordSetChangeHistoryRequiresFields(t *testing.T) {
+	server, client := testTools(nil)
+	defer server.Close()
+
+	_, err := client.RecordSetChangeHistory(RecordSetChangeHistoryFilter{})
+	if err == nil {
+		t.Fatal("expected error for missing record set change history fields")
+	}
+}
+
 func TestRecordSetChangesFailure(t *testing.T) {
 	failuresJSON := `{
 		"failedRecordSetChanges": [

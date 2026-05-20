@@ -661,6 +661,21 @@ func TestBuildRecordSetChangeHistoryQuery(t *testing.T) {
 	}
 }
 
+func TestBuildRecordSetChangeHistoryQuerySkipsEmptyRequiredFields(t *testing.T) {
+	query := buildRecordSetChangeHistoryQuery(RecordSetChangeHistoryFilter{
+		ZoneID:    "zone-1",
+		MaxItems:  2,
+		StartFrom: "1",
+	})
+	expected := "?zoneId=zone-1&startFrom=1&maxItems=2"
+
+	if query != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", query)
+		t.Error("buildRecordSetChangeHistoryQuery should skip empty required fields")
+	}
+}
+
 func TestBuildPrometheusQuery(t *testing.T) {
 	query := buildPrometheusQuery([]string{"one", "two"})
 	expected := "?name=one&name=two"

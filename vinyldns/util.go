@@ -68,6 +68,7 @@ func resourceRequest(c *Client, url, method string, body []byte, responseStruct 
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 
 	bodyContents, err := io.ReadAll(resp.Body)
 	if logRequests() {
@@ -119,6 +120,7 @@ func resourceRequestRaw(c *Client, url, method string, body []byte) (int, string
 	if err != nil {
 		return 0, "", err
 	}
+	defer resp.Body.Close()
 
 	bodyContents, err := io.ReadAll(resp.Body)
 	if logRequests() {

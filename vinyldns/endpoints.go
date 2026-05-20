@@ -300,9 +300,15 @@ func buildRecordSetChangeHistoryQuery(f RecordSetChangeHistoryFilter) string {
 	params := []string{}
 	query := "?"
 
-	params = append(params, fmt.Sprintf("zoneId=%s", f.ZoneID))
-	params = append(params, fmt.Sprintf("fqdn=%s", f.FQDN))
-	params = append(params, fmt.Sprintf("recordType=%s", f.RecordType))
+	if f.ZoneID != "" {
+		params = append(params, fmt.Sprintf("zoneId=%s", f.ZoneID))
+	}
+	if f.FQDN != "" {
+		params = append(params, fmt.Sprintf("fqdn=%s", f.FQDN))
+	}
+	if f.RecordType != "" {
+		params = append(params, fmt.Sprintf("recordType=%s", f.RecordType))
+	}
 
 	if f.StartFrom != "" {
 		params = append(params, fmt.Sprintf("startFrom=%s", f.StartFrom))
@@ -310,6 +316,10 @@ func buildRecordSetChangeHistoryQuery(f RecordSetChangeHistoryFilter) string {
 
 	if f.MaxItems != 0 {
 		params = append(params, fmt.Sprintf("maxItems=%d", f.MaxItems))
+	}
+
+	if len(params) == 0 {
+		query = ""
 	}
 
 	return query + strings.Join(params, "&")

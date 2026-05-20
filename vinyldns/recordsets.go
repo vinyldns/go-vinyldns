@@ -233,16 +233,18 @@ func (c *Client) recordSetOwnershipTransfer(rs *RecordSet, status OwnershipTrans
 		return nil, fmt.Errorf("record set is required")
 	}
 
+	copyRS := *rs
+
 	if updateOwnerGroup && requestedOwnerGroupID != "" {
-		rs.OwnerGroupID = requestedOwnerGroupID
+		copyRS.OwnerGroupID = requestedOwnerGroupID
 	}
 
-	rs.RecordSetGroupChange = &OwnershipTransfer{
+	copyRS.RecordSetGroupChange = &OwnershipTransfer{
 		OwnershipTransferStatus: status,
 		RequestedOwnerGroupID:   requestedOwnerGroupID,
 	}
 
-	return c.RecordSetUpdate(rs)
+	return c.RecordSetUpdate(&copyRS)
 }
 
 // RecordSetDelete deletes the RecordSet matching the Zone ID and RecordSet ID it's passed.
@@ -269,6 +271,10 @@ func (c *Client) RecordSetChanges(zoneID string, f ListFilterRecordSetChanges) (
 
 // RecordSetChangeHistory retrieves history for a record set.
 func (c *Client) RecordSetChangeHistory(f RecordSetChangeHistoryFilter) (*RecordSetChanges, error) {
+	if f.ZoneID == "" || f.FQDN == "" || f.RecordType == "" {
+		return nil, fmt.Errorf("zone ID, FQDN, and record type are required")
+	}
+
 	rsc := &RecordSetChanges{}
 	err := resourceRequest(c, recordSetChangeHistoryEP(c, f), "GET", nil, rsc)
 	if err != nil {
