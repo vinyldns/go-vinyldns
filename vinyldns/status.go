@@ -12,13 +12,24 @@ limitations under the License.
 
 package vinyldns
 
-// groupsList retrieves the list of zones with the List criteria passed.
-func (c *Client) groupsList(filter ListFilter) (*Groups, error) {
-	groups := &Groups{}
-	err := resourceRequest(c, groupsListEP(c, filter), "GET", nil, groups)
+// Status retrieves the current system processing status.
+func (c *Client) Status() (SystemStatus, error) {
+	status := &SystemStatus{}
+	err := resourceRequest(c, statusEP(c), "GET", nil, status)
 	if err != nil {
-		return groups, err
+		return SystemStatus{}, err
 	}
 
-	return groups, nil
+	return *status, nil
+}
+
+// StatusUpdate updates the system processing status.
+func (c *Client) StatusUpdate(processingDisabled bool) (SystemStatus, error) {
+	status := &SystemStatus{}
+	err := resourceRequest(c, statusUpdateEP(c, processingDisabled), "POST", nil, status)
+	if err != nil {
+		return SystemStatus{}, err
+	}
+
+	return *status, nil
 }

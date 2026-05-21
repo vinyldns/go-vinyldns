@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2018-2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -41,13 +41,13 @@ func concatStrs(delim string, str ...string) string {
 	return strings.Join(str, delim)
 }
 
-func resourceRequest(c *Client, url, method string, body []byte, responseStruct interface{}) error {
+func signedRequest(c *Client, url, method string, body []byte) (int, []byte, error) {
 	if logRequests() {
 		fmt.Printf("Request url: \n\t%s\nrequest body: \n\t%s \n\n", url, string(body))
 	}
 	req, err := http.NewRequest(method, url, bytes.NewReader(body))
 	if err != nil {
-		return err
+		return 0, nil, err
 	}
 
 	req.Header.Set("User-Agent", c.UserAgent)
@@ -61,20 +61,21 @@ func resourceRequest(c *Client, url, method string, body []byte, responseStruct 
 	payloadHash := hex.EncodeToString(h.Sum(nil))
 	err = signer.SignHTTP(nil, creds.Value, req, payloadHash, "VinylDNS", "us-east-1", time.Now())
 	if err != nil {
-		return err
+		return 0, nil, err
 	}
 
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
-		return err
+		return 0, nil, err
 	}
+	defer resp.Body.Close()
 
 	bodyContents, err := io.ReadAll(resp.Body)
 	if logRequests() {
 		fmt.Printf("Response status: \n\t%d\nresponse body: \n\t%s \n\n", resp.StatusCode, bodyContents)
 	}
 	if err != nil {
-		return err
+		return resp.StatusCode, nil, err
 	}
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusAccepted {
 		dError := &Error{}
@@ -83,11 +84,30 @@ func resourceRequest(c *Client, url, method string, body []byte, responseStruct 
 		dError.RequestBody = string(body)
 		dError.ResponseCode = resp.StatusCode
 		dError.ResponseBody = string(bodyContents)
-		return dError
+		return resp.StatusCode, nil, dError
 	}
+
+	return resp.StatusCode, bodyContents, nil
+}
+
+func resourceRequest(c *Client, url, method string, body []byte, responseStruct interface{}) error {
+	_, bodyContents, err := signedRequest(c, url, method, body)
+	if err != nil {
+		return err
+	}
+
 	err = json.Unmarshal(bodyContents, responseStruct)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func resourceRequestRaw(c *Client, url, method string, body []byte) (int, string, error) {
+	statusCode, bodyContents, err := signedRequest(c, url, method, body)
+	if err != nil {
+		return statusCode, "", err
+	}
+
+	return statusCode, string(bodyContents), nil
 }

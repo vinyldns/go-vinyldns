@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Comcast Cable Communications Management, LLC
+Copyright 2018-2026 Comcast Cable Communications Management, LLC
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -47,6 +47,39 @@ func (c *Client) BatchRecordChangeCreate(change *BatchRecordChange) (*BatchRecor
 	err = resourceRequest(c, batchRecordChangesEP(c), "POST", cJSON, resource)
 	if err != nil {
 		return &BatchRecordChangeUpdateResponse{}, err
+	}
+
+	return resource, nil
+}
+
+// BatchRecordChangeApprove approves a batch record change in manual review.
+func (c *Client) BatchRecordChangeApprove(changeID string, review *BatchChangeReview) (*BatchRecordChange, error) {
+	return c.batchRecordChangeReviewAction(changeID, review, batchRecordChangeApproveEP)
+}
+
+// BatchRecordChangeReject rejects a batch record change in manual review.
+func (c *Client) BatchRecordChangeReject(changeID string, review *BatchChangeReview) (*BatchRecordChange, error) {
+	return c.batchRecordChangeReviewAction(changeID, review, batchRecordChangeRejectEP)
+}
+
+// BatchRecordChangeCancel cancels a batch record change.
+func (c *Client) BatchRecordChangeCancel(changeID string, review *BatchChangeReview) (*BatchRecordChange, error) {
+	return c.batchRecordChangeReviewAction(changeID, review, batchRecordChangeCancelEP)
+}
+
+func (c *Client) batchRecordChangeReviewAction(changeID string, review *BatchChangeReview, endpoint func(*Client, string) string) (*BatchRecordChange, error) {
+	var reviewJSON []byte
+	var err error
+	if review != nil {
+		reviewJSON, err = json.Marshal(review)
+		if err != nil {
+			return nil, err
+		}
+	}
+	resource := &BatchRecordChange{}
+	err = resourceRequest(c, endpoint(c, changeID), "POST", reviewJSON, resource)
+	if err != nil {
+		return &BatchRecordChange{}, err
 	}
 
 	return resource, nil
