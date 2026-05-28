@@ -33,3 +33,13 @@ func (c *Client) zoneChangesList(zoneID string, filter ListFilter) (*ZoneChanges
 
 	return changes, nil
 }
+
+// abandonedZonesList retrieves the list of deleted zone changes with the List criteria passed.
+func (c *Client) abandonedZonesList(filter ListFilter) (*ZonesDeletedInfo, error) {
+	deletedZones := &ZonesDeletedInfo{}
+	err := resourceRequest(c, abandonedZonesEP(c, filter), "GET", nil, deletedZones)
+	if err != nil {
+		return deletedZones, err
+	}
+	return deletedZones, nil
+}

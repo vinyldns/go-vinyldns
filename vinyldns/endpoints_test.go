@@ -130,6 +130,67 @@ func TestZoneChangesEP(t *testing.T) {
 	}
 }
 
+func TestAbandonedZoneEP(t *testing.T) {
+	az := abandonedZonesEP(c, ListFilter{})
+	expected := "http://host.com/zones/deleted/changes"
+
+	if az != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", az)
+		t.Error("deletedZoneChangesEP should return the right endpoint")
+	}
+
+	az = abandonedZonesEP(c, ListFilter{
+		StartFrom: "nextplease",
+	})
+	expected = "http://host.com/zones/deleted/changes?startFrom=nextplease"
+
+	if az != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", az)
+		t.Error("deletedZoneChangesEP should return the right endpoint")
+	}
+
+	az = abandonedZonesEP(c, ListFilter{
+		StartFrom: "nextplease",
+		MaxItems:  99,
+	})
+	expected = "http://host.com/zones/deleted/changes?startFrom=nextplease&maxItems=99"
+
+	if az != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", az)
+		t.Error("deletedZoneChangesEP should return the right endpoint")
+	}
+
+	az = abandonedZonesEP(c, ListFilter{
+		NameFilter: "foo",
+		StartFrom:  "nextplease",
+		MaxItems:   99,
+	})
+	expected = "http://host.com/zones/deleted/changes?nameFilter=foo&startFrom=nextplease&maxItems=99"
+
+	if az != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", az)
+		t.Error("deletedZoneChangesEP should return the right endpoint")
+	}
+
+	az = abandonedZonesEP(c, ListFilter{
+		NameFilter:   "foo",
+		StartFrom:    "nextplease",
+		MaxItems:     99,
+		IgnoreAccess: true,
+	})
+	expected = "http://host.com/zones/deleted/changes?nameFilter=foo&startFrom=nextplease&maxItems=99&ignoreAccess=true"
+
+	if az != expected {
+		fmt.Printf("Expected: %s", expected)
+		fmt.Printf("Actual: %s", az)
+		t.Error("deletedZoneChangesEP should return the right endpoint")
+	}
+}
+
 func TestRecordSetsListEP(t *testing.T) {
 	rs := recordSetsListEP(c, "123", ListFilter{})
 	expected := "http://host.com/zones/123/recordsets"

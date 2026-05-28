@@ -19,6 +19,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
+	"reflect"
 )
 
 type testToolsConfig struct {
@@ -40,8 +41,22 @@ func testTools(configs []testToolsConfig) (*httptest.Server, *Client) {
 	host := "http://host.com"
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		reqURL, _ := url.Parse(r.RequestURI)
+		reqPath := reqURL.Path
+		reqQuery := reqURL.Query()
+
 		for _, c := range configs {
-			if c.endpoint == r.RequestURI {
+
+			expURL, _ := url.Parse(c.endpoint)
+			expPath := expURL.Path
+			expQuery := expURL.Query()
+
+			if reqPath != expPath {
+				continue
+			}
+
+			if reflect.DeepEqual(reqQuery, expQuery) {
 				w.WriteHeader(c.code)
 				w.Header().Set("Content-Type", "application/json")
 				fmt.Fprintf(w, c.body)
