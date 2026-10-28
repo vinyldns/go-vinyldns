@@ -44,7 +44,7 @@ func testTools(configs []testToolsConfig) (*httptest.Server, *Client) {
 			if c.endpoint == r.RequestURI {
 				w.WriteHeader(c.code)
 				w.Header().Set("Content-Type", "application/json")
-				fmt.Fprintf(w, c.body)
+				fmt.Fprint(w, c.body)
 				return
 			}
 		}

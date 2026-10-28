@@ -49,6 +49,8 @@ See `vinyldns/${resource}.go` files for the various `vinyldns` API methods.
 
 ## Development
 
+Go 1.27.3 or later is required. CI reads the required version from `go.mod`.
+
 Run tests w/ code coverage:
 
 ```
