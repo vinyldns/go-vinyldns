@@ -123,24 +123,16 @@ func TestZoneCreateIntegration(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	connection := &ZoneConnection{
-		Name:          "ok.",
-		KeyName:       "vinyldns.",
-		Key:           "nzisn+4G2ldMn0q1CV3vsg==",
-		PrimaryServer: "vinyldns-integration:19001",
-	}
-
 	zone := &Zone{
-		Name:               "ok.",
-		Email:              "email@test.com",
-		AdminGroupID:       groups[0].ID,
-		Connection:         connection,
-		TransferConnection: connection,
+		Name:         "ok.",
+		Email:        "email@test.com",
+		AdminGroupID: groups[0].ID,
+		BackendID:    "default",
 	}
 
 	zc, err := c.ZoneCreate(zone)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	createdZoneID := zc.Zone.ID
