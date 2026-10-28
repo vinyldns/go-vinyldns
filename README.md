@@ -62,21 +62,3 @@ Install:
 ```
 make install
 ```
-
-## Release notes
-
-### 0.9.19
-
-- Require Go 1.27.3 and use the same toolchain in CI.
-- Update the AWS SDK and credential provider, including the Smithy dependency.
-- Preserve the existing client API and request-signing behavior.
-
-Consumers must update this module and rebuild their applications with a patched
-Go toolchain. Updating this library does not change existing CLI binaries.
-
-The client uses Go's default TLS certificate verification and the host's trust
-configuration; it does not bundle a certificate store or implement certificate
-revocation checks. A toolchain update alone does not establish remediation for a
-compromised certificate authority. Apply any required trust-store updates under
-your organization's certificate guidance. Certificate-advisory validation and
-replacement CLI binaries remain separate release requirements.
