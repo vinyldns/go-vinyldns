@@ -14,8 +14,37 @@ package vinyldns
 
 import (
 	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"strings"
 	"testing"
 )
+
+func TestClientTLSVerification(t *testing.T) {
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasPrefix(r.Header.Get("Authorization"), "AWS4-HMAC-SHA256 ") {
+			t.Error("expected an AWS SigV4 authorization header")
+		}
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, `{"zones":[]}`)
+	}))
+	defer server.Close()
+
+	c := NewClient(ClientConfiguration{
+		AccessKey: "accessKey",
+		SecretKey: "secretKey",
+		Host:      server.URL,
+	})
+	if _, err := c.Zones(); err == nil {
+		t.Fatal("expected the default client to reject an untrusted TLS certificate")
+	}
+
+	// This client trusts only the test server's certificate and still verifies TLS.
+	c.HTTPClient = server.Client()
+	if _, err := c.Zones(); err != nil {
+		t.Fatalf("expected a signed request with a trusted TLS certificate to succeed: %v", err)
+	}
+}
 
 func TestNewClientFromEnv(t *testing.T) {
 	t.Setenv("VINYLDNS_ACCESS_KEY", "accessKey")

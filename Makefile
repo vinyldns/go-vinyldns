@@ -1,4 +1,4 @@
-VERSION=0.9.18
+VERSION=0.9.19
 SOURCE?=./...
 VINYLDNS_REPO=github.com/vinyldns/vinyldns
 VINYLDNS_DIR="$(GOPATH)/src/$(VINYLDNS_REPO)/" 
